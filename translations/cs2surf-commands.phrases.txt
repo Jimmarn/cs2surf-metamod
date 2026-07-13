@@ -28,13 +28,14 @@
 		"it"		"Per usare questi comandi scrivi \"bind <tasto> surf_<nome comando>\" nella console, oppure !<nome comando> o /<nome comando> in chat.\nEsempio: \"bind 1 surf_cp\" o \"!cp\" o \"/cp\""
 		"es"		"Para usar estos comandos, puedes escribir \"bind <key> surf_<command name>\" en tu consola, o escribir !<command name> o /<command name> en el chat.\nPor ejemplo: \"bind 1 surf_cp\" or \"!cp\" or \"/cp\""
 		"de"		"Um diese Befehle zu verwenden, kannst du \"bind <Taste> surf_<Befehlsname>\" in Deiner Konsole eingeben, oder !<Befehlsname> oder /<Befehlsname> im Chat eingeben.\nZum Beispiel: \„bind 1 surf_cp\" oder \„!cp\" oder \„/cp\""
-		"ko"		"이 명령어를 사용하려면 콘솔에 \"bind <key> surf_<명령어 이름>\"을 입력하거나, 채팅창에 !<명령어 이름> 또는 /<명령어 이름>을 입력하세요. 예시: \"bind 1 surf_cp\" 또는 \"!cp\" 또는 \"/cp\""
+		"ko"		"이 명령어를 사용하려면 콘솔에 \"bind <key> surf_<명령어 이름>\"을 입력하거나, 채팅창에 !<명령어 이름> 또는 /<명령어 이름>을 입력하세요.\n예시: \"bind 1 surf_cp\" 또는 \"!cp\" 또는 \"/cp\""
 		"lv"		"Lai pielietotu šīs komandas, tu vari ierakstīt \"bind <taustiņš> surf_<komandas nosaukums>\" konsolē, vai ierakstīt !<komandas nosaukums> vai /<komandas nosaukums> čatā.\nPiemēram: \"bind 1 surf_cp\" vai \"!cp\" vai \"/cp\""
 		"pt"		"Para usar estes comandos, você pode digitar \"bind <key> surf_<command name>\" no seu console, ou digitar !<command name> ou /<command name> no chat.\nExemplo: \"bind 1 surf_cp\" or \"!cp\" or \"/cp\""
 	}
 	"Command Help Response Category Hint (Console)"
 	{
 		"en"		"You can use \"surf_help <category>\" to get a list of commands related to a specific category (eg. surf_help saveloc misc).\nList of available categories: record, modestyle, preference, replay, saveloc, spec, status, timer, player, global, misc, map"
+		"ko"		"\"surf_help <카테고리>\"를 사용하면 특정 카테고리에 해당하는 명령어 목록을 볼 수 있습니다 (예: surf_help saveloc misc).\n사용 가능한 카테고리 목록: record, modestyle, preference, replay, saveloc, spec, status, timer, player, global, misc, map"
 		"chi"		"您可以使用 \"surf_help <类别>\" 获取特定类别的命令列表 (例如：surf_help saveloc misc).\n可用类别列表: record(记录), modestyle(模式风格), preference(偏好设置), replay(重播), saveloc(保存位置), spec(观察), status(状态), timer(计时器), player(玩家), global(全球), misc(杂项), map(地图)"
 		"sv"		"Du kan använda \"surf_help <kategori>\" för att lista kommandon relaterade till en specifik kategori (t.ex. surf_help saveloc misc).\nLista över tillgängliga kategorier: record, modestyle, preference, replay, saveloc, spec, status, timer, player, global, misc, map"
 		"ua"		"Ви можете використати \"surf_help <категорія>\", щоб отримати список команд, пов'язаних з певною категорією (наприклад, surf_help saveloc misc).\nСписок доступних категорій: record, modestyle, preference, replay, saveloc, spec, status, timer, player, global, misc, map"
@@ -46,6 +47,7 @@
 	"Command List Header - Name"
 	{
 		"en"		"Name"
+		"ko"		"이름"
 		"chi"		"名称"
 		"sv"		"Namn"
 		"ua"		"Назва"
@@ -55,6 +57,7 @@
 	"Command List Header - Description"
 	{
 		"en"		"Description"
+		"ko"		"설명"
 		"chi"		"描述"
 		"sv"		"Beskrivning"
 		"ua"		"Опис"
@@ -64,6 +67,7 @@
 	"Command List - Record"
 	{
 		"en"		"Record Commands:"
+		"ko"		"기록 명령어:"
 		"chi"		"记录 命令:"
 		"sv"		"Rekordkommandon:"
 		"ua"		"Команди Рекордів:"
@@ -73,6 +77,7 @@
 	"Command List - ModeStyle"
 	{
 		"en"		"Mode/Style Commands:"
+		"ko"		"모드/스타일 명령어:"
 		"chi"		"模式/风格 命令:"
 		"sv"		"Mode/Stilkommandon:"
 		"ua"		"Команди Режиму/Стилю:"
@@ -82,6 +87,7 @@
 	"Command List - Preference"
 	{
 		"en"		"Preference Commands:"
+		"ko"		"환경설정 명령어:"
 		"chi"		"偏好设置 命令:"
 		"sv"		"Preferenskommandon:"
 		"ua"		"Команди Налаштувань:"
@@ -91,6 +97,7 @@
 	"Command List - Replay"
 	{
 		"en"		"Replay Commands:"
+		"ko"		"리플레이 명령어:"
 		"chi"		"重播 命令:"
 		"sv"		"Repriskommandon:"
 		"ua"		"Команди Повтору:"
@@ -100,6 +107,7 @@
 	"Command List - Saveloc"
 	{
 		"en"		"Saveloc Commands:"
+		"ko"		"체크포인트 명령어:"
 		"chi"		"保存位置 命令:"
 		"sv"		"Saveloc kommandon:"
 		"ua"		"Команди Saveloc:"
@@ -109,6 +117,7 @@
 	"Command List - Spec"
 	{
 		"en"		"Spectate Commands:"
+		"ko"		"관전 명령어:"
 		"chi"		"观察 命令:"
 		"sv"		"Åskådningskommandon:"
 		"ua"		"Команди Спостерігання:"
@@ -118,6 +127,7 @@
 	"Command List - Status"
 	{
 		"en"		"Status Commands:"
+		"ko"		"상태 명령어:"
 		"chi"		"状态 命令:"
 		"sv"		"Statuskommandon:"
 		"ua"		"Команди Статусу:"
@@ -127,6 +137,7 @@
 	"Command List - Timer"
 	{
 		"en"		"Timer Commands:"
+		"ko"		"타이머 명령어:"
 		"chi"		"计时器 命令:"
 		"sv"		"Timerkommandon:"
 		"ua"		"Команди Таймера:"
@@ -136,6 +147,7 @@
 	"Command List - Player"
 	{
 		"en"		"Player Commands:"
+		"ko"		"플레이어 명령어:"
 		"chi"		"玩家 命令:"
 		"sv"		"Spelarkommandon:"
 		"ua"		"Команди Гравця:"
@@ -145,6 +157,7 @@
 	"Command List - Global"
 	{
 		"en"		"Global Commands:"
+		"ko"		"글로벌 명령어:"
 		"chi"		"全球 命令:"
 		"sv"		"Globala Kommandon:"
 		"ua"		"Глобальні Команди:"
@@ -154,6 +167,7 @@
 	"Command List - Misc"
 	{
 		"en"		"Miscellaneous Commands:"
+		"ko"		"기타 명령어:"
 		"chi"		"杂项 命令:"
 		"sv"		"Blandade Kommandon:"
 		"ua"		"Інші Команди:"
@@ -163,6 +177,7 @@
 	"Command List - Map"
 	{
 		"en"		"Map Commands:"
+		"ko"		"맵 명령어:"
 		"chi"		"地图 命令:"
 		"sv"		"Kartkommandon:"
 		"ua"		"Команди Мапи:"
@@ -172,6 +187,7 @@
 	"Command List - HUD"
 	{
 		"en"		"HUD Commands:"
+		"ko"		"HUD 명령어:"
 		"chi"		"HUD 命令:"
 		"sv"		"HUD Kommandon:"
 		"ua"		"Команди HUD:"
@@ -326,6 +342,7 @@
 	"Command Description - surf_nextloc"
 	{
 		"en"		"Teleport to the next checkpoint."
+		"ko"		"다음 체크포인트로 텔레포트합니다."
 		"chi"		"传送到下一个存点."
 		"pl"		"Teleportuj się do następnego checkpointu."
 		"fi"		"Teleporttaa seuraavaan tallennuspisteeseen."
@@ -341,6 +358,7 @@
 	"Command Description - surf_nextcp"
 	{
 		"en"		"Teleport to the next checkpoint."
+		"ko"		"다음 체크포인트로 텔레포트합니다."
 		"chi"		"传送到下一个存点."
 		"pl"		"Teleportuj się do następnego checkpointu."
 		"fi"		"Teleporttaa seuraavaan tallennuspisteeseen."
@@ -381,7 +399,7 @@
 		"it"		"Imposta la zona di partenza custom alla tua posizione attuale."
 		"es"		"Establecer tu posición actual como tu posición de inicio personalizada."
 		"de"		"Setze deine benutzerdefinierte Startposition auf deiner aktuellen Position."
-		"ko"		"다음 체크포인트로 텔레포트합니다."
+		"ko"		"현재 위치를 사용자 지정 시작 위치로 설정합니다."
 		"lv"		"Iestatīt savu pielāgoto starta pozīciju uz pašreizējo pozīciju."
 		"pt"		"Definir uma posição atual como de ínicio customizada."
 	}
@@ -532,6 +550,7 @@
 	"Command Description - surf_specs"
 	{
 		"en"		"List currently spectating players in chat."
+		"ko"		"현재 관전 중인 플레이어를 채팅에 표시합니다."
 		"ua"		"Показати в чаті список спостерігачів."
 		"sv"		"Lista närvarande åskådare i chatten."
 		"pt"		"Listar os seus espectadores no chat."
@@ -600,7 +619,7 @@
 		"it"		"Elenca stili attivi o rimuovi stile."
 		"es"		"Listar estilos activos o remover estilo."
 		"de"		"Stil entfernen."
-		"ko"		"활성화 된 스타일을 표시하거나 스타일을 제거합니다."
+		"ko"		"활성화된 스타일을 표시하거나 스타일을 제거합니다."
 		"lv"		"Uzskaitīt aktīvos stilus vai noņemt stilu."
 		"pt"		"Listar os estilos ativos ou remover um estilo."
 	}
@@ -812,6 +831,7 @@
 	"Command Description - surf_64t"
 	{
 		"en"		"Switch to 64tick mode."
+		"ko"		"64tick 모드로 전환합니다."
 		"pt"		"Alterar para o modo 64tick."
 	}
 	"Command Description - surf_pb"
@@ -937,6 +957,7 @@
 	"Command Description - surf_course"
 	{
 		"en"		"Teleport to a course, or display the current course and the list of all courses in the map."
+		"ko"		"코스로 텔레포트하거나, 현재 코스와 맵의 모든 코스 목록을 표시합니다."
 	}
 	"Command Description - surf_courses"
 	{
@@ -953,6 +974,7 @@
 	"Command Description - surf_spb"
 	{
 		"en"		"Retrieve server personal best statistics."
+		"ko"		"서버 개인 최고 기록 통계를 확인합니다."
 		"chi"		"获取服务器个人最佳数据."
 		"ua"		"Показати персональний найкращий час на сервері."
 		"sv"		"Hämta personlig bästa statistik på servern."
@@ -962,6 +984,7 @@
 	"Command Description - surf_gpb"
 	{
 		"en"		"Retrieve global personal best statistics."
+		"ko"		"글로벌 개인 최고 기록 통계를 확인합니다."
 		"chi"		"获取全球个人最佳数据."
 		"ua"		"Показати глобальний персональний найкращий час."
 		"sv"		"Hämta personlig bästa statistik globalt."
@@ -971,6 +994,7 @@
 	"Command Description - surf_globalcheck"
 	{
 		"en"		"Display the status of the GlobalAPI."
+		"ko"		"GlobalAPI의 상태를 표시합니다."
 		"chi"		"显示 全球API 的状态."
 		"ua"		"Показати статус GlobalAPI."
 		"sv"		"Visa statusen av GlobalAPI."
@@ -980,6 +1004,7 @@
 	"Command Description - surf_gc"
 	{
 		"en"		"Display the status of the GlobalAPI."
+		"ko"		"GlobalAPI의 상태를 표시합니다."
 		"chi"		"显示 全球API 的状态."
 		"ua"		"Показати статус GlobalAPI."
 		"sv"		"Visa statusen av GlobalAPI."
@@ -989,6 +1014,7 @@
 	"Command Description - surf_timerstopsound"
 	{
 		"en"		"Toggle the timer stop sound."
+		"ko"		"타이머 중지음을 전환합니다."
 		"chi"		"切换计时器停止音效."
 		"ua"		"Увімк./вимк. звук зупинки таймера."
 		"pt"		"Habilitar/Desabilitar o som de parar do timer."
@@ -996,6 +1022,7 @@
 	"Command Description - surf_autohideweapon"
 	{
 		"en"		"Toggle the automatic hiding of weapon viewmodel."
+		"ko"		"무기 모델 자동 숨김을 전환합니다."
 		"chi"		"切换武器视图模型的自动隐藏."
 		"ua"		"Увімк./вимк. автоматичне приховування зброї."
 		"pt"		"Habilitar/Desabilitar esconder a arma automaticamente."
@@ -1003,45 +1030,56 @@
 	"Command Description - surf_fov"
 	{
 		"en"		"Change your FOV."
+		"ko"		"FOV를 변경합니다."
 	}
 	"Command Description - surf_rpsave"
 	{
 		"en"		"Manually save past gameplay into a replay."
+		"ko"		"지난 플레이를 리플레이로 직접 저장합니다."
 	}
 	"Command Description - surf_replay"
 	{
 		"en"		"Play a previously saved replay."
+		"ko"		"저장된 리플레이를 재생합니다."
 	}
 	"Command Description - surf_replays"
 	{
 		"en"		"List saved replays."
+		"ko"		"저장된 리플레이 목록을 표시합니다."
 	}
   	"Command Description - surf_rpgoto"
 	{
 		"en"		"Go to a specific time in the replay. (hh:mm:ss)"
+		"ko"		"리플레이의 특정 시간으로 이동합니다. (hh:mm:ss)"
 	}
   	"Command Description - surf_rpgototick"
 	{
 		"en"		"Go to a specific tick in the replay."
+		"ko"		"리플레이의 특정 틱으로 이동합니다."
 	}
   	"Command Description - surf_rpinfo"
 	{
 		"en"		"Display information about the current replay."
+		"ko"		"현재 리플레이의 정보를 표시합니다."
 	}
   	"Command Description - surf_rppause"
 	{
 		"en"		"Pause or resume the current replay."
+		"ko"		"현재 리플레이를 일시 정지하거나 재개합니다."
 	}
   	"Command Description - surf_rploadprogress"
 	{
 		"en"		"Display the loading progress of the replay."
+		"ko"		"리플레이의 불러오기 진행률을 표시합니다."
 	}
   	"Command Description - surf_rpcancelload"
 	{
 		"en"		"Cancel the loading of the replay."
+		"ko"		"리플레이 불러오기를 취소합니다."
 	}
 	"Command Description - surf_rphidelegs"
 	{
 		"en"		"Toggle replay bot's first person legs visibility."
+		"ko"		"리플레이 봇의 1인칭 다리 표시를 전환합니다."
 	}
 }

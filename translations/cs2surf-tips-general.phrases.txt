@@ -22,6 +22,7 @@
 	"Tip - surf_mode"
 	{
 		"en"	"{grey}You can switch to a mode by typing its abbreviation. For example, type {default}/64t{grey} to switch to the {purple}64tick {grey}mode or {default}/css {grey}to switch to the {purple}CS:Source {grey}mode."
+		"ko"	"{grey}약어를 입력해 모드를 전환할 수 있습니다. 예를 들어 {default}/64t{grey}를 입력하면 {purple}64tick {grey}모드로, {default}/css {grey}를 입력하면 {purple}CS:Source {grey}모드로 전환됩니다."
 		"pt"	"{grey}Você pode alternar para um modo digitando sua abreviação. Por exemplo, digite {default}/64t{grey} para alternar para o modo {purple}64tick {grey} ou {default}/css {grey} para alternar para o modo {purple}CS:Source {grey}."
 	}
 	"Tip - surf_restart"

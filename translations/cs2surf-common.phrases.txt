@@ -21,7 +21,7 @@
 		"sv"		"{darkred}Varning{grey}: Du har inte Prime Status uppgraderingen. Din tid kommer inte att sparas globalt."
 		"es"		"{darkred}Atención{grey}:No tienes la mejora del estatus Prime. Tu carrera no será guardada globalmente."
 		"fi"		"{darkred}Varoitus{grey}: Sinulla ei ole Prime Status -päivitystä. Tulostasi ei tallenneta maailmanlaajuisesti."
-		"ko"		"{darkred}경고{grey}: 프라임 계정이 아닙니다. 공식 기록이 저장되지 않습니다."
+		"ko"		"{darkred}경고{grey}: 프라임 계정이 아닙니다. 글로벌 기록이 저장되지 않습니다."
 		"lv"		"{darkred}Brīdinājums{grey}: Tev nav Prime Status jauninājuma. Tavs skrējiens globāli netiks saglabāts."
 		"pt"		"{darkred}Aviso{grey}: Você não possuí prime. A sua run não será salva."
 	}
@@ -67,13 +67,14 @@
 		"it"		"{darkred}Impossibile trovare il giocatore \"{player}\"."
 		"es"		"{darkred}No se puede encontrar un jugador llamado \"{player}\"."
 		"de"		"{darkred}Konnte keinen Spieler mit dem Namen \"{player}\"."
-		"ko"		"{darkred}\"{player}\" 해당 플레이어를 찾을 수 없습니다."
+		"ko"		"{darkred}\"{player}\"(이)라는 플레이어를 찾을 수 없습니다."
 		"lv"		"{darkred}Neizdevās atrast spēlētāju ar vārdu \"{player}\"."
 		"pt"		"{darkred}Não foi encontrado um jogador com o nome \"{player}\"."
 	}
 	"Command Cooldown"
 	{
 		"en"		"{grey}Please wait before using that command again."
+		"ko"		"{grey}잠시 후에 명령어를 다시 사용해 주세요."
 		"chi"		"{grey}请勿频繁输入指令,请稍后再试."
 		"ru"		"{grey}Пожалуйста, подождите, прежде чем использовать эту команду снова."
 		"sv"		"{grey}Vänligen vänta innan du använder kommandot igen."

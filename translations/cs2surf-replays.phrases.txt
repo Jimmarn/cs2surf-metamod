@@ -3,59 +3,72 @@
 	"Replay - No Replay Playing"
 	{
 		"en"		"{grey}No replay is currently playing."
+		"ko"		"{grey}재생 중인 리플레이가 없습니다."
 	}
 	"Replay - Usage Goto"
 	{
 		"en"		"{grey}Usage: surf_rpgoto <tick>"
+		"ko"		"{grey}사용법: surf_rpgoto <tick>"
 	}
 	"Replay - Usage Seek"
 	{
 		"en"		"{grey}Usage: surf_rpseek <+/-seconds>"
+		"ko"		"{grey}사용법: surf_rpseek <+/-seconds>"
 	}
 	"Replay - Usage Navigation"
 	{
 		"en"		"{grey}Usage: <time/tick> (Examples: 1:23.45, +10, -5.2, 1234)"
+		"ko"		"{grey}사용법: <time/tick> (예시: 1:23.45, +10, -5.2, 1234)"
 	}
 	"Replay - Usage Goto Time"
 	{
 		"en"		"{grey}Usage: surf_rpgoto <time> (Examples: 1:23.45, +10, -5.2)"
+		"ko"		"{grey}사용법: surf_rpgoto <time> (예시: 1:23.45, +10, -5.2)"
 	}
 	"Replay - Usage Goto Tick"
 	{
 		"en"		"{grey}Usage: surf_rpgototick <tick> (Examples: 1234, +100, -50)"
+		"ko"		"{grey}사용법: surf_rpgototick <tick> (예시: 1234, +100, -50)"
 	}
 	"Replay - Invalid Relative Time"
 	{
 		"en"		"{darkred}Invalid time format. Examples: +10, -5.2, +1:30"
+		"ko"		"{darkred}잘못된 시간 형식입니다. 예시: +10, -5.2, +1:30"
 	}
 	"Replay - Invalid Absolute Time"
 	{
 		"en"		"{darkred}Invalid time format. Examples: 1:23.45, 12:34:56.789, 45.2"
+		"ko"		"{darkred}잘못된 시간 형식입니다. 예시: 1:23.45, 12:34:56.789, 45.2"
 	}
 	"Replay - Invalid Tick Number"
 	{
 		"en"		"{darkred}Invalid tick number. Must be a positive integer."
+		"ko"		"{darkred}잘못된 틱 번호입니다. 양의 정수여야 합니다."
 	}
 	"Replay - Tick Out Of Range"
 	{
 		"#format"	"tick:d,maxTick:d"
 		"en"		"{grey}Tick {lime}{tick}{grey} is out of range. Maximum tick: {lime}{maxTick}"
+		"ko"		"{grey}틱 {lime}{tick}{grey}은(는) 범위를 벗어났습니다. 최대 틱: {lime}{maxTick}"
 	}
 	"Replay - Time Out Of Range"
 	{
 		"#format"	"time:s,maxTime:s"
 		"en"		"{grey}Time {lime}{time}{grey} is out of range. Maximum time: {lime}{maxTime}"
+		"ko"		"{grey}시간 {lime}{time}{grey}은(는) 범위를 벗어났습니다. 최대 시간: {lime}{maxTime}"
 	}
 	"Replay - Jumped To Tick"
 	{
 		"#format"	"tick:d,time:s"
 		"en"		"{grey}Jumped to tick {lime}{tick} ({lime}{time}{grey})"
+		"ko"		"{grey}틱 {lime}{tick} ({lime}{time}{grey}) 위치로 이동했습니다."
 	}
 	"Replay - Current Info"
 	{
 		// Current tick: 1234/5678 (12:34/23:45). Check console for details!
 		"#format"	"currentTick:d,totalTicks:d,time:s,maxTime:s"
 		"en"		"{grey}Current tick: {lime}{currentTick}{grey}/{lime}{totalTicks}{grey} ({lime}{time}{grey}/{lime}{maxTime}{grey}). Check console for details!"
+		"ko"		"{grey}현재 틱: {lime}{currentTick}{grey}/{lime}{totalTicks}{grey} ({lime}{time}{grey}/{lime}{maxTime}{grey}). 자세한 내용은 콘솔을 확인하세요!"
 	}
 	"Replay - General Info Console"
 	{
@@ -66,6 +79,7 @@
 		// Plugin Version: 1.2.3
 		"#format"	"uuid:s,playerName:s,playerSteamID:llu,createdOn:s,serverVersion:lu,pluginVersion:s"
 		"en"		"Replay {uuid}\nPlayer: {playerName} ({playerSteamID})\nCreated On: {createdOn}\nServer Version: {serverVersion}\nPlugin Version: {pluginVersion}"
+		"ko"		"리플레이 {uuid}\n플레이어: {playerName} ({playerSteamID})\n생성 일시: {createdOn}\n서버 버전: {serverVersion}\n플러그인 버전: {pluginVersion}"
 	}
 	"Replay - Cheater Info Console"
 	{
@@ -73,6 +87,7 @@
 		// Suspect Reason: abcdef
 		"#format"	"reason:s"
 		"en"		"Replay Type: Cheater\nSuspect Reason: {reason}"
+		"ko"		"리플레이 종류: 치터\n의심 사유: {reason}"
 	}
 	"Replay - Run Info Console"
 	{
@@ -82,6 +97,7 @@
 		// Time: 12:34.567
 		"#format"	"name:s,mode:s,time:s"
 		"en"		"Replay Type: Run\nCourse: {name}\nMode + Styles: {mode}\nTime: {time}"
+		"ko"		"리플레이 종류: 주행\n코스: {name}\n모드 + 스타일: {mode}\n기록: {time}"
 	}
 	"Replay - Manual Info Console"
 	{
@@ -89,108 +105,132 @@
 		// Saved By: Alice (765498765432109)
 		"#format"	"playerName:s,playerSteamID:llu"
 		"en"		"Replay Type: Manual\nSaved By: {playerName} ({playerSteamID})"
+		"ko"		"리플레이 종류: 수동\n저장한 사람: {playerName} ({playerSteamID})"
 	}
 	"Replay - Seeked To Tick"
 	{
 		// Seeked 12.345s to tick 6789 (12:34)
 		"#format"	"seekSeconds:.3f,tick:d,time:s"
 		"en"		"{grey}Seeked {lime}{seekSeconds}{grey}s to tick {lime}{tick}{grey} ({lime}{time}{grey})"
+		"ko"		"{grey}{lime}{seekSeconds}{grey}초 탐색하여 틱 {lime}{tick}{grey} ({lime}{time}{grey}) 위치로 이동했습니다."
 	}
 	"Replay - Hide Player Legs - Enable"
 	{
 		"en"		"{grey}Replay bot's legs are now hidden."
+		"ko"		"{grey}이제 리플레이 봇의 다리가 숨겨집니다."
 	}
 	"Replay - Hide Player Legs - Disable"
 	{
 		"en"		"{grey}Replay bot's legs are now visible."
+		"ko"		"{grey}이제 리플레이 봇의 다리가 표시됩니다."
 	}
 	"Replay - Paused"
 	{
 		"en"		"{grey}Replay paused."
+		"ko"		"{grey}리플레이를 일시 정지했습니다."
 	}
 	"Replay - Resumed"
 	{
 		"en"		"{grey}Replay resumed."
+		"ko"		"{grey}리플레이를 재개했습니다."
 	}
 	"Replay - Loading"
 	{
 		"en"		"{grey}Loading replay, please wait..."
+		"ko"		"{grey}리플레이를 불러오는 중입니다. 잠시 기다려 주세요..."
 	}
 	"Replay - Loading Already"
 	{
 		"en"		"{grey}Replay is already loading, please wait..."
+		"ko"		"{grey}이미 리플레이를 불러오는 중입니다. 잠시 기다려 주세요..."
 	}
 	"Replay - Invalid UUID"
 	{
 		"en"		"{darkred}Invalid UUID format"
+		"ko"		"{darkred}잘못된 UUID 형식입니다"
 	}
 	"Replay - Multiple Matches"
 	{
 		"#format"	"uuid:s"
 		"en"		"{darkred}Multiple replays match UUID substring {grey}'{default}{uuid}{grey}'."
+		"ko"		"{darkred}UUID 조각 {grey}'{default}{uuid}{grey}'{darkred}과 일치하는 리플레이가 여러 개입니다."
 	}
 	"Replay - Loaded Successfully"
 	{
 		"en"		"{lime}Replay loaded successfully! Starting playback..."
+		"ko"		"{lime}리플레이를 불러왔습니다! 재생을 시작합니다..."
 	}
 	"Replay - No Loading Progress"
 	{
 		"en"		"{grey}No replay loading in progress"
+		"ko"		"{grey}진행 중인 리플레이 불러오기가 없습니다"
 	}
 	"Replay - Loading Progress"
 	{
 		"#format"	"progress:.1f"
 		"en"		"{grey}Loading replay: {progress}%%%% complete"
+		"ko"		"{grey}리플레이 불러오는 중: {progress}%%%% 완료"
 	}
 	"Replay - Loading Completed"
 	{
 		"en"		"{lime}Replay loading completed"
+		"ko"		"{lime}리플레이 불러오기가 완료되었습니다"
 	}
 	"Replay - Loading Cancelled"
 	{
 		"en"		"{grey}Replay loading cancelled"
+		"ko"		"{grey}리플레이 불러오기를 취소했습니다"
 	}
 	"Replay - Usage Command"
 	{
 		"en"		"{grey}Usage: surf_replay <ID>"
+		"ko"		"{grey}사용법: surf_replay <ID>"
 	}
 	"Replay - Load Cancelled"
 	{
 		"en"		"{darkred}Load cancelled by user"
+		"ko"		"{darkred}사용자가 불러오기를 취소했습니다"
 	}
 	"Replay - Invalid File Format"
 	{
 		"en"		"{darkred}Invalid replay file format"
+		"ko"		"{darkred}잘못된 리플레이 파일 형식입니다"
 	}
 	"Replay - Manual Replay Failed"
 	{
 		"en"		"{darkred}Failed to save manual replay."
+		"ko"		"{darkred}수동 리플레이를 저장하지 못했습니다."
 	}
 	"Replay - Manual Replay Saved"
 	{
 		"#format"	"uuid:s,duration:.0f"
 		"en"		"{grey}Replay saved: {lime}{uuid}{grey} ({lime}{duration}{grey}s)" 
+		"ko"		"{grey}리플레이를 저장했습니다: {lime}{uuid}{grey} ({lime}{duration}{grey}초)"
 	}
 	"Replay - Manual Replay Saved (Console)"
 	{
 		"#format"	"uuid:s,duration:.0f"
 		"en"		"Replay saved: {uuid} ({duration}s)" 
+		"ko"		"리플레이를 저장했습니다: {uuid} ({duration}초)"
 		"chi"		"回放已保存: {uuid} ({duration}s)" 
 		"ua"		"Повтор збережено: {uuid} ({duration}с.)" 
 	}
 	"Replay - Run Replay Failed"
 	{
 		"en"		"{darkred}Failed to save run replay."
+		"ko"		"{darkred}주행 리플레이를 저장하지 못했습니다."
 	}
 	"Replay - Run Replay Saved"
 	{
 		"#format"	"uuid:s"
 		"en"		"{grey}Replay saved: {lime}{uuid}{grey}"
+		"ko"		"{grey}리플레이를 저장했습니다: {lime}{uuid}{grey}"
 	}
 	"Replay - Run Replay Saved (Console)"
 	{
 		"#format"	"uuid:s"
 		"en"		"Replay saved: {uuid}"
+		"ko"		"리플레이를 저장했습니다: {uuid}"
 		"chi"		"回放已保存: {uuid}"
 		"ua"		"Повтор збережено: {uuid}"
 	}
@@ -198,27 +238,32 @@
 	{
 		"#format"	"replayMap:s,currentMap:s"
 		"en"		"{darkred}Replay map does not match current map.{grey} (Replay: {default}{replayMap}{grey}, Current: {default}{currentMap}{grey})"
+		"ko"		"{darkred}리플레이의 맵이 현재 맵과 다릅니다.{grey} (리플레이: {default}{replayMap}{grey}, 현재: {default}{currentMap}{grey})"
 	}
 	"Replay - Unknown Mode"
 	{
 		"#format"	"modeName:s"
 		"en"		"{darkred}Mode {default}{modeName}{darkred} is not available. Playback might be inaccurate."
+		"ko"		"{darkred}{default}{modeName}{darkred} 모드를 사용할 수 없습니다. 재생이 부정확할 수 있습니다."
 	}
 	"Replay - Unknown Style"
 	{
 		"#format"	"styleName:s"
 		"en"		"{darkred}Style {default}{styleName}{darkred} is not available. Playback might be inaccurate."
+		"ko"		"{darkred}{default}{styleName}{darkred} 스타일을 사용할 수 없습니다. 재생이 부정확할 수 있습니다."
 	}
 	
 	"Replay List - Check Console"
 	{
 		"en"		"{grey}Check console for info!"
+		"ko"		"{grey}자세한 내용은 콘솔을 확인하세요!"
 	}
 	
 	"Replay List - Usage Title"
 	{
 		// Usage: !replays [type=run/r/manual/m] [options...]
 		"en"		"Usage: !replays [type=run/r/manual/m] [options...]"
+		"ko"		"사용법: !replays [type=run/r/manual/m] [options...]"
 	}
 
 	"Replay List - Usage General Options"
@@ -230,6 +275,7 @@
 		//	offset=<num> - Skip first N results
 		//	limit=<num> - Limit results (max 20)
 		"en"		"\nGeneral Options:\n\tplayer=<name> - Filter by player name\n\tsteamid=<id> - Filter by Steam ID\n\tmap=<name> - Filter by map name (default: current map)\n\toffset=<num> - Skip first N results\n\tlimit=<num> - Limit results (max 20)"
+		"ko"		"\n공통 옵션:\n\tplayer=<이름> - 플레이어 이름으로 필터\n\tsteamid=<id> - Steam ID로 필터\n\tmap=<이름> - 맵 이름으로 필터 (기본값: 현재 맵)\n\toffset=<숫자> - 처음 N개 건너뛰기\n\tlimit=<숫자> - 결과 개수 제한 (최대 20)"
 	}
 
 	"Replay List - Usage Type Options"
@@ -238,63 +284,77 @@
 		//	Run: mode=<mode> course=<name> maxtime=<sec> numstyles=<num>
 		//	Manual: saver=<name> ssid=<steamid>
 		"en"		"\nType Options:\n\tRun: mode=<mode> course=<name> maxtime=<sec> numstyles=<num>\n\tManual: saver=<name> ssid=<steamid>"
+		"ko"		"\n종류별 옵션:\n\tRun: mode=<모드> course=<이름> maxtime=<초> numstyles=<숫자>\n\tManual: saver=<이름> ssid=<steamid>"
 	}
 
 
 	"Replay List - No Matching Replays"
 	{
 		"en"		"{grey}No matching replays found."
+		"ko"		"{grey}일치하는 리플레이를 찾지 못했습니다."
 	}
 	
 	"Cheater Replays - Table Name"
 	{
 		"en"		"Cheater Replays"
+		"ko"		"치터 리플레이"
 	}
 	
 	"Run Replays - Table Name"
 	{
 		"en"		"Run Replays"
+		"ko"		"주행 리플레이"
 	}
 	
 	"Manual Replays - Table Name"
 	{
 		"en"		"Manual Replays"
+		"ko"		"수동 리플레이"
 	}
 	
 	"Replay Table Header - Player"
 	{
 		"en"		"Player"
+		"ko"		"플레이어"
 	}
 	"Replay Table Header - Map"
 	{
 		"en"		"Map"
+		"ko"		"맵"
 	}
 	"Replay Table Header - Reason"
 	{
 		"en"		"Reason"
+		"ko"		"사유"
 	}
 	"Replay Table Header - SteamID"
 	{
 		"en"		"SteamID"
+		"ko"		"SteamID"
 	}
 	"Replay Table Header - UUID"
 	{
 		"en"		"UUID"
+		"ko"		"UUID"
 	}
 	"Replay Table Header - Course"
 	{
 		"en"		"Course"
+		"ko"		"코스"
 	}
 	"Replay Table Header - Mode"
 	{
 		"en"		"Mode"
+		"ko"		"모드"
 	}
 	"Replay Table Header - Time"
 	{
 		"en"		"Time"
+		"ko"		"시간"
 	}
 	"Replay Table Header - Saved By"
 	{
 		"en"		"Saved By"
+		"ko"		"저장한 사람"
 	}
 }
