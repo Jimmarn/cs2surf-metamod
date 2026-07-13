@@ -48,6 +48,6 @@
 		"de"		"{grey}Du hast deine Startposition gelöscht."
 		"ko"		"{grey}사용자 지정 시작 위치를 지웠습니다."
 		"lv"		"{grey}Tu esi notīrījis savu pielāgoto starta pozīciju."
-		"en"		"{grey}Você redefiniu a posição customizada de início."
+		"pt"		"{grey}Você redefiniu a posição customizada de início."
 	}
 }
