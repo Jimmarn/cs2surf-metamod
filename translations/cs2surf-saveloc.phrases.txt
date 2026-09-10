@@ -39,6 +39,7 @@
 	"Can't Teleport (Not TAS)"
 	{
 		"en"		"{darkred}You must be in the TAS style to teleport."
+		"ko"		"{darkred}텔레포트하려면 TAS 스타일이어야 합니다."
 	}
 	"Can't Teleport (Map)"
 	{

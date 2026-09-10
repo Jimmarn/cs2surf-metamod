@@ -14,7 +14,7 @@
 		"es"		"{lime}{player_name}{grey} en {default}{map_name}{grey} ({default}{course_name}{grey}) [{purple}{mode_style_text}{grey}]"
 		"de"		"{lime}{player_name}{grey} auf {default}{map_name}{grey} ({default}{course_name}{grey}) [{purple}{mode_style_text}{grey}]"
 		"pl"		"{lime}{player_name}{grey} na {default}{map_name}{grey} ({default}{course_name}{grey}) [{purple}{mode_style_text}{grey}]"
-		"ko"		"{lime}{player_name}{grey}님이 {default}{map_name}{grey} ({default}{course_name}{grey})에서 [{purple}{mode_style_text}{grey}]로 진행 중입니다."
+		"ko"		"{lime}{player_name}{grey}님의 {default}{map_name}{grey} ({default}{course_name}{grey}) 기록 [{purple}{mode_style_text}{grey}]"
 		"lv"  		"{lime}{player_name}{grey} kartē {default}{map_name}{grey} ({default}{course_name}{grey}) [{purple}{mode_style_text}{grey}]"
 		"pt"		"{lime}{player_name}{grey} em {default}{map_name}{grey} ({default}{course_name}{grey}) [{purple}{mode_style_text}{grey}]"
 	}
@@ -75,6 +75,7 @@
 		// Global: 12.34 (5 TPs) [#1/24 Overall / 10000 pts]
 		"#format"	"time:s,rank:d,max_rank:d,points:d"
 		"en"		"{grey}Global: {default}{time}{grey} [#{default}{rank}{grey}/{default}{max_rank}{grey} {yellow}Overall{grey} / {purple}{points}{grey} pts]"
+		"ko"		"{grey}글로벌: {default}{time}{grey} [#{default}{rank}{grey}/{default}{max_rank}{grey} {yellow}전체{grey} / {purple}{points}{grey} 포인트]"
 		"chi"		"{grey}全球: {default}{time}{grey} [#{default}{rank}{grey}/{default}{max_rank}{grey} {yellow}总体{grey} / {purple}{points}{grey} 得分]"
 		"ua"		"{grey}Глобально: {default}{time}{grey} [#{default}{rank}{grey}/{default}{max_rank}{grey} {yellow}Загальний{grey} / {purple}{points}{grey} очок]"
 		"sv"		"{grey}Global: {default}{time}{grey} [#{default}{rank}{grey}/{default}{max_rank}{grey} {yellow}Allmän{grey} / {purple}{points}{grey} pts]"
@@ -86,6 +87,7 @@
 		// Global: 12.34 (5 TPs) [Overall]
 		"#format"	"time:s"
 		"en"		"{grey}Global: {default}{time}{grey} [{yellow}Overall{grey}]"
+		"ko"		"{grey}글로벌: {default}{time}{grey} [{yellow}전체{grey}]"
 		"chi"		"{grey}全球: {default}{time}{grey} [{yellow}总体{grey}]"
 		"ua"		"{grey}Глобально: {default}{time}{grey} [{yellow}Загальний{grey}]"
 		"sv"		"{grey}Global: {default}{time}{grey} [{yellow}Allmän{grey}]"
@@ -104,7 +106,7 @@
 		"es"		"{darkred}Fallo al recuperar las mejores estadísticas personales."
 		"de"		"{darkred}Persönliche PBs konnten nicht abgerufen werden."
 		"pl"		"{darkred}Fallo al recuperar las mejores estadísticas personales."
-		"ko"		"{darkred}개인 최고 기록을을 가져오지 못했습니다."
+		"ko"		"{darkred}개인 최고 기록 통계를 가져오지 못했습니다."
 		"lv"  		"{darkred}Neizdevās iegūt personīgo rekordu statistiku."
 		"pt"		"{darkred}Falha ao recuperar as melhores estatísticas pessoais."
 	}

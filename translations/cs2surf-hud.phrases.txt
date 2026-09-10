@@ -136,7 +136,7 @@
 		"it"		"{stage}"
 		"es"		"{stage}"
 		"de"		"{stage}"
-		"ko"		"{stage}"
+		"ko"		"스테이지 {stage}"
 		"lv"		"{stage}"
 		"pt"		"Estágio {stage}"
 	}

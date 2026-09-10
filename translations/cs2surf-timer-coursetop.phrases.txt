@@ -4,6 +4,7 @@
 	{
 		"#format"	"map_name:s,course_name:s,mode_name:s"
 		"en"		"{map_name} ({course_name}) {mode_name} Overall Server Top"
+		"ko"		"{map_name} ({course_name}) {mode_name} 전체 서버 최고 기록"
 		"chi"		"{map_name} ({course_name}) {mode_name} 总体服务器榜单"
 		"ua"		"{map_name} ({course_name}) {mode_name} Загальний топ сервера"
 		"sv"		"{map_name} ({course_name}) {mode_name} Allmän Server Top"
@@ -15,6 +16,7 @@
 	{
 		"#format"	"map_name:s,course_name:s,mode_name:s"
 		"en"		"{map_name} ({course_name}) {mode_name} Overall Global Top"
+		"ko"		"{map_name} ({course_name}) {mode_name} 전체 글로벌 최고 기록"
 		"chi"		"{map_name} ({course_name}) {mode_name} 总体全球榜单"
 		"ua"		"{map_name} ({course_name}) {mode_name} Загальний глобальний топ"
 		"sv"		"{map_name} ({course_name}) {mode_name} Allmän Global Top"
@@ -89,6 +91,7 @@
 	"Course Top Header - Points"
 	{
 		"en"		"Points"
+		"ko"		"포인트"
 		"ua"		"Очки"
 		"sv"		"Poäng"
 		"fi"		"Pisteet"

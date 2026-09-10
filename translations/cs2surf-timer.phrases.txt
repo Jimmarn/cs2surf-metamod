@@ -66,7 +66,7 @@
 		"it"		"{lime}{player_name} {grey}ha completato {default}{course_name}{grey} in {default}{time}{grey} | {mode_style_text}"
 		"es"		"{lime}{player_name} {grey}finalizó {default}{course_name}{grey} en {default}{time}{grey} | {mode_style_text}"
 		"de"		"{lime}{player_name} {grey}hat {default}{course_name}{grey} in {default}{time}{grey} beendet | {mode_style_text}"
-		"ko"		"{lime}{player_name} {grey}님이 {default}{course_name}{grey} 코스를 {default}{time}{grey} 동안 완료했습니다 | {mode_style_text}"
+		"ko"		"{lime}{player_name} {grey}님이 {default}{course_name}{grey} 코스를 {default}{time}{grey} 기록으로 완주했습니다 | {mode_style_text}"
 		"lv"		"{lime}{player_name} {grey}pabeidza {default}{course_name}{grey} {default}{time}{grey} laikā | {mode_style_text}"
 		"pt"		"{lime}{player_name} {grey}finalizou {default}{course_name}{grey} em {default}{time}{grey} | {mode_style_text}"
 	}
@@ -110,6 +110,7 @@
 		// Course Points: 2345 Overall (+512) | Player Rating: 34475
 		"#format"	"points:.0f,points_gained:.0f,player_rating:.0f"
 		"en"		"{grey}Course Points: {purple}{points}{grey} {yellow}Overall{grey} (+{purple}{points_gained}{grey}) | Player Rating: {purple}{player_rating}{grey}"
+		"ko"		"{grey}코스 포인트: {purple}{points}{grey} {yellow}전체{grey} (+{purple}{points_gained}{grey}) | 플레이어 레이팅: {purple}{player_rating}{grey}"
 		"chi"		"{grey}关卡得分: {purple}{points}{grey} {yellow}总体{grey} (+{purple}{points_gained}{grey}) | 玩家 Rating: {purple}{player_rating}{grey}"
 		"ua"		"{grey}Очки за курс: {purple}{points}{grey} {yellow}Загалом{grey} (+{purple}{points_gained}{grey}) | Рейтинг гравця: {purple}{player_rating}{grey}"
 		"sv"		"{grey}Ban Poäng: {purple}{points}{grey} {yellow}Allmän{grey} (+{purple}{points_gained}{grey}) | Spelar Gradering: {purple}{player_rating}{grey}"
@@ -300,6 +301,7 @@
 	"Can't Bhop Start"
 	{
 		"en"		"{darkred}You can't start your run with bhop(s)."
+		"ko"		"{darkred}버니합으로는 주행을 시작할 수 없습니다."
 	}
 
 	// Split #1: 12:34.56 (+12.34) | SPB +12.12 | PRO SPB +23.45
@@ -311,7 +313,7 @@
 		"sv"		"{grey}Del {default}#{number}{grey}: {lime}{time_text}{grey}{diff_text}"
 		"ua"		"{grey}Спліт {default}#{number}{grey}: {lime}{time_text}{grey}{diff_text}"
 		"tr"		"{grey}Aralık {default}#{number}{grey}: {lime}{time_text}{grey}{diff_text}"
-		"ko"		"{grey}분할 {default}#{number}{grey}: {lime}{time_text}{grey}{diff_text}"
+		"ko"		"{grey}구간 {default}#{number}{grey}: {lime}{time_text}{grey}{diff_text}"
 		"es"		"{grey}Parte {default}#{number}{grey}: {lime}{time_text}{grey}{diff_text}"
 		"lv"		"{grey}Sadalījums {default}#{number}{grey}: {lime}{time_text}{grey}{diff_text}"
 		"pt"		"{grey}Split {default}#{number}{grey}: {lime}{time_text}{grey}{diff_text}"
@@ -347,6 +349,7 @@
 	{
 		"#format"	"diff_time:s"
 		"en"		" | SPB {diff_time}"
+		"ko"		" | SPB {diff_time}"
 		"chi"		" | SPB {diff_time}"
 		"sv"		" | SPB {diff_time}"
 		"ua"		" | SPB {diff_time}"
@@ -358,6 +361,7 @@
 	{
 		"#format"	"diff_time:s"
 		"en"		" | GPB {diff_time}"
+		"ko"		" | GPB {diff_time}"
 		"chi"		" | GPB {diff_time}"
 		"sv"		" | GPB {diff_time}"
 		"ua"		" | GPB {diff_time}"
@@ -369,6 +373,7 @@
 	{
 		"#format"	"diff_time:s"
 		"en"		" | SR {diff_time}"
+		"ko"		" | SR {diff_time}"
 		"chi"		" | SR {diff_time}"
 		"sv"		" | SR {diff_time}"
 		"ua"		" | SR {diff_time}"
@@ -380,6 +385,7 @@
 	{
 		"#format"	"diff_time:s"
 		"en"		" | WR {diff_time}"
+		"ko"		" | WR {diff_time}"
 		"chi"		" | WR {diff_time}"
 		"sv"		" | VR {diff_time}"
 		"ua"		" | WR {diff_time}"
@@ -397,7 +403,7 @@
 		"sv"		"{grey}Du missade din bästa {yellow}Allmänna{grey} tiden ({lightred}{time}{grey})."
 		"ua"		"{grey}Ви пропустили свій найкращий {yellow}Загальний{grey} час ({lightred}{time}{grey})."
 		"tr"		"{grey}En iyi süreni kaçırdın {yellow}Tümünde {grey} ({lightred}{time}{grey})."
-		"ko"		"{grey}최고 기록인 {yellow}전체{grey} 시간을 놓쳤습니다 ({lightred}{time}{grey})."
+		"ko"		"{grey}서버 개인 최고 {yellow}전체{grey} 기록을 넘지 못했습니다 ({lightred}{time}{grey})."
 		"es"		"{grey}Has fallado tu mejor tiempo {yellow}General{grey} ({lightred}{time}{grey})."
 		"lv"		"{grey}Tu nepārspēji labāko servera {yellow}Kopvērtējuma{grey} laiku ({lightred}{time}{grey})."
 		"pt"		"{grey}Você perdeu o seu melhor tempo do servidor ({lightred}{time}{grey})."
@@ -410,7 +416,7 @@
 		"sv"		"{grey}Du missade din bästa globala {yellow}Allmänna{grey} tid ({lightred}{time}{grey})."
 		"ua"		"{grey}Ви пропустили свій найкращий глобальний {yellow}Загальний{grey} час ({lightred}{time}{grey})."
 		"tr"		"{grey}En iyi küresel süreni kaçırdın {yellow}Tümünde{grey} ({lightred}{time}{grey})."
-		"ko"		"{grey}글로벌 최고 기록인 {yellow}전체{grey} 시간을 놓쳤습니다 ({lightred}{time}{grey})."
+		"ko"		"{grey}글로벌 개인 최고 {yellow}전체{grey} 기록을 넘지 못했습니다 ({lightred}{time}{grey})."
 		"es"		"{grey}Has fallado tu mejor tiempo {yellow}General{grey} ({lightred}{time}{grey})."
 		"lv"		"{grey}Tu nepārspēji labāko globālo {yellow}Kopvērtējuma{grey} laiku ({lightred}{time}{grey})."
 		"pt"		"{grey}Você pedeu o seu melhor tempo global ({lightred}{time}{grey})."
@@ -423,7 +429,7 @@
 		"sv"		"{grey}Du missade {yellow}Allmänna{grey} server rekordtiden ({lightred}{time}{grey})."
 		"ua"		"{grey}Ви пропустили {yellow}Загальний{grey} час рекорду серевера ({lightred}{time}{grey})."
 		"tr"		"{grey}Süreyi kaçırdın {yellow}Tümünde{grey} sunucu rekoru ({lightred}{time}{grey})."
-		"ko"		"{grey}서버 최고 기록인 {yellow}전체{grey} 시간을 놓쳤습니다 ({lightred}{time}{grey})."
+		"ko"		"{grey}서버 {yellow}전체{grey} 최고 기록을 넘지 못했습니다 ({lightred}{time}{grey})."
 		"es"		"{grey}Has fallado el tiempo récord del servidor {yellow}General{grey} ({lightred}{time}{grey})."
 		"lv"		"{grey}Tu nepārspēji {yellow}Kopvērtējuma{grey} servera rekorda laiku ({lightred}{time}{grey})."
 		"pt"		"{grey}Você perdeu o seu melhor tempo do servidor ({lightred}{time}{grey})."
@@ -436,7 +442,7 @@
 		"sv"		"{grey}Du missade {yellow}Allmänna{grey} globala rekordtiden ({lightred}{time}{grey})."
 		"ua"		"{grey}Ви пропустили {yellow}Загальний{grey} час світового рекорду ({lightred}{time}{grey})."
 		"tr"		"{grey}Süreyi kaçırdın {yellow}Tümünde{grey} küresel rekor ({lightred}{time}{grey})."
-		"ko"		"{grey}글로벌 최고 기록인 {yellow}전체{grey} 시간을 놓쳤습니다 ({lightred}{time}{grey})."
+		"ko"		"{grey}글로벌 {yellow}전체{grey} 최고 기록을 넘지 못했습니다 ({lightred}{time}{grey})."
 		"es"		"{grey}Has fallado el tiempo récord global {yellow}General{grey} ({lightred}{time}{grey})."
 		"lv"		"{grey}Tu nepārspēji {yellow}Kopvērtējuma{grey} globālo rekorda laiku ({lightred}{time}{grey})."
 		"pt"		"{grey}Você perdeu o seu melhor tempo global ({lightred}{time}{grey})."
@@ -485,7 +491,7 @@
 		"sv"		"{grey}Du kommer nu att jämföra din tid med din bästa globala tid."
 		"ua"		"{grey}Зараз Ви порівняєте своє проходження з вашим особистим глобальним найкращим часом."
 		"tr"		"{grey}Şimdiki koşunu küresel kendi rekorunla karşılaştıracaksın."
-		"ko"		"{grey}이제 주행 기록이 글로벌 개인 최고 기록과 최대 비교됩니다."
+		"ko"		"{grey}이제 주행 기록이 글로벌 개인 최고 기록과 비교됩니다."
 		"es"		"{grey}Ahora compararás tu carrera con tu mejor marca personal global."
 		"lv"		"{grey}Tagad tavs skrējiens tiks salīdzināts ar tavu globālo personīgo rekordu."
 		"pt"		"{grey}Você agora comparará sua corrida com seu melhor tempo pessoal global."
@@ -497,7 +503,7 @@
 		"sv"		"{grey}Du kommer nu att jämföra din tid med server rekordet."
 		"ua"		"{grey}Зараз Ви порівняєте своє проходження з рекордом сервера."
 		"tr"		"{grey}Şimdi koşunu sunucu rekoruyla karşılaştıracaksın."
-		"ko"		"{grey}이제 주행 기록이 서버 최고 기록과 최대 비교됩니다."
+		"ko"		"{grey}이제 주행 기록이 서버 기록과 비교됩니다."
 		"es"		"{grey}Ahora compararás tu carrera con el récord del servidor."
 		"lv"		"{grey}Tagad tavs skrējiens tiks salīdzināts ar servera rekordu."
 		"pt"		"{grey}Você agora comparará sua corrida com o recorde do servidor."
@@ -509,7 +515,7 @@
 		"sv"		"{grey}Du kommer nu att jämföra din tid med världsrekordet."
 		"ua"		"{grey}Зараз Ви порівняєте своє проходження зі світовим рекордом."
 		"tr"		"{grey}Şimdi koşunu dünya rekoruyla karşılaştıracaksın."
-		"ko"		"{grey}이제 주행 기록이 세계 최고 기록과 최대 비교됩니다."
+		"ko"		"{grey}이제 주행 기록이 세계 기록과 비교됩니다."
 		"es"		"{grey}Ahora compararás tu carrera con el récord mundial."
 		"lv"		"{grey}Tagad tavs skrējiens tiks salīdzināts ar pasaules rekordu."
 		"pt"		"{grey}Você agora comparará sua corrida com o recorde do mundo."
@@ -518,6 +524,7 @@
   	"Request - Failed (Invalid Map)"
 	{
 		"en"		"{darkred}Failed to process current request. (Invalid map)"
+		"ko"		"{darkred}현재 요청을 처리하지 못했습니다. (잘못된 맵)"
 		"chi"		"{darkred}无法处理当前请求. (错误地图)"
 		"ua"		"{darkred}Не вдалося обробити поточний запит. (Невірна мапа)"
 		"sv"		"{darkred}Det gick inte att behandla begäran. (Ogiltig map)"
@@ -528,6 +535,7 @@
   	"Request - Failed (Generic)"
 	{
 		"en"		"{darkred}Failed to process current request."
+		"ko"		"{darkred}현재 요청을 처리하지 못했습니다."
 		"chi"		"{darkred}无法处理当前请求."
 		"ua"		"{darkred}Не вдалося обробити поточний запит."
 		"sv"		"{darkred}Det gick inte att behandla begäran."
@@ -539,6 +547,7 @@
 	{
 		"#format"	"map_name:s"
 		"en"		"{darkred}Failed to process current request. (No course exists in map {map_name})"
+		"ko"		"{darkred}현재 요청을 처리하지 못했습니다. ({map_name} 맵에 코스가 없습니다)"
 		"chi"		"{darkred}无法处理当前请求. (地图中没有关卡 {map_name})"
 		"ua"		"{darkred}Не вдалося обробити поточний запит. (Не існує такого курсу на мапі {map_name})"
 		"sv"		"{darkred}Det gick inte att behandla begäran. (Ingen bana finns på kartan {map_name})"
@@ -550,6 +559,7 @@
 	"Timer Stop Sound Enabled"
 	{
 		"en"		"{grey}You have enabled the timer stop sound."
+		"ko"		"{grey}타이머 중지음을 활성화했습니다."
 		"chi"		"{grey}你已启用计时器停止音效."
 		"ua"		"{grey}Ви увімкнули звук зупинки таймера."
 		"pt"		"{grey}Você ativou o som de fim do timer."
@@ -557,6 +567,7 @@
 	"Timer Stop Sound Disabled"
 	{
 		"en"		"{grey}You have disabled the timer stop sound."
+		"ko"		"{grey}타이머 중지음을 비활성화했습니다."
 		"chi"		"{grey}你已禁用计时器停止音效."
 		"ua"		"{grey}Ви вимкнули звук зупинки таймера."
 		"pt"		"{grey}Você desativou o som de fim do timer."
@@ -566,6 +577,7 @@
 	{
 		"#format"	"start_speed:.0f"
 		"en"		"{grey}Start speed: {lime}{start_speed}{grey}"
+		"ko"		"{grey}시작 속도: {lime}{start_speed}{grey}"
 		"pt"		"{grey}Velocidade inicial: {lime}{start_speed}{grey}"
 	}
 }

@@ -3,51 +3,63 @@
 	"Tip - surf_replay"
 	{
 		"en"		"{grey}Type {default}!replay {grey}to watch the server's fastest runs."
+		"ko"		"{grey}서버의 최고 기록 주행을 보려면 {default}!replay {grey}를 입력하세요."
 		"chi"		"{grey}在聊天框中输入 {default}!replay {grey}以观察最快纪录视角."
 		"ru"		"{grey}Напишите {default}!replay {grey}для просмотра лучшего прохождения карты на этом сервере."
 	}
 	"Tip - surf_replays"
 	{
 		"en"		"{grey}Type {default}!replays {grey}to list available replays in the server."
+		"ko"		"{grey}서버에 저장된 리플레이 목록을 보려면 {default}!replays {grey}를 입력하세요."
 	}
 	"Tip - surf_rpgoto"
 	{
 		"en"		"{grey}Type {default}!rpgoto <time> {grey}to jump to a specific time in the replay."
+		"ko"		"{grey}리플레이의 특정 시간으로 이동하려면 {default}!rpgoto <time> {grey}을 입력하세요."
 	}
 	"Tip - surf_rpgototick"
 	{
 		"en"		"{grey}Type {default}!rpgototick <tick> {grey}to jump to a specific tick in the replay."
+		"ko"		"{grey}리플레이의 특정 틱으로 이동하려면 {default}!rpgototick <tick> {grey}을 입력하세요."
 	}
 	"Tip - surf_rpinfo"
 	{
 		"en"		"{grey}Type {default}!rpinfo {grey}to show information about the current replay."
+		"ko"		"{grey}현재 리플레이의 정보를 보려면 {default}!rpinfo {grey}를 입력하세요."
 	}
 	"Tip - surf_rppause"
 	{
 		"en"		"{grey}Type {default}!rppause {grey}to pause or resume the replay playback."
+		"ko"		"{grey}리플레이 재생을 일시 정지하거나 재개하려면 {default}!rppause {grey}를 입력하세요."
 	}
 	"Tip - surf_rploadprogress"
 	{
 		"en"		"{grey}Type {default}!rploadprogress {grey}to check the loading progress of a replay."
+		"ko"		"{grey}리플레이의 불러오기 진행률을 확인하려면 {default}!rploadprogress {grey}를 입력하세요."
 	}
 	"Tip - surf_rpcancelload"
 	{
 		"en"		"{grey}Type {default}!rpcancelload {grey}to cancel loading a replay."
+		"ko"		"{grey}리플레이 불러오기를 취소하려면 {default}!rpcancelload {grey}를 입력하세요."
 	}
 	"Tip - surf_rpseek"
 	{
 		"en"		"{grey}Type {default}!rpseek <+/-time> {grey}to relatively seek to a time in the replay."
+		"ko"		"{grey}리플레이에서 현재 위치를 기준으로 이동하려면 {default}!rpseek <+/-time> {grey}을 입력하세요."
 	}
 	"Tip - surf_rpsave"
 	{
 		"en"		"{grey}Type {default}!rpsave <seconds> {grey}to save a manual replay of up to the specified duration."
+		"ko"		"{grey}지정한 시간만큼의 리플레이를 직접 저장하려면 {default}!rpsave <seconds> {grey}를 입력하세요."
 	}
     "Tip - Replay Storage Policy"
     {
 	    "en"        "{grey}Older or less important replays may be automatically removed over time to free up server space. Saving new manual replays can overwrite previous ones."
+	    "ko"        "{grey}서버 공간 확보를 위해 오래되었거나 덜 중요한 리플레이는 시간이 지나면 자동으로 삭제될 수 있습니다. 새 수동 리플레이를 저장하면 이전 리플레이를 덮어쓸 수 있습니다."
     }
 	"Tip - surf_rphidelegs"
 	{
 		"en"		"{grey}Type {default}!rphidelegs {grey}to toggle the visibility of the replay bot's first person legs."
+		"ko"		"{grey}리플레이 봇의 1인칭 다리 표시를 전환하려면 {default}!rphidelegs {grey}를 입력하세요."
 	}
 }

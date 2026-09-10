@@ -67,5 +67,6 @@
 	"Tip - surf_fov"
 	{
 		"en"	"{grey}Use {default}/fov {purple}<value> {grey}to change your FOV."
+		"ko"	"{grey}FOV를 변경하려면 {default}/fov {purple}<value> {grey}를 사용하세요."
 	}
 }

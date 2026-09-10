@@ -35,7 +35,7 @@
 		"en"		"{yellow}Please reconnect to the server to apply changes to the menu."
 		"chi"		"{yellow}请重新连接服务器以应用菜单更改."
 		"ua"		"{yellow}Будь ласка, перепідключіться до сервера, щоб застосувати зміни в меню."
-		"ko"		"{yellow}서버에 재 접속하시면 변경된 설정이 적용됩니다."
+		"ko"		"{yellow}서버에 재접속하시면 변경된 설정이 적용됩니다."
 		"lv"		"{yellow}Lūdzu, pārslēdzies atpakaļ uz serveri, lai piemērotu izvēlnes izmaiņas."
 		"pt"		"{yellow}Por favor reconecte ao servidor para aplicar as alteração no menu."
 	}
