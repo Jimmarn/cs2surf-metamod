@@ -56,9 +56,9 @@ static_function PageRange GetPageRange(const ReplayFilterCriteria &criteria, siz
 	const size_t endIndex = limit > 0 ? MIN(startIndex + limit, total) : startIndex;
 	return {startIndex, endIndex};
 }
-		
+
 template<typename MapT>
-static_function std::vector<std::pair<UUID_t, ReplayHeader>> CollectMatchesWithMapFallback(const MapT &replayMap, 
+static_function std::vector<std::pair<UUID_t, ReplayHeader>> CollectMatchesWithMapFallback(const MapT &replayMap,
 																						   const ReplayFilterCriteria &criteria, std::mutex &mutex)
 {
 	auto collectMatches = [&](bool exactMapMatch)
@@ -74,7 +74,7 @@ static_function std::vector<std::pair<UUID_t, ReplayHeader>> CollectMatchesWithM
 		}
 		return matches;
 	};
-	
+
 	const bool preferExactMap = !criteria.mapName.empty() && criteria.mapName != "*";
 	auto matches = collectMatches(preferExactMap);
 	if (preferExactMap && matches.empty())
@@ -83,10 +83,11 @@ static_function std::vector<std::pair<UUID_t, ReplayHeader>> CollectMatchesWithM
 	}
 	return matches;
 }
+
 void ReplayWatcher::FilterAndPrintMatchingCheaterReplays(ReplayFilterCriteria &criteria, SurfPlayer *player)
 {
 	std::vector<std::pair<UUID_t, ReplayHeader>> matchingReplays =
-	CollectMatchesWithMapFallback(this->cheaterReplays, criteria, this->replayMapsMutex);
+		CollectMatchesWithMapFallback(this->cheaterReplays, criteria, this->replayMapsMutex);
 	PageRange page = GetPageRange(criteria, matchingReplays.size());
 	CUtlString headers[SURF_ARRAYSIZE(cheaterReplayTableHeaders)];
 	for (u32 i = 0; i < SURF_ARRAYSIZE(cheaterReplayTableHeaders); i++)
@@ -131,10 +132,10 @@ void ReplayWatcher::FilterAndPrintMatchingCheaterReplays(ReplayFilterCriteria &c
 void ReplayWatcher::FilterAndPrintMatchingRunReplays(ReplayFilterCriteria &criteria, SurfPlayer *player)
 {
 	std::vector<std::pair<UUID_t, ReplayHeader>> matchingReplays = CollectMatchesWithMapFallback(this->runReplays, criteria, this->replayMapsMutex);
-	
+
 	std::sort(matchingReplays.begin(), matchingReplays.end(),
 			  [](const auto &a, const auto &b) { return a.second.run().time() < b.second.run().time(); });
-	
+
 	PageRange page = GetPageRange(criteria, matchingReplays.size());
 	CUtlString headers[SURF_ARRAYSIZE(runReplayTableHeaders)];
 	for (u32 i = 0; i < SURF_ARRAYSIZE(runReplayTableHeaders); i++)
@@ -202,7 +203,7 @@ void ReplayWatcher::FilterAndPrintMatchingRunReplays(ReplayFilterCriteria &crite
 void ReplayWatcher::FilterAndPrintMatchingManualReplays(ReplayFilterCriteria &criteria, SurfPlayer *player)
 {
 	std::vector<std::pair<UUID_t, ReplayHeader>> matchingReplays =
-			CollectMatchesWithMapFallback(this->manualReplays, criteria, this->replayMapsMutex);
+		CollectMatchesWithMapFallback(this->manualReplays, criteria, this->replayMapsMutex);
 	PageRange page = GetPageRange(criteria, matchingReplays.size());
 	CUtlString headers[SURF_ARRAYSIZE(manualReplayTableHeaders)];
 	for (u32 i = 0; i < SURF_ARRAYSIZE(manualReplayTableHeaders); i++)
