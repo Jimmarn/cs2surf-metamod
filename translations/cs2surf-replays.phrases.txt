@@ -347,6 +347,16 @@
 		"en"		"Mode"
 		"ko"		"모드"
 	}
+	"Replay Table Header - Styles"
+	{
+		"en"		"Styles"
+		"ko"        "스타일"
+		"chi"		"风格"
+		"pl"		"Style"
+		"ru"		"Стили"
+		"ua"		"Стилі"
+		"de"		"Stile"
+	}
 	"Replay Table Header - Time"
 	{
 		"en"		"Time"

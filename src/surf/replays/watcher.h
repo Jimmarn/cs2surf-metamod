@@ -36,12 +36,12 @@ struct ReplayFilterCriteria
 	// Try to get current course by default.
 	std::optional<std::string> courseName;
 
-	bool PassGeneralFilters(const ReplayHeader &header) const;
+	bool PassGeneralFilters(const ReplayHeader &header, bool exactMapMatch) const;
 	bool PassCheaterFilters(const ReplayHeader &header) const;
 	bool PassRunFilters(const ReplayHeader &header) const;
 	bool PassManualFilters(const ReplayHeader &header) const;
 
-	bool PassFilters(const ReplayHeader &header) const;
+	bool PassFilters(const ReplayHeader &header, bool exactMapMatch) const;
 };
 
 // Keep track of replays on disk and their headers.
