@@ -13,7 +13,6 @@ namespace Surf::replaysystem::bot
 	void SpawnBot();
 	void KickBot();
 	void MakeBotAlive();
-	void MoveBotToSpec();
 
 	// Bot state management
 	CCSPlayerController *GetBot();

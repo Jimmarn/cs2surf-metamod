@@ -17,7 +17,6 @@ namespace Surf::replaysystem::events
 
 	// Specific event handlers
 	void HandleTimerEvent(SurfPlayer &player, const RpEvent *event, data::ReplayPlayback *replay);
-	void HandleCheckpointEvent(const RpEvent *event, data::ReplayPlayback *replay);
 	void HandleModeChangeEvent(SurfPlayer &player, const RpEvent *event);
 	void HandleStyleChangeEvent(SurfPlayer &player, const RpEvent *event);
 	void HandleTeleportEvent(SurfPlayer &player, const RpEvent *event);

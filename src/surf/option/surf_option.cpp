@@ -1,7 +1,19 @@
 #include "surf_option.h"
 #include "surf/db/surf_db.h"
 #include "utils/eventlisteners.h"
+
+#include <mutex>
+
 static_global KeyValues *pServerCfgKeyValues;
+
+// Recursive because logging itself reads options in `SurfLoggingListener::OpenFile()`
+// so a log line emitted under this lock would cause deadlock otherwise.
+static_global std::recursive_mutex serverCfgMutex;
+
+static_function void GetServerCfgPath(char (&path)[1024])
+{
+	V_snprintf(path, sizeof(path), "%s%s", g_SMAPI->GetBaseDir(), "/cfg/cs2surf-server-config.txt");
+}
 
 IMPLEMENT_CLASS_EVENT_LISTENER(SurfOptionService, SurfOptionServiceEventListener);
 
@@ -118,30 +130,61 @@ static_function void MergePreferences(KeyValues3 *target, KeyValues3 *source, co
 void SurfOptionService::LoadDefaultOptions()
 {
 	char serverCfgPath[1024];
-	V_snprintf(serverCfgPath, sizeof(serverCfgPath), "%s%s", g_SMAPI->GetBaseDir(), "/cfg/cs2surf-server-config.txt");
+	GetServerCfgPath(serverCfgPath);
+	{
+		std::lock_guard _guard(serverCfgMutex);
+		pServerCfgKeyValues = new KeyValues("ServerConfig");
+		pServerCfgKeyValues->LoadFromFile(g_pFullFileSystem, serverCfgPath, nullptr);
+	}
+}
 
-	pServerCfgKeyValues = new KeyValues("ServerConfig");
-	pServerCfgKeyValues->LoadFromFile(g_pFullFileSystem, serverCfgPath, nullptr);
+bool SurfOptionService::ReloadOptions()
+{
+	char serverCfgPath[1024];
+	GetServerCfgPath(serverCfgPath);
+
+	// Check if the file is valid before replacing the existing.
+	KeyValues *probe = new KeyValues("ServerConfig");
+	bool valid = probe->LoadFromFile(g_pFullFileSystem, serverCfgPath, nullptr);
+	delete probe;
+
+	if (!valid)
+	{
+		return false;
+	}
+
+	std::lock_guard _guard(serverCfgMutex);
+	if (!pServerCfgKeyValues)
+	{
+		return false;
+	}
+
+	pServerCfgKeyValues->Clear();
+	return pServerCfgKeyValues->LoadFromFile(g_pFullFileSystem, serverCfgPath, nullptr);
 }
 
 const char *SurfOptionService::GetOptionStr(const char *optionName, const char *defaultValue)
 {
-	return pServerCfgKeyValues->GetString(optionName, defaultValue);
+	std::lock_guard _guard(serverCfgMutex);
+	return pServerCfgKeyValues ? pServerCfgKeyValues->GetString(optionName, defaultValue) : defaultValue;
 }
 
 f64 SurfOptionService::GetOptionFloat(const char *optionName, f64 defaultValue)
 {
-	return pServerCfgKeyValues->GetFloat(optionName, defaultValue);
+	std::lock_guard _guard(serverCfgMutex);
+	return pServerCfgKeyValues ? pServerCfgKeyValues->GetFloat(optionName, defaultValue) : defaultValue;
 }
 
 i64 SurfOptionService::GetOptionInt(const char *optionName, i64 defaultValue)
 {
-	return pServerCfgKeyValues->GetInt(optionName, defaultValue);
+	std::lock_guard _guard(serverCfgMutex);
+	return pServerCfgKeyValues ? pServerCfgKeyValues->GetInt(optionName, defaultValue) : defaultValue;
 }
 
 KeyValues *SurfOptionService::GetOptionKV(const char *optionName)
 {
-	return pServerCfgKeyValues->FindKey(optionName);
+	std::lock_guard _guard(serverCfgMutex);
+	return pServerCfgKeyValues ? pServerCfgKeyValues->FindKey(optionName) : nullptr;
 }
 
 void SurfOptionService::InitOptions()
@@ -151,18 +194,60 @@ void SurfOptionService::InitOptions()
 
 void SurfOptionService::Cleanup()
 {
+	std::lock_guard _guard(serverCfgMutex);
 	if (pServerCfgKeyValues)
 	{
 		delete pServerCfgKeyValues;
+		pServerCfgKeyValues = nullptr;
 	}
+}
+
+// 0 when there is no stamp, or when it is far enough ahead of this server's clock to be untrusted.
+static_function i64 ReadPrefsStamp(KeyValues3 *prefs)
+{
+	KeyValues3 *member = prefs->FindMember(SURF_PREF_UPDATED_AT);
+	if (!member)
+	{
+		return 0;
+	}
+	const i64 stamp = member->GetInt64(0);
+	time_t now = 0;
+	time(&now);
+	if (stamp <= 0 || stamp > (i64)now + SURF_PREF_STAMP_MAX_SKEW)
+	{
+		return 0;
+	}
+	return stamp;
+}
+
+void SurfOptionService::StampPreferences()
+{
+	time_t now = 0;
+	time(&now);
+	this->prefKV.FindOrCreateMember(SURF_PREF_UPDATED_AT)->SetInt64((i64)now);
+}
+
+bool SurfOptionService::ShouldApplyPrefs(i64 incomingStamp, i32 incomingTier)
+{
+	if (this->dataState == NONE)
+	{
+		return true;
+	}
+
+	if (incomingStamp && this->loadedStamp)
+	{
+		return incomingStamp > this->loadedStamp;
+	}
+	return incomingTier > (i32)this->dataState;
 }
 
 void SurfOptionService::InitializeLocalPrefs(CUtlString text)
 {
-	if (this->dataState > LOCAL)
+	if (this->localLoaded)
 	{
 		return;
 	}
+	this->localLoaded = true;
 	if (text.IsEmpty())
 	{
 		text = "{\n}";
@@ -178,8 +263,15 @@ void SurfOptionService::InitializeLocalPrefs(CUtlString text)
 		return;
 	}
 
+	const i64 stamp = ReadPrefsStamp(&loadedPrefs);
+	if (!this->ShouldApplyPrefs(stamp, LOCAL))
+	{
+		return;
+	}
+
 	// Merge loaded preferences, excluding user-set preferences
 	MergePreferences(&this->prefKV, &loadedPrefs, &this->userSetPrefs);
+	this->loadedStamp = stamp;
 
 	this->dataState = LOCAL;
 	// Calling this before the player is ingame will create unwanted race conditions.
@@ -195,6 +287,11 @@ void SurfOptionService::InitializeGlobalPrefs(std::string json)
 {
 	assert(!json.empty() && "API always sends at least an empty object");
 
+	if (this->globalLoaded)
+	{
+		return;
+	}
+	this->globalLoaded = true;
 	// Load the preferences from the API into a temporary KV
 	KeyValues3 loadedPrefs(KV3_TYPEEX_TABLE, KV3_SUBTYPE_UNSPECIFIED);
 	CUtlString error;
@@ -206,9 +303,16 @@ void SurfOptionService::InitializeGlobalPrefs(std::string json)
 		return;
 	}
 
+	const i64 stamp = ReadPrefsStamp(&loadedPrefs);
+	if (!this->ShouldApplyPrefs(stamp, GLOBAL))
+	{
+		return;
+	}
+
 	// Merge loaded preferences, excluding user-set preferences
 	// Global preferences override local preferences, but not user-set ones
 	MergePreferences(&this->prefKV, &loadedPrefs, &this->userSetPrefs);
+	this->loadedStamp = stamp;
 
 	this->dataState = GLOBAL;
 
@@ -229,6 +333,7 @@ void SurfOptionService::SaveLocalPrefs()
 	{
 		return;
 	}
+	this->StampPreferences();
 	CUtlString error, output;
 	SaveKV3AsJSON(&this->prefKV, &error, &output);
 	if (!error.IsEmpty())

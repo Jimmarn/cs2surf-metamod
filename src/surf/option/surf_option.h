@@ -1,11 +1,16 @@
 #pragma once
-#include "../surf.h"
+#include "surf/surf.h"
 #include "utils/utils.h"
 #include "KeyValues.h"
 #include "interfaces/interfaces.h"
 #include "filesystem.h"
 #include "keyvalues3.h"
 #include "utils/eventlisteners.h"
+
+// Written into the set whenever it is saved, so the most recently written copy can be identified.
+#define SURF_PREF_UPDATED_AT "prefsUpdatedAt"
+// A server with a badly wrong clock would otherwise write a stamp that wins everywhere forever.
+#define SURF_PREF_STAMP_MAX_SKEW 86400
 
 class SurfOptionServiceEventListener
 {
@@ -23,6 +28,16 @@ class SurfOptionService : public SurfBaseService
 public:
 	static void InitOptions();
 	static void Cleanup();
+
+	/**
+	 * Reload server configuration file.
+	 *
+	 * Returns false and keeps the current configuration if the file cannot be parsed.
+	 *
+	 * NOTE: this *might* invalidate every pointer previously returned by `GetOptionStr()` and (most certainly) `GetOptionKV()`.
+	 * As a result, callers should never store the results of these functions, or risk crashing the server.
+	 */
+	static bool ReloadOptions();
 	static const char *GetOptionStr(const char *optionName, const char *defaultValue = "");
 	static f64 GetOptionFloat(const char *optionName, f64 defaultValue = 0.0);
 	static i64 GetOptionInt(const char *optionName, i64 defaultValue = 0);
@@ -39,14 +54,27 @@ private:
 		GLOBAL
 	} dataState, currentState;
 
+	// The stamp of the set currently applied, and per-source arrival guards. Sources can arrive in
+	// either order, so which one is newest is not the same question as which one got here first.
+	i64 loadedStamp {};
+	bool localLoaded {};
+	bool globalLoaded {};
+
+	// True when a set carrying this stamp should replace what is already applied.
+	bool ShouldApplyPrefs(i64 incomingStamp, i32 incomingTier);
+	void StampPreferences();
+
 	KeyValues3 prefKV = KeyValues3(KV3_TYPEEX_TABLE, KV3_SUBTYPE_UNSPECIFIED);
-	CUtlVector<CUtlString> userSetPrefs;
+	CUtlVector<CUtlString> userSetPrefs; // Track user-modified preferences
 
 public:
 	void Reset()
 	{
 		dataState = NONE;
 		currentState = NONE;
+		loadedStamp = 0;
+		localLoaded = false;
+		globalLoaded = false;
 		prefKV.SetToEmptyTable();
 		userSetPrefs.Purge();
 	}
@@ -68,7 +96,14 @@ public:
 
 	void GetPreferencesAsJSON(CUtlString *error, CUtlString *output)
 	{
+		this->StampPreferences();
 		SaveKV3AsJSON(&this->prefKV, error, output);
+	}
+
+	// True once the player has a value for this preference, as opposed to falling back to a default.
+	bool HasPreference(const char *optionName)
+	{
+		return prefKV.FindMember(optionName) != NULL;
 	}
 
 	// Due to the way keyvalues3.h is written, we can't template these functions.
@@ -149,7 +184,21 @@ public:
 		{
 			return defaultValue;
 		}
+		// DebugPrintKV3(&prefKV);
 		return option->GetString(defaultValue);
+	}
+
+	// TODO: Use these functions for existing color prefs as well.
+	void SetPreferenceColor(const char *optionName, const Color &value)
+	{
+		SetPreferenceInt(optionName, ((i64)value.r() << 24) | ((i64)value.g() << 16) | ((i64)value.b() << 8) | (i64)value.a());
+	}
+
+	Color GetPreferenceColor(const char *optionName, const Color &defaultValue)
+	{
+		i64 fallback = ((i64)defaultValue.r() << 24) | ((i64)defaultValue.g() << 16) | ((i64)defaultValue.b() << 8) | (i64)defaultValue.a();
+		i64 packed = GetPreferenceInt(optionName, fallback);
+		return Color((u8)((packed >> 24) & 0xFF), (u8)((packed >> 16) & 0xFF), (u8)((packed >> 8) & 0xFF), (u8)(packed & 0xFF));
 	}
 
 	void SetPreferenceVector(const char *optionName, const Vector &value)

@@ -1,5 +1,5 @@
 #pragma once
-#include "../surf.h"
+#include "surf/surf.h"
 #include "utils/utils.h"
 #include "utils/simplecmds.h"
 #include "KeyValues.h"
@@ -24,7 +24,6 @@ public:
 	static f64 PrintTips();
 	void OnPlayerJoinTeam(i32 team);
 	void OnTimerStartPost();
-	void QueryBeamCvar();
 
 private:
 	bool ShouldPrintTip();

@@ -1,7 +1,7 @@
 /**
  * =============================================================================
  * CS2Fixes
- * Copyright (C) 2023-2025 Source2ZE
+ * Copyright (C) 2023-2026 Source2ZE
  * =============================================================================
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -20,7 +20,7 @@
 #pragma once
 
 #include "gameconfig.h"
-#include "plat.h"
+#include "platform.h"
 #include "utils/module.h"
 
 class CMemPatch
@@ -38,7 +38,7 @@ public:
 		m_iOffset = 0;
 	}
 
-	bool PerformPatch(CGameConfig *gameConfig);
+	bool PerformPatch(CGameConfig *g_GameConfig);
 	void UndoPatch();
 
 	uintptr_t GetPatchAddress()

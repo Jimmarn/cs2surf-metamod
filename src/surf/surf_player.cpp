@@ -489,13 +489,13 @@ void SurfPlayer::OnCheckJumpButtonLegacy()
 	this->triggerService->OnCheckJumpButtonLegacy();
 }
 
-void SurfPlayer::OnCheckJumpButtonPostLegacy()
+void SurfPlayer::OnCheckJumpButtonLegacyPost()
 {
 	VPROF_BUDGET(__func__, "CS2Surf");
-	this->modeService->OnCheckJumpButtonPostLegacy();
+	this->modeService->OnCheckJumpButtonLegacyPost();
 	FOR_EACH_VEC(this->styleServices, i)
 	{
-		this->styleServices[i]->OnCheckJumpButtonPostLegacy();
+		this->styleServices[i]->OnCheckJumpButtonLegacyPost();
 	}
 }
 
@@ -510,13 +510,13 @@ void SurfPlayer::OnJumpLegacy()
 	this->hudService->OnJump();
 }
 
-void SurfPlayer::OnJumpPostLegacy()
+void SurfPlayer::OnJumpLegacyPost()
 {
 	VPROF_BUDGET(__func__, "CS2Surf");
-	this->modeService->OnJumpPostLegacy();
+	this->modeService->OnJumpLegacyPost();
 	FOR_EACH_VEC(this->styleServices, i)
 	{
-		this->styleServices[i]->OnJumpPostLegacy();
+		this->styleServices[i]->OnJumpLegacyPost();
 	}
 }
 

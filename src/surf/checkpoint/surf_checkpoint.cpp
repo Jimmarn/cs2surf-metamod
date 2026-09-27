@@ -1,4 +1,4 @@
-#include "../surf.h"
+#include "surf/surf.h"
 #include "surf_checkpoint.h"
 #include "../option/surf_option.h"
 #include "../timer/surf_timer.h"

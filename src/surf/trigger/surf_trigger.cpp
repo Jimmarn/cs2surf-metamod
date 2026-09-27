@@ -1,4 +1,5 @@
 #include "surf_trigger.h"
+#include "utils/hooks.h"
 #include "surf/checkpoint/surf_checkpoint.h"
 #include "surf/language/surf_language.h"
 #include "surf/mode/surf_mode.h"
@@ -217,6 +218,16 @@ void SurfTriggerService::EndTouchAll()
 	}
 }
 
+bool SurfTriggerService::IsValidTrigger(CBaseEntity *entity)
+{
+	// All trigger_ entities are valid except trigger_push.
+	if (entity && V_strstr(entity->GetClassname(), "trigger_") && !SURF_STREQI(entity->GetClassname(), "trigger_push"))
+	{
+		return true;
+	}
+	return false;
+}
+
 void SurfTriggerService::TouchAll()
 {
 	FOR_EACH_VEC(this->triggerTrackers, i)
@@ -321,8 +332,8 @@ void SurfTriggerService::StartTouch(CBaseTrigger *trigger)
 
 	// Handle changes in origin and velocity due to this event.
 	this->UpdatePreTouchData();
-	trigger->StartTouch(pawn);
-	pawn->StartTouch(pawn);
+	hooks::CallOriginalStartTouch(trigger, pawn);
+	hooks::CallOriginalStartTouch(pawn, pawn);
 	tracker->startedTouch = true;
 	this->OnTriggerStartTouchPost(trigger, *tracker);
 	// Call UpdatePlayerPostTouch here because UpdatePlayerStartTouch will be run inside Touch later anyway.
@@ -358,8 +369,8 @@ void SurfTriggerService::Touch(CBaseTrigger *trigger, bool silent)
 	if (shouldTouch)
 	{
 		this->UpdatePreTouchData();
-		trigger->Touch(pawn);
-		pawn->Touch(trigger);
+		hooks::CallOriginalTouch(trigger, pawn);
+		hooks::CallOriginalTouch(pawn, pawn);
 		if (!silent)
 		{
 			tracker->touchedThisTick = true;
@@ -398,8 +409,8 @@ void SurfTriggerService::EndTouch(CBaseTrigger *trigger)
 			this->Touch(trigger);
 		}
 		this->UpdatePreTouchData();
-		trigger->EndTouch(pawn);
-		pawn->EndTouch(trigger);
+		hooks::CallOriginalEndTouch(trigger, pawn);
+		hooks::CallOriginalEndTouch(pawn, pawn);
 		this->UpdatePlayerPostTouch();
 		this->OnTriggerEndTouchPost(trigger, *tracker);
 		this->triggerTrackers.FindAndRemove(*tracker);

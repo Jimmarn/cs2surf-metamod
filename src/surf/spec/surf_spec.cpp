@@ -112,7 +112,7 @@ bool SurfSpecService::SpectatePlayer(const char *playerName)
 					if (otherPlayer->GetController()->GetTeam() == CS_TEAM_SPECTATOR)
 					{
 						player->languageService->PrintChat(true, false, "Spectate Failure (Dead)");
-						return MRES_SUPERCEDE;
+						return true;
 					}
 					targetPlayer = otherPlayer;
 					break;
@@ -124,7 +124,7 @@ bool SurfSpecService::SpectatePlayer(const char *playerName)
 	if (!targetPlayer)
 	{
 		player->languageService->PrintChat(true, false, "Spectate Failure (Player Not Found)", playerName);
-		return MRES_SUPERCEDE;
+		return true;
 	}
 
 	this->SpectatePlayer(targetPlayer);
@@ -245,7 +245,7 @@ SCMD(surf_spec, SCFL_SPEC)
 	if (!player->specService->CanSpectate())
 	{
 		player->languageService->PrintChat(true, false, "Spectate Failure (Generic)");
-		return MRES_SUPERCEDE;
+		return true;
 	}
 	// Count alive players and find first alive player
 	u32 numAlivePlayers = 0;
@@ -267,24 +267,24 @@ SCMD(surf_spec, SCFL_SPEC)
 	if (numAlivePlayers == 0 && args->ArgC() == 1)
 	{
 		player->specService->SpectatePlayer("@me");
-		return MRES_SUPERCEDE;
+		return true;
 	}
 	if (numAlivePlayers == 1)
 	{
 		player->specService->SpectatePlayer(firstAlivePlayer);
-		return MRES_SUPERCEDE;
+		return true;
 	}
 
 	// If no target is provided, default to the first alive player
 	if (args->ArgC() < 2)
 	{
 		player->specService->SpectatePlayer(firstAlivePlayer);
-		return MRES_SUPERCEDE;
+		return true;
 	}
 
 	// Handle explicit target
 	player->specService->SpectatePlayer(args->Arg(1));
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD(surf_specs, SCFL_SPEC)
@@ -295,7 +295,7 @@ SCMD(surf_specs, SCFL_SPEC)
 	if (!targetPlayer)
 	{
 		player->languageService->PrintChat(true, false, "Spectator List (None)");
-		return MRES_SUPERCEDE;
+		return true;
 	}
 	CUtlVector<CUtlString> spectatorList;
 	targetPlayer->specService->GetSpectatorList(spectatorList);
@@ -331,7 +331,7 @@ SCMD(surf_specs, SCFL_SPEC)
 											   spectatorListString.Get());
 		}
 	}
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD_LINK(surf_speclist, surf_specs);

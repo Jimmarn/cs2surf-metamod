@@ -2,9 +2,10 @@
 	Credit to CS2Fixes: https://github.com/Source2ZE/CS2Fixes/blame/main/src/gameconfig.cpp
 */
 
-#include <cstdint>
+#include <algorithm>
 #include "gameconfig.h"
 #include "addresses.h"
+#include "khook.hpp"
 
 CGameConfig::CGameConfig(const std::string &gameDir, const std::string &path)
 {
@@ -179,7 +180,6 @@ void *CGameConfig::ResolveSignature(const char *name)
 		Warning("Invalid Module %s\n", name);
 		return nullptr;
 	}
-	int error = SIG_OK;
 	void *address = nullptr;
 	if (this->IsSymbol(name))
 	{
@@ -194,23 +194,25 @@ void *CGameConfig::ResolveSignature(const char *name)
 	else
 	{
 		const char *signature = this->GetSignature(name);
-		if (!signature)
+		if (!signature || !signature[0])
 		{
 			Warning("Failed to find signature for %s\n", name);
 			return nullptr;
 		}
 
-		size_t iLength = 0;
-		byte *pSignature = HexToByte(signature, iLength);
-		if (!pSignature)
+		byte *base = (byte *)(*module)->m_base;
+		size_t sigBytes = std::count(signature, signature + strlen(signature), ' ') + 1;
+		size_t scanSize = (*module)->m_size - sigBytes + 1;
+		address = KHook::LookupSignature(base, scanSize, signature);
+		// LookupSignature stops at the first match, so scan the rest of the module to reject ambiguous signatures.
+		if (address && !m_umAllowMultiMatch[name])
 		{
-			return nullptr;
-		}
-		address = (*module)->FindSignature(pSignature, iLength, error);
-		if (error == SIG_FOUND_MULTIPLE && !m_umAllowMultiMatch[name])
-		{
-			Warning("Multiple addresses found for %s, defaulting to nullptr\n", name);
-			return nullptr;
+			byte *next = (byte *)address + 1;
+			if (KHook::LookupSignature(next, scanSize - (next - base), signature))
+			{
+				Warning("Multiple addresses found for %s, defaulting to nullptr\n", name);
+				return nullptr;
+			}
 		}
 	}
 
@@ -256,52 +258,100 @@ std::string CGameConfig::GetDirectoryName(const std::string &directoryPathInput)
 	return "";
 }
 
-int CGameConfig::HexStringToUint8Array(const char *hexString, uint8_t *byteArray, size_t maxBytes)
+int CGameConfig::ParseHexNibble(char c)
 {
-	if (!hexString)
+	if (c >= '0' && c <= '9')
 	{
-		printf("Invalid hex string.\n");
-		return -1;
+		return c - '0';
 	}
 
-	size_t hexStringLength = strlen(hexString);
-	size_t byteCount = hexStringLength / 4; // Each "\\x" represents one byte.
-
-	if (hexStringLength % 4 != 0 || byteCount == 0 || byteCount > maxBytes)
+	const char lower = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+	if (lower >= 'a' && lower <= 'f')
 	{
-		printf("Invalid hex string format or byte count.\n");
-		return -1; // Return an error code.
+		return lower - 'a' + 10;
 	}
 
-	for (size_t i = 0; i < hexStringLength; i += 4)
-	{
-		if (sscanf(hexString + i, "\\x%2hhX", &byteArray[i / 4]) != 1)
-		{
-			printf("Failed to parse hex string at position %zu.\n", i);
-			return -1; // Return an error code.
-		}
-	}
-
-	byteArray[byteCount] = '\0'; // Add a null-terminating character.
-
-	return byteCount; // Return the number of bytes successfully converted.
+	return -1;
 }
 
-byte *CGameConfig::HexToByte(const char *src, size_t &length)
+bool CGameConfig::ParsePatternBytes(const char *pattern, std::vector<uint8_t> &bytes)
 {
-	if (!src || strlen(src) <= 0)
+	if (!pattern)
 	{
-		Warning("Invalid hex string\n");
+		return false;
+	}
+
+	const char *cursor = pattern;
+	while (*cursor)
+	{
+		while (*cursor && std::isspace(static_cast<unsigned char>(*cursor)))
+		{
+			cursor++;
+		}
+
+		if (!*cursor)
+		{
+			break;
+		}
+
+		if (*cursor == '?')
+		{
+			bytes.push_back('?');
+			cursor++;
+			if (*cursor == '?')
+			{
+				cursor++;
+			}
+			continue;
+		}
+
+		const int highNibble = ParseHexNibble(cursor[0]);
+		const int lowNibble = ParseHexNibble(cursor[1]);
+		if (highNibble < 0 || lowNibble < 0)
+		{
+			return false;
+		}
+
+		bytes.push_back(static_cast<uint8_t>((highNibble << 4) | lowNibble));
+		cursor += 2;
+	}
+
+	return !bytes.empty();
+}
+
+bool CGameConfig::IsValidIDASignature(const char *signature, std::vector<uint8_t> &bytes)
+{
+	if (!signature || strlen(signature) <= 0)
+	{
+		Warning("Invalid IDA signature string\n");
+		return false;
+	}
+
+	if (!ParsePatternBytes(signature, bytes))
+	{
+		Warning("Invalid IDA signature format \"%s\"\n", signature);
+		return false;
+	}
+
+	return true;
+}
+
+byte *CGameConfig::IDASigToUint8Array(const char *signature, size_t &length)
+{
+	std::vector<uint8_t> bytes;
+
+	if (!IsValidIDASignature(signature, bytes))
+	{
 		return nullptr;
 	}
 
-	length = strlen(src) / 4;
-	uint8_t *dest = new uint8_t[length + 1];
-	int byteCount = HexStringToUint8Array(src, dest, length);
-	if (byteCount <= 0)
+	length = bytes.size();
+	uint8_t *dest = new uint8_t[length];
+
+	for (size_t i = 0; i < length; i++)
 	{
-		Warning("Invalid hex format %s\n", src);
-		return nullptr;
+		dest[i] = bytes[i];
 	}
+
 	return (byte *)dest;
 }

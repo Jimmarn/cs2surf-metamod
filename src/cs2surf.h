@@ -61,18 +61,27 @@ public:
 	}
 
 	virtual void *OnMetamodQuery(const char *iface, int *ret) override;
+	virtual void OnLevelInit(char const *pMapName, char const *pMapEntities, char const *pOldLevel, char const *pLandmarkName, bool loadGame,
+							 bool background) override;
 
 	bool simulatingPhysics = false;
 	CGlobalVars serverGlobals;
 	bool unloading = false;
+	bool loading = true;
 
 private:
 	void UpdateSelfMD5();
 	char md5[33];
+	std::string m_sCurrentMap;
 
 public:
 	std::string_view GetMD5()
 	{
 		return md5;
+	}
+
+	std::string_view GetCurrentMap()
+	{
+		return m_sCurrentMap;
 	}
 };

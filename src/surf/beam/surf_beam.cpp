@@ -13,11 +13,19 @@ static_global class SurfOptionServiceEventListener_Beam : public SurfOptionServi
 {
 	virtual void OnPlayerPreferencesLoaded(SurfPlayer *player)
 	{
-		player->beamService->OnPlayerPreferencesLoaded();
+		player->beamService->ApplyPreferences();
+	}
+
+	virtual void OnPlayerPreferenceChanged(SurfPlayer *player, const char *optionName)
+	{
+		if (SURF_STREQI(optionName, "desiredBeamType") || SURF_STREQI(optionName, "beamOffset"))
+		{
+			player->beamService->ApplyPreferences();
+		}
 	}
 } optionEventListener;
 
-void SurfBeamService::OnPlayerPreferencesLoaded()
+void SurfBeamService::ApplyPreferences()
 {
 	this->SetBeamType(this->player->optionService->GetPreferenceInt("desiredBeamType"));
 	this->playerBeamOffset = this->player->optionService->GetPreferenceVector("beamOffset", SurfBeamService::defaultOffset);
@@ -45,7 +53,7 @@ SCMD(surf_beam, SCFL_MISC | SCFL_PREFERENCE)
 		else
 		{
 			player->languageService->PrintChat(true, false, "Beam Command Usage");
-			return MRES_HANDLED;
+			return true;
 		}
 	}
 	player->beamService->SetBeamType(newDesiredBeamType);
@@ -63,7 +71,7 @@ SCMD(surf_beam, SCFL_MISC | SCFL_PREFERENCE)
 		}
 	}
 	player->optionService->SetPreferenceInt("desiredBeamType", player->beamService->desiredBeamType);
-	return MRES_HANDLED;
+	return true;
 }
 
 SCMD_LINK(surf_trail, surf_beam);
@@ -76,14 +84,14 @@ SCMD(surf_beamoffset, SCFL_MISC | SCFL_PREFERENCE)
 		player->languageService->PrintChat(true, false, "Beam Offset Command Usage");
 		player->languageService->PrintChat(true, false, "Current Beam Offset", player->beamService->playerBeamOffset.x,
 										   player->beamService->playerBeamOffset.y, player->beamService->playerBeamOffset.z);
-		return MRES_HANDLED;
+		return true;
 	}
 	player->beamService->playerBeamOffset = Vector(atof(args->Arg(1)), atof(args->Arg(2)), atof(args->Arg(3)));
 
 	player->optionService->SetPreferenceVector("beamOffset", player->beamService->playerBeamOffset);
 	player->languageService->PrintChat(true, false, "Current Beam Offset", player->beamService->playerBeamOffset.x,
 									   player->beamService->playerBeamOffset.y, player->beamService->playerBeamOffset.z);
-	return MRES_HANDLED;
+	return true;
 }
 
 void SurfBeamService::Update()

@@ -18,10 +18,6 @@
 #include "surf/option/surf_option.h"
 #include "surf/timer/surf_timer.h"
 
-#include <vendor/ClientCvarValue/public/iclientcvarvalue.h>
-
-extern IClientCvarValue *g_pClientCvarValue;
-
 bool SurfGlobalService::IsAvailable()
 {
 	return SurfGlobalService::state.load() == SurfGlobalService::State::HandshakeCompleted;

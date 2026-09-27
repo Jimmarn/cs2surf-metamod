@@ -9,7 +9,7 @@
 #include "surf/checkpoint/surf_checkpoint.h"
 #include "surf/timer/surf_timer.h"
 
-#include <vendor/ClientCvarValue/public/iclientcvarvalue.h>
+#include "utils/cvarquery.h"
 #include <vendor/MultiAddonManager/public/imultiaddonmanager.h>
 
 extern IMultiAddonManager *g_pMultiAddonManager;
@@ -21,8 +21,6 @@ static_global class SurfOptionServiceEventListener_Language : public SurfOptionS
 		player->languageService->OnPlayerPreferencesLoaded();
 	}
 } optionEventListener;
-
-extern IClientCvarValue *g_pClientCvarValue;
 
 static_global KeyValues *translationKV;
 static_global KeyValues *languagesKV;
@@ -72,6 +70,62 @@ void SurfLanguageService::Cleanup()
 			delete addonsKV;
 		}
 	}
+}
+
+static_global std::vector<SurfLanguageService::AvailableLanguage> availableLanguages;
+
+const std::vector<SurfLanguageService::AvailableLanguage> &SurfLanguageService::GetAvailableLanguages()
+{
+	if (!availableLanguages.empty() || !translationKV)
+	{
+		return availableLanguages;
+	}
+
+	std::vector<i32> phraseCounts;
+	i32 totalPhrases = 0;
+	for (KeyValues *phrase = translationKV->GetFirstSubKey(); phrase; phrase = phrase->GetNextKey())
+	{
+		totalPhrases++;
+		for (KeyValues *lang = phrase->GetFirstSubKey(); lang; lang = lang->GetNextKey())
+		{
+			const char *code = lang->GetName();
+			if (!code || code[0] == '#')
+			{
+				continue;
+			}
+			i32 index = -1;
+			for (i32 i = 0; i < (i32)availableLanguages.size(); i++)
+			{
+				if (V_stricmp(availableLanguages[i].code.Get(), code) == 0)
+				{
+					index = i;
+					break;
+				}
+			}
+			if (index < 0)
+			{
+				// config.txt maps a Steam language name to each code; use the first one as the label.
+				CUtlString steamName = code;
+				for (KeyValues *named = languagesKV ? languagesKV->GetFirstSubKey() : nullptr; named; named = named->GetNextKey())
+				{
+					if (V_stricmp(named->GetString(nullptr, ""), code) == 0)
+					{
+						steamName = named->GetName();
+						break;
+					}
+				}
+				availableLanguages.push_back({code, steamName, 0});
+				phraseCounts.push_back(0);
+				index = (i32)availableLanguages.size() - 1;
+			}
+			phraseCounts[index]++;
+		}
+	}
+	for (i32 i = 0; i < (i32)availableLanguages.size(); i++)
+	{
+		availableLanguages[i].coverage = totalPhrases > 0 ? phraseCounts[i] * 100 / totalPhrases : 0;
+	}
+	return availableLanguages;
 }
 
 void SurfLanguageService::LoadLanguages()
@@ -189,13 +243,12 @@ void SurfLanguageService::OnPlayerConnect(u64 steamID64)
 	}
 	this->UpdateLanguage(steamID64, SurfOptionService::GetOptionStr("defaultLanguage", SURF_DEFAULT_LANGUAGE), LanguageInfo::CacheLevel::CACHE_NONE,
 						 false);
-	if (g_pClientCvarValue)
 	{
 		// clang-format off
-		g_pClientCvarValue->QueryCvarValue(this->player->GetPlayerSlot(), "cl_language",
-			[steamID64](CPlayerSlot nSlot, ECvarValueStatus eStatus, const char *pszCvarName, const char *pszCvarValue)
+		cvarquery::Query(this->player->GetPlayerSlot(), "cl_language",
+			[steamID64](CPlayerSlot nSlot, cvarquery::Status eStatus, const char *pszCvarName, const char *pszCvarValue)
 			{
-				if (eStatus == ECvarValueStatus::ValueIntact)
+				if (eStatus == cvarquery::Status::ValueIntact)
 				{
 					const char* langKey = languagesKV->GetString(pszCvarValue, pszCvarValue);
 					META_CONPRINTF("[Surf::Language] Received client convar value: %s\n", langKey);
@@ -225,7 +278,7 @@ SCMD(surf_language, SCFL_PREFERENCE)
 		player->languageService->PrintChat(true, false, "Switch Language", language);
 		player->languageService->PrintChat(false, false, "Language Change - Manual Menu Change Required");
 	}
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 CON_COMMAND_F(surf_reload_translations, "Reload translation configuration files", FCVAR_NONE)

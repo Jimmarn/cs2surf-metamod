@@ -1,5 +1,5 @@
 #pragma once
-#include "../surf.h"
+#include "surf/surf.h"
 #include "../timer/surf_timer.h"
 
 #define SURF_HUD_TIMER_STOPPED_GRACE_TIME 3.0f

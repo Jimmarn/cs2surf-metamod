@@ -1140,7 +1140,7 @@ SCMD(surf_courses, SCFL_MAP)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	ListCourses(player);
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD(surf_course, SCFL_MAP)
@@ -1154,5 +1154,5 @@ SCMD(surf_course, SCFL_MAP)
 	{
 		Surf::misc::HandleTeleportToCourse(player, args);
 	}
-	return MRES_SUPERCEDE;
+	return true;
 }

@@ -76,7 +76,7 @@ SCMD(surf_noclip, SCFL_PLAYER)
 	{
 		player->languageService->PrintChat(true, false, "Noclip - Disable");
 	}
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD_LINK(surf_nc, surf_noclip);

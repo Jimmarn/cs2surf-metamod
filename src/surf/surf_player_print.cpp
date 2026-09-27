@@ -1,6 +1,6 @@
 #include "surf.h"
 #include "utils/utils.h"
-#include "../surf/option/surf_option.h"
+#include "surf/option/surf_option.h"
 
 #include "sdk/recipientfilters.h"
 #include "tier0/memdbgon.h"

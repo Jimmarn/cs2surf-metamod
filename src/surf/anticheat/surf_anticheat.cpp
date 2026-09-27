@@ -1,12 +1,9 @@
-#include "../surf.h"
+#include "surf/surf.h"
 #include "surf_anticheat.h"
 #include "surf/language/surf_language.h"
 #include "surf/timer/surf_timer.h"
 #include "utils/ctimer.h"
-
-#include <vendor/ClientCvarValue/public/iclientcvarvalue.h>
-
-extern IClientCvarValue *g_pClientCvarValue;
+#include "utils/cvarquery.h"
 
 #define INTEGRITY_CHECK_MIN_INTERVAL 1.0f
 #define INTEGRITY_CHECK_MAX_INTERVAL 5.0f
@@ -24,9 +21,9 @@ static_function f64 KickPlayerInvalidSettings(CPlayerUserId userID)
 	return 0.0f;
 }
 
-static_function void ValidateCvar(CPlayerSlot nSlot, ECvarValueStatus eStatus, const char *pszCvarName, const char *pszCvarValue)
+static_function void ValidateCvar(CPlayerSlot nSlot, cvarquery::Status eStatus, const char *pszCvarName, const char *pszCvarValue)
 {
-	if (eStatus != ECvarValueStatus::ValueIntact)
+	if (eStatus != cvarquery::Status::ValueIntact)
 	{
 		return;
 	}
@@ -47,11 +44,11 @@ static_function void ValidateCvar(CPlayerSlot nSlot, ECvarValueStatus eStatus, c
 static_function f64 CheckClientCvars(CPlayerUserId userID)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(userID);
-	if (!player || !g_pClientCvarValue || !player->anticheatService->ShouldCheckClientCvars())
+	if (!player || !player->anticheatService->ShouldCheckClientCvars())
 	{
 		return 0.0f;
 	}
-	g_pClientCvarValue->QueryCvarValue(player->GetPlayerSlot(), "m_yaw", ValidateCvar);
+	cvarquery::Query(player->GetPlayerSlot(), "m_yaw", ValidateCvar);
 	return RandomFloat(INTEGRITY_CHECK_MIN_INTERVAL, INTEGRITY_CHECK_MAX_INTERVAL);
 }
 

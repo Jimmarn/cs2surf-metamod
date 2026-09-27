@@ -1,5 +1,5 @@
 #pragma once
-#include "../surf.h"
+#include "surf/surf.h"
 
 #define SURF_STYLE_MANAGER_INTERFACE "SurfStyleManagerInterface"
 
@@ -90,11 +90,11 @@ public:
 
 	virtual void OnCheckJumpButtonLegacy() {}
 
-	virtual void OnCheckJumpButtonPostLegacy() {}
+	virtual void OnCheckJumpButtonLegacyPost() {}
 
 	virtual void OnJumpLegacy() {}
 
-	virtual void OnJumpPostLegacy() {}
+	virtual void OnJumpLegacyPost() {}
 
 	virtual void OnAirMove() {}
 
@@ -188,6 +188,7 @@ public:
 	void ClearStyles(SurfPlayer *player, bool silent = false, bool updatePreference = true);
 	void RefreshStyles(SurfPlayer *player, bool updatePreference = true);
 	CUtlString GetStylesString(SurfPlayer *player);
+	static const CUtlVector<StylePluginInfo> &GetStyles();
 	void PrintActiveStyles(SurfPlayer *player);
 	void PrintAllStyles(SurfPlayer *player);
 

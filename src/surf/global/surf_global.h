@@ -11,6 +11,7 @@
 
 #include "utils/json.h"
 
+#include "cs2surf.h"
 #include "surf/surf.h"
 #include "surf/global/api.h"
 #include "surf/global/handshake.h"

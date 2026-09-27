@@ -24,6 +24,11 @@ SurfModeManager *g_pSurfModeManager = &modeManager;
 
 CUtlVector<SurfModeManager::ModePluginInfo> modeInfos;
 
+const CUtlVector<SurfModeManager::ModePluginInfo> &SurfModeManager::GetModes()
+{
+	return modeInfos;
+}
+
 CConVarRef<float> sv_maxvelocity("sv_maxvelocity");
 
 static_global class SurfDatabaseServiceEventListener_Modes : public SurfDatabaseServiceEventListener
@@ -368,7 +373,7 @@ SCMD(surf_mode, SCFL_MODESTYLE)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	modeManager.SwitchToMode(player, args->Arg(1));
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 static_function SCMD_CALLBACK(Command_SurfModeShort)
@@ -393,7 +398,7 @@ static_function SCMD_CALLBACK(Command_SurfModeShort)
 		const char *mode = args->Arg(0) + len;
 		modeManager.SwitchToMode(player, mode);
 	}
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SurfModeManager::ModePluginInfo Surf::mode::GetModeInfo(SurfModeService *mode)

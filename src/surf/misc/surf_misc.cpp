@@ -41,7 +41,7 @@ SCMD(surf_hidelegs, SCFL_PLAYER | SCFL_PREFERENCE)
 	{
 		player->languageService->PrintChat(true, false, "Quiet Option - Hide Player Legs - Disable");
 	}
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD_LINK(surf_legs, surf_hidelegs);
@@ -58,7 +58,7 @@ SCMD(surf_hide, SCFL_PLAYER | SCFL_PREFERENCE)
 	{
 		player->languageService->PrintChat(true, false, "Quiet Option - Show Players - Enable");
 	}
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD(surf_end, SCFL_MAP)
@@ -73,7 +73,7 @@ SCMD(surf_end, SCFL_MAP)
 		if (!course || !course || !course->hasEndPosition)
 		{
 			player->languageService->PrintChat(true, false, "No End Position For Course", args->ArgS());
-			return MRES_SUPERCEDE;
+			return true;
 		}
 	}
 
@@ -92,7 +92,7 @@ SCMD(surf_end, SCFL_MAP)
 		{
 			CUtlString courseName = player->timerService->GetCourse()->GetName();
 			player->languageService->PrintChat(true, false, "No End Position For Course", courseName.Get());
-			return MRES_SUPERCEDE;
+			return true;
 		}
 	}
 
@@ -130,7 +130,7 @@ SCMD(surf_end, SCFL_MAP)
 		}
 		player->Teleport(&tpOrigin, &tpAngles, &vec3_origin);
 	}
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD(surf_bonus, SCFL_TIMER | SCFL_MAP)
@@ -146,7 +146,7 @@ SCMD(surf_bonus, SCFL_TIMER | SCFL_MAP)
 		}
 		else
 		{
-			return MRES_SUPERCEDE;
+			return true;
 		}
 	}
 	player->timerService->SetStage(0);
@@ -186,13 +186,13 @@ SCMD(surf_bonus, SCFL_TIMER | SCFL_MAP)
 			// no arg provided
 			if (bonusID == 0)
 			{
-				return MRES_SUPERCEDE;
+				return true;
 			}
 
 			// please dont have over 99 bonuses
 			if (bonusID > 99)
 			{
-				return MRES_SUPERCEDE;
+				return true;
 			}
 
 			if (surfTrigger->type != SURFTRIGGER_ZONE_BONUS_START)
@@ -211,7 +211,7 @@ SCMD(surf_bonus, SCFL_TIMER | SCFL_MAP)
 					{
 						player->timerService->TimerStop(true);
 						player->Teleport(&destPos, &destAng, &vec3_origin);
-						return MRES_SUPERCEDE;
+						return true;
 					}
 				}
 
@@ -227,12 +227,12 @@ SCMD(surf_bonus, SCFL_TIMER | SCFL_MAP)
 					player->SetOrigin(safeOrigin);
 					player->SetVelocity(vec3_origin);
 				}
-				return MRES_SUPERCEDE;
+				return true;
 			}
 		}
 	}
 
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD_LINK(surf_b, surf_bonus);
@@ -245,7 +245,7 @@ SCMD(surf_rb, SCFL_TIMER | SCFL_MAP)
 	if (!course || course->name[0] != 'B')
 	{
 		// Not in a bonus course
-		return MRES_SUPERCEDE;
+		return true;
 	}
 
 	// First pass: Find all teleport destinations and their positions
@@ -296,7 +296,7 @@ SCMD(surf_rb, SCFL_TIMER | SCFL_MAP)
 					{
 						player->timerService->TimerStop(true);
 						player->Teleport(&destPos, &destAng, &vec3_origin);
-						return MRES_SUPERCEDE;
+						return true;
 					}
 				}
 
@@ -312,12 +312,12 @@ SCMD(surf_rb, SCFL_TIMER | SCFL_MAP)
 					player->SetOrigin(safeOrigin);
 					player->SetVelocity(vec3_origin);
 				}
-				return MRES_SUPERCEDE;
+				return true;
 			}
 		}
 	}
 
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD(surf_stage, SCFL_TIMER | SCFL_MAP)
@@ -327,7 +327,7 @@ SCMD(surf_stage, SCFL_TIMER | SCFL_MAP)
 	i32 stageID = 0;
 	if (course->stageCount == 0)
 	{
-		return MRES_SUPERCEDE;
+		return true;
 	}
 
 	if (V_strlen(args->ArgS()) > 0)
@@ -338,7 +338,7 @@ SCMD(surf_stage, SCFL_TIMER | SCFL_MAP)
 		}
 		else
 		{
-			return MRES_SUPERCEDE;
+			return true;
 		}
 	}
 
@@ -377,13 +377,13 @@ SCMD(surf_stage, SCFL_TIMER | SCFL_MAP)
 			// no arg provided
 			if (stageID == 0)
 			{
-				return MRES_SUPERCEDE;
+				return true;
 			}
 
 			// please dont have over 99 stages
 			if (stageID > 99)
 			{
-				return MRES_SUPERCEDE;
+				return true;
 			}
 
 			if (surfTrigger->type != SURFTRIGGER_ZONE_STAGE && surfTrigger->type != SURFTRIGGER_ZONE_START)
@@ -403,7 +403,7 @@ SCMD(surf_stage, SCFL_TIMER | SCFL_MAP)
 						player->timerService->TimerStop(true);
 						player->Teleport(&destPos, &destAng, &vec3_origin);
 						player->timerService->SetStage(stageID);
-						return MRES_SUPERCEDE;
+						return true;
 					}
 				}
 
@@ -421,12 +421,12 @@ SCMD(surf_stage, SCFL_TIMER | SCFL_MAP)
 					player->SetOrigin(safeOrigin);
 					player->SetVelocity(vec3_origin);
 				}
-				return MRES_SUPERCEDE;
+				return true;
 			}
 		}
 	}
 
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD_LINK(surf_s, surf_stage);
@@ -438,7 +438,7 @@ SCMD(surf_rs, SCFL_TIMER | SCFL_MAP)
 	if (currentStage == 0)
 	{
 		// not a staged map or stage has not been set
-		return MRES_SUPERCEDE;
+		return true;
 	}
 
 	if (currentStage == 1)
@@ -494,7 +494,7 @@ SCMD(surf_rs, SCFL_TIMER | SCFL_MAP)
 					if (utils::IsVectorInBox(destPos, mins, maxs))
 					{
 						player->Teleport(&destPos, &destAng, &vec3_origin);
-						return MRES_SUPERCEDE;
+						return true;
 					}
 				}
 
@@ -509,12 +509,12 @@ SCMD(surf_rs, SCFL_TIMER | SCFL_MAP)
 					player->SetOrigin(safeOrigin);
 					player->SetVelocity(vec3_origin);
 				}
-				return MRES_SUPERCEDE;
+				return true;
 			}
 		}
 	}
 
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 void Surf::misc::HandleTeleportToCourse(SurfPlayer *player, const CCommand *args)
@@ -660,7 +660,7 @@ SCMD(surf_restart, SCFL_TIMER | SCFL_MAP)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	Surf::misc::HandleTeleportToCourse(player, args);
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD_LINK(surf_r, surf_restart);
@@ -694,11 +694,11 @@ SCMD(surf_playercheck, SCFL_PLAYER)
 	if (!targetPlayer)
 	{
 		player->languageService->PrintChat(true, false, "Error Message (Player Not Found)", args->ArgS());
-		return MRES_SUPERCEDE;
+		return true;
 	}
 	player->languageService->PrintChat(
 		true, false, targetPlayer->IsAuthenticated() ? "Player Authenticated (Steam)" : "Player Not Authenticated (Steam)", targetPlayer->GetName());
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD_LINK(surf_pc, surf_playercheck);
@@ -706,13 +706,13 @@ SCMD_LINK(surf_pc, surf_playercheck);
 SCMD(jointeam, SCFL_HIDDEN)
 {
 	Surf::misc::JoinTeam(g_pSurfPlayerManager->ToPlayer(controller), atoi(args->Arg(1)), true);
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD(switchhands, SCFL_HIDDEN)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
-	return MRES_IGNORED;
+	return false;
 }
 
 SCMD_LINK(switchhandsleft, switchhands);
@@ -921,6 +921,10 @@ static_global bool triggersDrawn = false;
 
 static_function void ResetOverlays()
 {
+	if (g_SurfPlugin.loading)
+	{
+		return;
+	}
 	g_pSurfUtils->ClearOverlays();
 	clipsDrawn = false;
 	triggersDrawn = false;

@@ -1,6 +1,5 @@
 #include "movement.h"
 #include "utils/utils.h"
-#include "utils/detours.h"
 #include "sdk/tracefilter.h"
 #include "sdk/navphysicsinterface.h"
 #include "tier0/memdbgon.h"
@@ -224,7 +223,7 @@ bool MovementPlayer::IsButtonPressed(InputBitMask_t button, bool onlyDown)
 	{
 		return false;
 	}
-	return ms->m_nButtons()->IsButtonPressed(button, onlyDown);
+	return ms->m_nButtons().IsButtonPressed(button, onlyDown);
 }
 
 bool MovementPlayer::IsButtonNewlyPressed(InputBitMask_t button)
@@ -234,7 +233,7 @@ bool MovementPlayer::IsButtonNewlyPressed(InputBitMask_t button)
 	{
 		return false;
 	}
-	return ms->m_nButtons()->IsButtonNewlyPressed(button);
+	return ms->m_nButtons().IsButtonNewlyPressed(button);
 }
 
 void MovementPlayer::DisableButton(InputBitMask_t button)
@@ -246,9 +245,9 @@ void MovementPlayer::DisableButton(InputBitMask_t button)
 	}
 
 	// clear all button states
-	ms->m_nButtons()->m_pButtonStates[0] &= ~button;
-	ms->m_nButtons()->m_pButtonStates[1] &= ~button;
-	ms->m_nButtons()->m_pButtonStates[2] &= ~button;
+	ms->m_nButtons().m_pButtonStates[0] &= ~button;
+	ms->m_nButtons().m_pButtonStates[1] &= ~button;
+	ms->m_nButtons().m_pButtonStates[2] &= ~button;
 }
 
 f32 MovementPlayer::GetGroundPosition()

@@ -502,17 +502,17 @@ SCMD(surf_replay, SCFL_REPLAY)
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	if (!g_pFullFileSystem || !player)
 	{
-		return MRES_SUPERCEDE;
+		return true;
 	}
 
 	if (args->ArgC() < 2)
 	{
 		player->languageService->PrintChat(true, false, "Replay - Usage Command");
-		return MRES_SUPERCEDE;
+		return true;
 	}
 
 	Surf::replaysystem::commands::LoadReplay(player, args->Arg(1));
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD(surf_rpgoto, SCFL_REPLAY)
@@ -520,17 +520,17 @@ SCMD(surf_rpgoto, SCFL_REPLAY)
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	if (!player)
 	{
-		return MRES_SUPERCEDE;
+		return true;
 	}
 
 	if (args->ArgC() < 2)
 	{
 		player->languageService->PrintChat(true, false, "Replay - Usage Goto Time");
-		return MRES_SUPERCEDE;
+		return true;
 	}
 
 	Surf::replaysystem::commands::JumpToReplayTime(player, args->ArgS());
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD(surf_rpgototick, SCFL_REPLAY)
@@ -538,17 +538,17 @@ SCMD(surf_rpgototick, SCFL_REPLAY)
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	if (!player)
 	{
-		return MRES_SUPERCEDE;
+		return true;
 	}
 
 	if (args->ArgC() < 2)
 	{
 		player->languageService->PrintChat(true, false, "Replay - Usage Goto Tick");
-		return MRES_SUPERCEDE;
+		return true;
 	}
 
 	Surf::replaysystem::commands::JumpToReplayTick(player, args->Arg(1));
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD(surf_rpinfo, SCFL_REPLAY)
@@ -556,11 +556,11 @@ SCMD(surf_rpinfo, SCFL_REPLAY)
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	if (!player)
 	{
-		return MRES_SUPERCEDE;
+		return true;
 	}
 
 	Surf::replaysystem::commands::GetReplayInfo(player);
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD_LINK(surf_rpseek, surf_rpgoto);
@@ -570,11 +570,11 @@ SCMD(surf_rppause, SCFL_REPLAY)
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	if (!player)
 	{
-		return MRES_SUPERCEDE;
+		return true;
 	}
 
 	Surf::replaysystem::commands::ToggleReplayPause(player);
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD(surf_rploadprogress, SCFL_REPLAY)
@@ -582,11 +582,11 @@ SCMD(surf_rploadprogress, SCFL_REPLAY)
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	if (!player)
 	{
-		return MRES_SUPERCEDE;
+		return true;
 	}
 
 	Surf::replaysystem::commands::CheckReplayLoadProgress(player);
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD(surf_rpcancelload, SCFL_REPLAY)
@@ -594,11 +594,11 @@ SCMD(surf_rpcancelload, SCFL_REPLAY)
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	if (!player)
 	{
-		return MRES_SUPERCEDE;
+		return true;
 	}
 
 	Surf::replaysystem::commands::CancelReplayLoad(player);
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD(surf_replays, SCFL_REPLAY)
@@ -606,11 +606,11 @@ SCMD(surf_replays, SCFL_REPLAY)
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	if (!player)
 	{
-		return MRES_SUPERCEDE;
+		return true;
 	}
 
 	Surf::replaysystem::commands::ListReplays(player, args->ArgS());
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD(surf_rphidelegs, SCFL_REPLAY)
@@ -618,8 +618,8 @@ SCMD(surf_rphidelegs, SCFL_REPLAY)
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	if (!player)
 	{
-		return MRES_SUPERCEDE;
+		return true;
 	}
 	Surf::replaysystem::commands::ToggleLegsVisibility(player);
-	return MRES_SUPERCEDE;
+	return true;
 }

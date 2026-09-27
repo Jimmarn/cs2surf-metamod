@@ -91,11 +91,6 @@ namespace Surf::replaysystem::data
 	bool IsReplayValid();
 	bool IsReplayPlaying();
 
-	// Navigation support
-	void SetCurrentTick(u32 tick);
-	u32 GetCurrentTick();
-	u32 GetTickCount();
-
 	// Timer state accessors
 	i32 GetCurrentCpIndex();
 	i32 GetCheckpointCount();

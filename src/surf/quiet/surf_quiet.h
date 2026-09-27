@@ -1,5 +1,5 @@
 #pragma once
-#include "../surf.h"
+#include "surf/surf.h"
 #include "iserver.h"
 #include "networksystem/inetworkserializer.h"
 
@@ -23,7 +23,7 @@ public:
 	virtual void Reset() override;
 
 	void OnPhysicsSimulatePost();
-	void OnPlayerPreferencesLoaded();
+	void ApplyPreferences();
 	void ToggleHide();
 	void UpdateHideState();
 	void SendFullUpdate();

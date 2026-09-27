@@ -40,5 +40,5 @@ public:
 		teleportedThisTick = true;
 	}
 
-	void OnPlayerPreferencesLoaded();
+	void ApplyPreferences();
 };

@@ -18,7 +18,15 @@ static_global class SurfOptionServiceEventListener_Quiet : public SurfOptionServ
 {
 	virtual void OnPlayerPreferencesLoaded(SurfPlayer *player)
 	{
-		player->quietService->OnPlayerPreferencesLoaded();
+		player->quietService->ApplyPreferences();
+	}
+
+	virtual void OnPlayerPreferencesChanged(SurfPlayer *player, const char *optionName)
+	{
+		if (SURF_STREQI(optionName, "hideWeapon") || SURF_STREQI(optionName, "hideOtherPlayers"))
+		{
+			player->quietService->ApplyPreferences();
+		}
 	}
 } optionEventListener;
 
@@ -160,7 +168,6 @@ void Surf::quiet::OnPostEvent(INetworkMessageInternal *pEvent, const CNetMessage
 			break;
 		}
 		// Used by surf_misc to block valve's player say messages.
-		case CS_UM_SayText:
 		case UM_SayText:
 		{
 			if (!SurfOptionService::GetOptionInt("overridePlayerChat", true))
@@ -178,7 +185,6 @@ void Surf::quiet::OnPostEvent(INetworkMessageInternal *pEvent, const CNetMessage
 			}
 			return;
 		}
-		case CS_UM_SayText2:
 		case UM_SayText2:
 		{
 			if (!SurfOptionService::GetOptionInt("overridePlayerChat", true))
@@ -297,45 +303,39 @@ SCMD(surf_hideweapon, SCFL_PLAYER)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	player->quietService->ToggleHideWeapon();
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD_LINK(surf_hw, surf_hideweapon);
 
 void SurfQuietService::ToggleHideWeapon()
 {
-	this->hideWeapon = !this->hideWeapon;
-	this->SendFullUpdate();
-	this->player->optionService->SetPreferenceBool("hideWeapon", this->hideWeapon);
+	auto *opts = this->player->optionService;
+	opts->SetPreferenceBool("hideWeapon", !opts->GetPreferenceBool("hideWeapon", false));
 	this->player->languageService->PrintChat(true, false,
 											 this->hideWeapon ? "Quiet Option - Show Weapon - Disable" : "Quiet Option - Show Weapon - Enable");
 }
 
 void SurfQuietService::OnPhysicsSimulatePost() {}
 
-void SurfQuietService::OnPlayerPreferencesLoaded()
+void SurfQuietService::ApplyPreferences()
 {
-	this->hideWeapon = this->player->optionService->GetPreferenceBool("hideWeapon", false);
-	if (this->hideWeapon)
+	auto *opts = this->player->optionService;
+	const bool newHideWeapon = opts->GetPreferenceBool("hideWeapon", false);
+	const bool newHideOthers = opts->GetPreferenceBool("hideOtherPlayers", false);
+	const bool changed = newHideWeapon != this->hideWeapon || newHideOthers != this->hideOtherPlayers;
+	this->hideWeapon = newHideWeapon;
+	this->hideOtherPlayers = newHideOthers;
+	if (changed)
 	{
 		this->SendFullUpdate();
 	}
-	bool newShouldHide = this->player->optionService->GetPreferenceBool("hideOtherPlayers", false);
-	if (!newShouldHide && this->hideOtherPlayers && this->player->IsInGame())
-	{
-		this->SendFullUpdate();
-	}
-	this->hideOtherPlayers = newShouldHide;
 }
 
 void SurfQuietService::ToggleHide()
 {
-	this->hideOtherPlayers = !this->hideOtherPlayers;
-	this->player->optionService->SetPreferenceBool("hideOtherPlayers", this->hideOtherPlayers);
-	if (!this->hideOtherPlayers)
-	{
-		this->SendFullUpdate();
-	}
+	auto *opts = this->player->optionService;
+	opts->SetPreferenceBool("hideOtherPlayers", !opts->GetPreferenceBool("hideOtherPlayers", false));
 }
 
 void SurfQuietService::UpdateHideState()

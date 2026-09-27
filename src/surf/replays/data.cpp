@@ -88,21 +88,6 @@ namespace Surf::replaysystem::data
 		return g_currentReplay.playingReplay;
 	}
 
-	void SetCurrentTick(u32 tick)
-	{
-		g_currentReplay.currentTick = tick;
-	}
-
-	u32 GetCurrentTick()
-	{
-		return g_currentReplay.currentTick;
-	}
-
-	u32 GetTickCount()
-	{
-		return g_currentReplay.tickCount;
-	}
-
 	i32 GetCurrentCpIndex()
 	{
 		return g_currentReplay.currentCpIndex;

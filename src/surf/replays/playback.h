@@ -29,7 +29,6 @@ namespace Surf::replaysystem::playback
 	void StartReplay();
 
 	// Navigation support
-	void NavigateToTick(u32 targetTick);
 	void ApplyTickState(SurfPlayer *player, const TickData *tickData);
 } // namespace Surf::replaysystem::playback
 

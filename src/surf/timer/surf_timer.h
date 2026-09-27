@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../surf.h"
+#include "surf/surf.h"
 #include "../checkpoint/surf_checkpoint.h"
 #include "surf/mappingapi/surf_mappingapi.h"
 #include "utils/uuid.h"
@@ -311,8 +311,6 @@ private:
 		return timerRunning && this->GetTime() < EPSILON;
 	}
 
-	bool JustEndedTimer();
-
 public:
 	void PlayTimerEndSound();
 	void PlayTimerFalseEndSound();
@@ -372,5 +370,5 @@ public:
 	static void OnRoundStart();
 	void OnTeleport(const Vector *newPosition, const QAngle *newAngles, const Vector *newVelocity);
 
-	void OnPlayerPreferencesLoaded();
+	void ApplyPreferences();
 };

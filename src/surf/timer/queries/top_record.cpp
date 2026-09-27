@@ -195,7 +195,7 @@ SCMD(surf_wr, SCFL_RECORD | SCFL_GLOBAL)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	TopRecordRequest::Create<TopRecordRequest>(player, TopRecordRequest::trFeatures, true, true, args);
-	return MRES_SUPERCEDE;
+	return true;
 }
 */
 
@@ -203,5 +203,5 @@ SCMD(surf_sr, SCFL_RECORD)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	TopRecordRequest::Create<TopRecordRequest>(player, TopRecordRequest::trFeatures, true, false, args);
-	return MRES_SUPERCEDE;
+	return true;
 }

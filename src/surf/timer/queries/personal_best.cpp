@@ -320,14 +320,14 @@ SCMD(surf_pb, SCFL_RECORD)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	PBRequest::Create<PBRequest>(player, PBRequest::pbFeatures, true, true, args);
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD(surf_spb, SCFL_RECORD)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	PBRequest::Create<PBRequest>(player, PBRequest::pbFeatures, true, false, args);
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 /* TODO: global
@@ -335,6 +335,6 @@ SCMD(surf_gpb, SCFL_RECORD | SCFL_GLOBAL)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	PBRequest::Create<PBRequest>(player, PBRequest::pbFeatures, false, true, args);
-	return MRES_SUPERCEDE;
+	return true;
 }
 */

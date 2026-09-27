@@ -142,6 +142,8 @@ public:
 	void TouchAll();
 	void EndTouchAll();
 
+	// Return true if it's a trigger that we care about.
+	static bool IsValidTrigger(CBaseEntity *entity);
 	// Return true if this interaction is managed by TriggerFix.
 	static bool IsManagedByTriggerService(CBaseEntity *toucher, CBaseEntity *touched);
 

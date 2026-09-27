@@ -3,9 +3,7 @@
 #include "surf/language/surf_language.h"
 
 #include <vendor/MultiAddonManager/public/imultiaddonmanager.h>
-#include <vendor/ClientCvarValue/public/iclientcvarvalue.h>
 
-extern IClientCvarValue *g_pClientCvarValue;
 static_global KeyValues *pTipKeyValues;
 static_global CUtlVector<const char *> tipNames;
 static_global f64 tipInterval;
@@ -99,7 +97,7 @@ SCMD(surf_tips, SCFL_MISC)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	player->tipService->ToggleTips();
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 f64 SurfTipService::PrintTips()
@@ -127,26 +125,6 @@ void SurfTipService::OnPlayerJoinTeam(i32 team)
 	if (g_pMultiAddonManager)
 	{
 		this->player->languageService->PrintChat(true, false, "Menu Hint");
-	}
-	this->QueryBeamCvar();
-}
-
-void SurfTipService::QueryBeamCvar()
-{
-	CPlayerUserId userID = this->player->GetClient()->GetUserID();
-	if (g_pClientCvarValue)
-	{
-		// clang-format off
-		g_pClientCvarValue->QueryCvarValue(this->player->GetPlayerSlot(), "spec_show_xray",
-			[userID](CPlayerSlot nSlot, ECvarValueStatus eStatus, const char *pszCvarName, const char *pszCvarValue)
-			{
-				SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(userID);
-				if (!player)
-				{
-					return;
-				}
-		});
-		// clang-format on
 	}
 }
 

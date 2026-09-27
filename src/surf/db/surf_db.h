@@ -1,5 +1,5 @@
 #pragma once
-#include "../surf.h"
+#include "surf/surf.h"
 #include "surf/timer/surf_timer.h"
 
 class ISQLConnection;

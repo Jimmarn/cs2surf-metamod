@@ -12,6 +12,7 @@ class CBasePlayerWeapon;
 #include "econ/ccsplayerinventory.h"
 #include "entity/cbaseplayerweapon.h"
 class CCSPlayer_MovementServices;
+class CEconPersonaDataPublic;
 
 class CPlayerPawnComponent
 {
@@ -22,10 +23,10 @@ private:
 	virtual void unk_00() = 0;
 	virtual void unk_01() = 0;
 	virtual void unk_02() = 0;
-	virtual ~CPlayerPawnComponent() = 0;
+	virtual void unk_03() = 0;
 	virtual void unk_04() = 0;
 	virtual void unk_05() = 0;
-	virtual void unk_06() = 0;
+	virtual ~CPlayerPawnComponent() = 0;
 	virtual void unk_07() = 0;
 	virtual void unk_08() = 0;
 	virtual void unk_09() = 0;
@@ -39,6 +40,9 @@ private:
 	virtual void unk_17() = 0;
 	virtual void unk_18() = 0;
 	virtual void unk_19() = 0;
+	virtual void unk_20() = 0;
+	virtual void unk_21() = 0;
+	virtual void unk_22() = 0;
 
 public:
 	CNetworkVarChainer chainEntity;
@@ -76,7 +80,7 @@ class CPlayer_MovementServices : public CPlayerPawnComponent
 
 public:
 	DECLARE_SCHEMA_CLASS_ENTITY(CPlayer_MovementServices);
-	SCHEMA_FIELD_POINTER(CInButtonState, m_nButtons)
+	SCHEMA_FIELD(CInButtonState, m_nButtons)
 	SCHEMA_FIELD_POINTER(float, m_arrForceSubtickMoveWhen)
 
 	void SetForcedSubtickMove(i32 index, f32 when, bool network = true)
@@ -98,6 +102,8 @@ public:
 		}
 		m_arrForceSubtickMoveWhen[index] = when;
 	}
+
+	SCHEMA_FIELD(Vector, m_vecLastMovementImpulses)
 };
 
 class CPlayer_MovementServices_Humanoid : public CPlayer_MovementServices
@@ -109,6 +115,7 @@ public:
 	SCHEMA_FIELD(float, m_flSurfaceFriction)
 };
 
+// Not a real class, just something that the two classes below can inherit from
 class CCSPlayerBaseJump
 {
 	void **vtable;
@@ -141,6 +148,7 @@ public:
 };
 
 class CCSPlayer_MovementServices : public CPlayer_MovementServices_Humanoid
+
 {
 	virtual ~CCSPlayer_MovementServices() = 0;
 
@@ -203,8 +211,15 @@ public:
 
 	SCHEMA_FIELD_POINTER_OFFSET(CCSPlayerInventory, m_nPersonaDataXpTrailLevel, 4)
 
+	SCHEMA_FIELD_OFFSET(CEconPersonaDataPublic *, m_unEquippedPlayerSprayIDs, -8)
+
 	CCSPlayerInventory *GetInventory()
 	{
 		return m_nPersonaDataXpTrailLevel();
+	}
+
+	CEconPersonaDataPublic *GetPublicPersonaData()
+	{
+		return m_unEquippedPlayerSprayIDs();
 	}
 };

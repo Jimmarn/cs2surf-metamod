@@ -142,7 +142,7 @@ SCMD(surf_globalcheck, SCFL_GLOBAL | SCFL_MAP | SCFL_PLAYER)
 		request.Send(callback);
 	}
 
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD_LINK(surf_gc, surf_globalcheck);

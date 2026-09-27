@@ -13,8 +13,8 @@ void SurfTelemetryService::OnPhysicsSimulatePost()
 	{
 		return;
 	}
-	if (this->player->GetMoveServices()->m_nButtons()->m_pButtonStates[1] != 0
-		|| this->player->GetMoveServices()->m_nButtons()->m_pButtonStates[2] != 0)
+	if (this->player->GetMoveServices()->m_nButtons().m_pButtonStates[1] != 0
+		|| this->player->GetMoveServices()->m_nButtons().m_pButtonStates[2] != 0)
 	{
 		this->activeStats.lastActionTime = g_pSurfUtils->GetServerGlobals()->realtime;
 		return;

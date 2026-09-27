@@ -3,7 +3,8 @@
 #include "common.h"
 #include "utils/schema.h"
 
-enum EInButtonState : uint64_t
+#ifndef IDA_IGNORE
+enum EInButtonState : unsigned int
 {
 	IN_BUTTON_UP = 0x0,
 	IN_BUTTON_DOWN = 0x1,
@@ -18,10 +19,13 @@ enum EInButtonState : uint64_t
 
 class CInButtonState
 {
-	DECLARE_SCHEMA_CLASS_ENTITY(CInButtonState);
+	virtual SchemaMetaInfoHandle_t<CSchemaClassInfo> Schema_DynamicBinding() // Do not use
+	{
+		return {};
+	}
 
 public:
-	SCHEMA_FIELD_POINTER(uint64, m_pButtonStates);
+	uint64 m_pButtonStates[3];
 
 	void GetButtons(uint64 buttons[3])
 	{
@@ -96,3 +100,4 @@ public:
 		return CInButtonState::IsButtonPressed(this->m_pButtonStates, button, onlyDown);
 	}
 };
+#endif

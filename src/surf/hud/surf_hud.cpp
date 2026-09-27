@@ -1,4 +1,4 @@
-#include "../surf.h"
+#include "surf/surf.h"
 #include "cs2surf.h"
 #include "surf_hud.h"
 #include "sdk/datatypes.h"
@@ -243,5 +243,5 @@ SCMD(surf_panel, SCFL_HUD)
 	{
 		player->languageService->PrintChat(true, false, "HUD Option - Info Panel - Disable");
 	}
-	return MRES_SUPERCEDE;
+	return true;
 }

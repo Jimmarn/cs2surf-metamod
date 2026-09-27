@@ -117,5 +117,5 @@ SCMD(surf_goto, SCFL_PLAYER)
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	const char *targetNamePart = args->ArgS();
 	player->gotoService->GotoPlayer(targetNamePart);
-	return MRES_SUPERCEDE;
+	return true;
 }

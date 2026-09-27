@@ -46,7 +46,15 @@ static_global class SurfOptionServiceEventListener_Timer : public SurfOptionServ
 {
 	virtual void OnPlayerPreferencesLoaded(SurfPlayer *player)
 	{
-		player->timerService->OnPlayerPreferencesLoaded();
+		player->timerService->ApplyPreferences();
+	}
+
+	virtual void OnPlayerPreferenceChanged(SurfPlayer *player, const char *optionName)
+	{
+		if (SURF_STREQI(optionName, "preferredCompareType") || SURF_STREQI(optionName, "timerStopSound"))
+		{
+			player->timerService->ApplyPreferences();
+		}
 	}
 } optionEventListener;
 
@@ -412,11 +420,6 @@ bool SurfTimerService::HasValidMoveType()
 	return SurfTimerService::IsValidMoveType(this->player->GetMoveType());
 }
 
-bool SurfTimerService::JustEndedTimer()
-{
-	return g_pSurfUtils->GetServerGlobals()->curtime - this->lastEndTime > 1.0f;
-}
-
 void SurfTimerService::PlayTimerEndSound()
 {
 	if (this->shouldPlayTimerSound)
@@ -638,7 +641,7 @@ SCMD(surf_timerstopsound, SCFL_TIMER | SCFL_PREFERENCE)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	player->timerService->ToggleTimerStopSound();
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD_LINK(surf_tss, surf_timerstopsound);
@@ -672,6 +675,7 @@ void SurfTimerService::Reset()
 	this->lastInvalidateTime = {};
 	this->touchedGroundSinceTouchingStartZone = {};
 	this->shouldPlayTimerSound = true;
+	this->ClearPBCache();
 }
 
 void SurfTimerService::OnPhysicsSimulatePost()
@@ -806,21 +810,21 @@ SCMD(surf_stop, SCFL_TIMER)
 	{
 		player->timerService->TimerStop();
 	}
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD(surf_pause, SCFL_TIMER)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	player->timerService->TogglePause();
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD(surf_comparelevel, SCFL_RECORD | SCFL_TIMER | SCFL_PREFERENCE)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	player->timerService->SetCompareTarget(args->Arg(1));
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 static_function SurfTimerService::CompareType GetCompareTypeFromString(const char *typeString)
@@ -1278,6 +1282,7 @@ CUtlString SurfTimerService::GetCurrentRunMetadata()
 	}
 
 	KeyValues3 *stageZoneTimesKV = kv.FindOrCreateMember("stageZoneTimes");
+	stageZoneTimesKV->SetToEmptyArray();
 	FOR_EACH_VEC(this->stageZoneTimes, i)
 	{
 		KeyValues3 *time = stageZoneTimesKV->ArrayAddElementToTail();
@@ -1344,7 +1349,7 @@ void SurfTimerService::Init()
 	SurfOptionService::RegisterEventListener(&optionEventListener);
 }
 
-void SurfTimerService::OnPlayerPreferencesLoaded()
+void SurfTimerService::ApplyPreferences()
 {
 	if (this->player->optionService->GetPreferenceInt("preferredCompareType", COMPARE_GPB) > COMPARETYPE_COUNT)
 	{

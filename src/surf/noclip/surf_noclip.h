@@ -1,5 +1,5 @@
 #pragma once
-#include "../surf.h"
+#include "surf/surf.h"
 
 #define SURF_JUST_NOCLIP_TIME 0.05f;
 

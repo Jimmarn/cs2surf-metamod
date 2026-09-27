@@ -277,7 +277,7 @@ SCMD(surf_ctop, SCFL_RECORD)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	CourseTopRequest::Create<CourseTopRequest>(player, CourseTopRequest::ctopFeatures, true, true, args);
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD_LINK(surf_coursetop, surf_ctop);
@@ -290,7 +290,7 @@ SCMD(surf_gctop, SCFL_RECORD | SCFL_GLOBAL)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	CourseTopRequest::Create<CourseTopRequest>(player, CourseTopRequest::ctopFeatures, false, true, args);
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD_LINK(surf_gcoursetop, surf_gctop);
@@ -300,7 +300,7 @@ SCMD(surf_sctop, SCFL_TIMER)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	CourseTopRequest::Create<CourseTopRequest>(player, CourseTopRequest::ctopFeatures, true, false, args);
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD_LINK(surf_scoursetop, surf_sctop);

@@ -2,5 +2,5 @@
 
 #include "gameconfig.h"
 
-bool InitPatches(CGameConfig *gameConfig);
+bool InitPatches(CGameConfig *g_GameConfig);
 void UndoPatches();

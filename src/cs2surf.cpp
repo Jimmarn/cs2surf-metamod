@@ -29,13 +29,11 @@
 #include "surf/replays/surf_replaysystem.h"
 
 #include <vendor/MultiAddonManager/public/imultiaddonmanager.h>
-#include <vendor/ClientCvarValue/public/iclientcvarvalue.h>
 
 #include "tier0/memdbgon.h"
 SurfPlugin g_SurfPlugin;
 
 IMultiAddonManager *g_pMultiAddonManager;
-IClientCvarValue *g_pClientCvarValue;
 CSteamGameServerAPIContext g_steamAPI;
 
 PLUGIN_EXPOSE(SurfPlugin, g_SurfPlugin);
@@ -44,14 +42,25 @@ bool SurfPlugin::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bo
 {
 	setlocale(LC_ALL, "en_US.utf8");
 	PLUGIN_SAVEVARS();
+	modules::Initialize();
+
+	if (!interfaces::Initialize(ismm, error, maxlen))
+	{
+		return false;
+	}
+
+	META_CONVAR_REGISTER(FCVAR_NONE);
+	SurfOptionService::InitOptions();
 
 	if (!utils::Initialize(ismm, error, maxlen))
 	{
 		return false;
 	}
-	ConVar_Register();
-	hooks::Initialize();
-	movement::InitDetours();
+	if (!hooks::Initialize(error, maxlen))
+	{
+		return false;
+	}
+
 	SurfCheckpointService::Init();
 	SurfTimerService::Init();
 	SurfSpecService::Init();
@@ -76,7 +85,6 @@ bool SurfPlugin::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bo
 
 	Surf::mode::DisableReplicatedModeCvars();
 
-	SurfOptionService::InitOptions();
 	SurfTipService::Init();
 	if (late)
 	{
@@ -91,7 +99,7 @@ bool SurfPlugin::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bo
 	CommandLine()->AppendParm("-disable_workshop_command_filtering", "");
 
 	Surf::replaysystem::InitWatcher();
-
+	loading = false;
 	return true;
 }
 
@@ -103,7 +111,6 @@ bool SurfPlugin::Unload(char *error, size_t maxlen)
 	AsyncFileIO::Cleanup();
 	hooks::Cleanup();
 	Surf::mode::EnableReplicatedModeCvars();
-	utils::Cleanup();
 	g_pSurfModeManager->Cleanup();
 	g_pSurfStyleManager->Cleanup();
 	g_pPlayerManager->Cleanup();
@@ -112,6 +119,8 @@ bool SurfPlugin::Unload(char *error, size_t maxlen)
 	SurfLanguageService::Cleanup();
 	SurfOptionService::Cleanup();
 	Surf::replaysystem::Cleanup();
+	hooks::Cleanup();
+	utils::Cleanup();
 	ConVar_Unregister();
 	return true;
 }
@@ -124,7 +133,12 @@ void SurfPlugin::AllPluginsLoaded()
 	g_pSurfPlayerManager->ResetPlayers();
 	this->UpdateSelfMD5();
 	g_pMultiAddonManager = (IMultiAddonManager *)g_SMAPI->MetaFactory(MULTIADDONMANAGER_INTERFACE, nullptr, nullptr);
-	g_pClientCvarValue = (IClientCvarValue *)g_SMAPI->MetaFactory(CLIENTCVARVALUE_INTERFACE, nullptr, nullptr);
+}
+
+void SurfPlugin::OnLevelInit(char const *pMapName, char const *pMapEntities, char const *pOldLevel, char const *pLandmarkName, bool loadGame,
+							 bool background)
+{
+	m_sCurrentMap = pMapName;
 }
 
 void SurfPlugin::AddonInit()

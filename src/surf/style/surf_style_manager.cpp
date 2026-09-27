@@ -20,6 +20,11 @@ static_global SurfStyleManager styleManager;
 SurfStyleManager *g_pSurfStyleManager = &styleManager;
 static_global CUtlVector<SurfStyleManager::StylePluginInfo> styleInfos;
 
+const CUtlVector<SurfStyleManager::StylePluginInfo> &SurfStyleManager::GetStyles()
+{
+	return styleInfos;
+}
+
 static_global class SurfDatabaseServiceEventListener_Styles : public SurfDatabaseServiceEventListener
 {
 public:
@@ -487,7 +492,7 @@ SCMD(surf_style, SCFL_MODESTYLE)
 	if (args->ArgC() == 1)
 	{
 		styleManager.PrintActiveStyles(player);
-		return MRES_SUPERCEDE;
+		return true;
 	}
 	if (args->Arg(1)[0] == '+')
 	{
@@ -503,35 +508,35 @@ SCMD(surf_style, SCFL_MODESTYLE)
 	{
 		styleManager.ToggleStyle(player, args->Arg(1));
 	}
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD(surf_togglestyle, SCFL_MODESTYLE)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	styleManager.ToggleStyle(player, args->Arg(1));
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD(surf_addstyle, SCFL_MODESTYLE)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	styleManager.AddStyle(player, args->Arg(1));
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD(surf_removestyle, SCFL_MODESTYLE)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	styleManager.RemoveStyle(player, args->Arg(1));
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 SCMD(surf_clearstyles, SCFL_MODESTYLE)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	styleManager.ClearStyles(player);
-	return MRES_SUPERCEDE;
+	return true;
 }
 
 void SurfOptionServiceEventListener_Styles::OnPlayerPreferencesLoaded(SurfPlayer *player)

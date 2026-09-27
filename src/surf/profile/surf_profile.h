@@ -1,5 +1,5 @@
 #pragma once
-#include "../surf.h"
+#include "surf/surf.h"
 #include "surf/global/surf_global.h"
 
 class SurfProfileService : public SurfBaseService

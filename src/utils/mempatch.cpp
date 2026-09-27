@@ -1,7 +1,7 @@
 /**
  * =============================================================================
  * CS2Fixes
- * Copyright (C) 2023-2025 Source2ZE
+ * Copyright (C) 2023-2026 Source2ZE
  * =============================================================================
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -19,13 +19,14 @@
 
 #include "mempatch.h"
 #include "common.h"
+#include "khook.hpp"
 #include "tier0/dbg.h"
 #include "tier1/strtools.h"
 #include "utils/module.h"
 
 #include "tier0/memdbgon.h"
 
-bool CMemPatch::PerformPatch(CGameConfig *gameConfig)
+bool CMemPatch::PerformPatch(CGameConfig *g_GameConfig)
 {
 	// We're patched already
 	if (m_pOriginalBytes)
@@ -36,7 +37,7 @@ bool CMemPatch::PerformPatch(CGameConfig *gameConfig)
 	// If we already have an address, no need to look for it again
 	if (!m_pPatchAddress)
 	{
-		m_pPatchAddress = (uintptr_t)gameConfig->ResolveSignature(m_pSignatureName);
+		m_pPatchAddress = (uintptr_t)g_GameConfig->ResolveSignature(m_pSignatureName);
 
 		if (!m_pPatchAddress)
 		{
@@ -44,13 +45,13 @@ bool CMemPatch::PerformPatch(CGameConfig *gameConfig)
 		}
 	}
 
-	const char *patch = gameConfig->GetPatch(m_pszName);
+	const char *patch = g_GameConfig->GetPatch(m_pszName);
 	if (!patch)
 	{
-		META_CONPRINTF("Failed to find patch for %s\n", m_pszName);
+		Warning("Failed to find patch for %s\n", m_pszName);
 		return false;
 	}
-	m_pPatch = gameConfig->HexToByte(patch, m_iPatchLength);
+	m_pPatch = g_GameConfig->IDASigToUint8Array(patch, m_iPatchLength);
 	if (!m_pPatch)
 	{
 		return false;
@@ -58,10 +59,10 @@ bool CMemPatch::PerformPatch(CGameConfig *gameConfig)
 
 	if (V_strcmp(m_pOffsetName, ""))
 	{
-		m_iOffset = gameConfig->GetOffset(m_pOffsetName);
+		m_iOffset = g_GameConfig->GetOffset(m_pOffsetName);
 		if (m_iOffset == -1)
 		{
-			META_CONPRINTF("Failed to find offset %s for patch %s\n", m_pOffsetName, m_pszName);
+			Warning("Failed to find offset %s for patch %s\n", m_pOffsetName, m_pszName);
 			return false;
 		}
 
@@ -79,7 +80,7 @@ bool CMemPatch::PerformPatch(CGameConfig *gameConfig)
 
 void CMemPatch::UndoPatch()
 {
-	if (!m_pPatchAddress)
+	if (!m_pOriginalBytes)
 	{
 		return;
 	}

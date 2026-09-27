@@ -99,9 +99,9 @@ public:
 	virtual void OnLadderMove() override;
 	virtual void OnLadderMovePost() override;
 	virtual void OnCheckJumpButtonLegacy() override;
-	virtual void OnCheckJumpButtonPostLegacy() override;
+	virtual void OnCheckJumpButtonLegacyPost() override;
 	virtual void OnJumpLegacy() override;
-	virtual void OnJumpPostLegacy() override;
+	virtual void OnJumpLegacyPost() override;
 	virtual void OnAirMove() override;
 	virtual void OnAirMovePost() override;
 	virtual void OnAirAccelerate(Vector &wishdir, f32 &wishspeed, f32 &accel) override;
@@ -247,7 +247,7 @@ namespace Surf
 		void OnActivateServer();
 		void JoinTeam(SurfPlayer *player, int newTeam, bool restorePos = true);
 		void ProcessConCommand(ConCommandRef cmd, const CCommandContext &ctx, const CCommand &args);
-		META_RES CheckBlockedRadioCommands(const char *cmd);
+		bool CheckBlockedRadioCommands(const char *cmd);
 		void OnRoundStart();
 		void InitTimeLimit();
 		void EnforceTimeLimit();

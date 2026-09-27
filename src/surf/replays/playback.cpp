@@ -128,9 +128,9 @@ namespace Surf::replaysystem::playback
 		TickData *tickData = &replay->tickData[replay->currentTick];
 
 		auto moveServices = player->GetMoveServices();
-		moveServices->m_nButtons()->m_pButtonStates[0] = tickData->post.buttons[0];
-		moveServices->m_nButtons()->m_pButtonStates[1] = tickData->post.buttons[1];
-		moveServices->m_nButtons()->m_pButtonStates[2] = tickData->post.buttons[2];
+		moveServices->m_nButtons().m_pButtonStates[0] = tickData->post.buttons[0];
+		moveServices->m_nButtons().m_pButtonStates[1] = tickData->post.buttons[1];
+		moveServices->m_nButtons().m_pButtonStates[2] = tickData->post.buttons[2];
 		moveServices->m_LegacyJump().m_flJumpPressedTime =
 			g_pSurfUtils->GetServerGlobals()->curtime + tickData->post.jumpPressedTime - tickData->gameTime;
 

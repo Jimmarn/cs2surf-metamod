@@ -1,5 +1,5 @@
 #pragma once
-#include "../surf.h"
+#include "surf/surf.h"
 #include "surf/mappingapi/surf_mappingapi.h"
 #include "surf/global/api.h"
 #include "UtlStringMap.h"
@@ -180,11 +180,11 @@ public:
 
 	void OnCheckJumpButtonLegacy() {}
 
-	void OnCheckJumpButtonPostLegacy() {}
+	void OnCheckJumpButtonLegacyPost() {}
 
 	void OnJumpLegacy() {}
 
-	void OnJumpPostLegacy() {}
+	void OnJumpLegacyPost() {}
 
 	void OnAirMove();
 
@@ -295,6 +295,7 @@ public:
 	// clang-format on
 
 	virtual void UnregisterMode(PluginId id);
+	static const CUtlVector<ModePluginInfo> &GetModes();
 	bool SwitchToMode(SurfPlayer *player, const char *modeName, bool silent = false, bool force = false, bool updatePreference = true);
 	void Cleanup();
 };

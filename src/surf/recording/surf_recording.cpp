@@ -116,9 +116,9 @@ void SurfRecordingService::RecordTickData_PhysicsSimulate()
 	this->player->GetVelocity(&this->currentTickData.pre.velocity);
 	this->player->GetAngles(&this->currentTickData.pre.angles);
 	auto movementServices = this->player->GetMoveServices();
-	this->currentTickData.pre.buttons[0] = static_cast<u32>(movementServices->m_nButtons()->m_pButtonStates[0]);
-	this->currentTickData.pre.buttons[1] = static_cast<u32>(movementServices->m_nButtons()->m_pButtonStates[1]);
-	this->currentTickData.pre.buttons[2] = static_cast<u32>(movementServices->m_nButtons()->m_pButtonStates[2]);
+	this->currentTickData.pre.buttons[0] = static_cast<u32>(movementServices->m_nButtons().m_pButtonStates[0]);
+	this->currentTickData.pre.buttons[1] = static_cast<u32>(movementServices->m_nButtons().m_pButtonStates[1]);
+	this->currentTickData.pre.buttons[2] = static_cast<u32>(movementServices->m_nButtons().m_pButtonStates[2]);
 	this->currentTickData.pre.jumpPressedTime = movementServices->m_LegacyJump().m_flJumpPressedTime;
 	this->currentTickData.pre.duckSpeed = movementServices->m_flDuckSpeed;
 	this->currentTickData.pre.duckAmount = movementServices->m_flDuckAmount;
@@ -156,9 +156,9 @@ void SurfRecordingService::RecordTickData_PhysicsSimulatePost()
 	this->player->GetVelocity(&this->currentTickData.post.velocity);
 	this->player->GetAngles(&this->currentTickData.post.angles);
 	auto movementServices = this->player->GetMoveServices();
-	this->currentTickData.post.buttons[0] = static_cast<u32>(movementServices->m_nButtons()->m_pButtonStates[0]);
-	this->currentTickData.post.buttons[1] = static_cast<u32>(movementServices->m_nButtons()->m_pButtonStates[1]);
-	this->currentTickData.post.buttons[2] = static_cast<u32>(movementServices->m_nButtons()->m_pButtonStates[2]);
+	this->currentTickData.post.buttons[0] = static_cast<u32>(movementServices->m_nButtons().m_pButtonStates[0]);
+	this->currentTickData.post.buttons[1] = static_cast<u32>(movementServices->m_nButtons().m_pButtonStates[1]);
+	this->currentTickData.post.buttons[2] = static_cast<u32>(movementServices->m_nButtons().m_pButtonStates[2]);
 	this->currentTickData.pre.jumpPressedTime = movementServices->m_LegacyJump().m_flJumpPressedTime;
 	this->currentTickData.post.duckSpeed = movementServices->m_flDuckSpeed;
 	this->currentTickData.post.duckAmount = movementServices->m_flDuckAmount;
@@ -200,9 +200,12 @@ void SurfRecordingService::RecordCommand(PlayerCommand *cmds, i32 numCmds)
 		time(&unixTime);
 		data.unixTime = (u64)unixTime;
 		INetChannelInfo *netchan = interfaces::pEngine->GetPlayerNetInfo(this->player->GetPlayerSlot());
-		netchan->GetRemoteFramerate(&data.framerate, nullptr, nullptr);
-		data.latency = netchan->GetEngineLatency();
-		data.avgLoss = netchan->GetAvgLoss(FLOW_INCOMING) + netchan->GetAvgChoke(FLOW_INCOMING);
+		if (netchan)
+		{
+			netchan->GetRemoteFramerate(&data.framerate, nullptr, nullptr);
+			data.latency = netchan->GetEngineLatency();
+			data.avgLoss = netchan->GetAvgLoss(FLOW_INCOMING) + netchan->GetAvgChoke(FLOW_INCOMING);
+		}
 		data.cmdNumber = pc.cmdNum;
 		data.clientTick = pc.base().client_tick();
 		data.forward = pc.base().has_forwardmove() ? pc.base().forwardmove() : 0;
@@ -512,14 +515,20 @@ SCMD(surf_rpsave, SCFL_REPLAY)
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	if (!g_pFullFileSystem || !player)
 	{
-		return MRES_SUPERCEDE;
+		return true;
 	}
 
 	f32 duration = args->ArgC() > 1 ? utils::StringToFloat(args->Arg(1)) : 120.0f;
+	if (!(duration >= 1.0f))
+	{
+		player->languageService->PrintChat(true, false, "Replay - Invalid Manual Replay Duration");
+		return true;
+	}
+
 	SurfPlayer *target = player->IsAlive() ? player : player->specService->GetSpectatedPlayer();
 	if (!target)
 	{
-		return MRES_SUPERCEDE;
+		return true;
 	}
 
 	// Capture player userid for the callback (don't capture player pointer as it may be invalid)
@@ -548,5 +557,5 @@ SCMD(surf_rpsave, SCFL_REPLAY)
 			}
 		});
 
-	return MRES_SUPERCEDE;
+	return true;
 }
