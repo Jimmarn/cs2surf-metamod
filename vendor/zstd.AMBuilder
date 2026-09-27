@@ -1,0 +1,52 @@
+# vim: set sts=2 ts=8 sw=2 tw=99 et ft=python:
+# Pre-builds zstd as a static library using the already-configured MMSPlugin CXX.
+# After building, copy the output to vendor/ and commit it:
+#   Windows: copy zstd\windows-x86_64\zstd.lib  ..\zstd.lib
+#   Linux:   cp zstd/linux-x86_64/libzstd.a ../libzstd.a
+import os
+
+cxx = MMSPlugin.sdk_target.cxx
+
+lib = cxx.StaticLibrary('zstd')
+
+lib.compiler.cxxincludes += [
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib'),
+]
+
+if lib.compiler.target.platform == 'linux':
+  # Linux PIC code requires this to avoid assembler errors.
+  lib.compiler.defines += ['ZSTD_DISABLE_ASM']
+  # Match main plugin defines.
+  lib.compiler.defines += ['_GLIBCXX_USE_CXX11_ABI=0']
+
+lib.sources += [
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'common', 'debug.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'common', 'entropy_common.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'common', 'error_private.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'common', 'fse_decompress.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'common', 'pool.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'common', 'threading.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'common', 'xxhash.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'common', 'zstd_common.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'fse_compress.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'hist.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'huf_compress.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'zstd_compress.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'zstd_compress_literals.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'zstd_compress_sequences.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'zstd_compress_superblock.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'zstd_double_fast.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'zstd_fast.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'zstd_lazy.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'zstd_ldm.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'zstd_opt.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'zstd_preSplit.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'decompress', 'huf_decompress.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'decompress', 'zstd_ddict.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'decompress', 'zstd_decompress.c'),
+  os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'decompress', 'zstd_decompress_block.c'),
+]
+
+builder.Add(lib)
+
+# vim: filetype=python expandtab shiftwidth=2 tabstop=8 textwidth=99

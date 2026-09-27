@@ -160,47 +160,12 @@ def configure_main(sdk_target, sdk, cxx):
     os.path.join(builder.sourcePath, 'src', 'surf', 'trigger', 'callbacks.cpp'),
     os.path.join(builder.sourcePath, 'src', 'surf', 'trigger', 'surf_trigger.cpp'),
     os.path.join(builder.sourcePath, 'src', 'surf', 'trigger', 'mapping_api.cpp'),
-
-
-    # zstd compression library
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'common', 'debug.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'common', 'entropy_common.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'common', 'error_private.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'common', 'fse_decompress.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'common', 'pool.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'common', 'threading.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'common', 'xxhash.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'common', 'zstd_common.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'fse_compress.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'hist.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'huf_compress.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'zstd_compress.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'zstd_compress_literals.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'zstd_compress_sequences.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'zstd_compress_superblock.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'zstd_double_fast.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'zstd_fast.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'zstd_lazy.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'zstd_ldm.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'zstd_opt.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'compress', 'zstd_preSplit.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'decompress', 'huf_decompress.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'decompress', 'zstd_ddict.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'decompress', 'zstd_decompress.c'),
-    os.path.join(builder.sourcePath, 'vendor', 'zstd', 'lib', 'decompress', 'zstd_decompress_block.c'),
   ]
-
-
-  ws_dir = os.path.join(builder.sourcePath, 'vendor', 'ixwebsocket', 'ixwebsocket')
-
-  for file in os.listdir(ws_dir):
-    if file.endswith('.cpp'):
-      binary.sources.append(os.path.join(ws_dir, file))
  
   if binary.compiler.target.platform == 'linux':
-    # Linux PIC stuff breaks if this isn't defined.
-    binary.compiler.defines += ['ZSTD_DISABLE_ASM']
     binary.compiler.postlink += [
+      os.path.join(builder.sourcePath, 'vendor', 'libzstd.a'),
+      os.path.join(builder.sourcePath, 'vendor', 'libixwebsocket.a'),
       os.path.join(sdk['path'], 'lib', 'linux64', 'mathlib.a'),
       '-lssl', '-lcrypto'
     ]
@@ -209,14 +174,16 @@ def configure_main(sdk_target, sdk, cxx):
       ]
   elif binary.compiler.target.platform == 'windows':
     binary.compiler.postlink += [
-      os.path.join('psapi.lib'),
-      os.path.join(sdk['path'], 'lib', 'public', 'win64', 'mathlib.lib'),
-      os.path.join(builder.sourcePath, 'vendor', 'steam_api64.lib'),
-      os.path.join(builder.sourcePath, 'vendor', 'libssl.lib'),
-      os.path.join(builder.sourcePath, 'vendor', 'libcrypto.lib'),
-      'crypt32.lib',
-      'ws2_32.lib',
-      'bcrypt.lib'
+        os.path.join('psapi.lib'),
+        os.path.join(builder.sourcePath, 'vendor', 'zstd.lib'),
+        os.path.join(builder.sourcePath, 'vendor', 'ixwebsocket.lib'),
+        os.path.join(sdk['path'], 'lib', 'public', 'win64', 'mathlib.lib'),
+        os.path.join(builder.sourcePath, 'vendor', 'steam_api64.lib'),
+        os.path.join(builder.sourcePath, 'vendor', 'libssl.lib'),
+        os.path.join(builder.sourcePath, 'vendor', 'libcrypto.lib'),
+        'crypt32.lib',
+        'ws2_32.lib',
+        'bcrypt.lib'
     ]
     binary.sources += [
       'src/utils/plat_win.cpp'

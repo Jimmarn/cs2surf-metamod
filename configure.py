@@ -33,4 +33,6 @@ parser.options.add_argument('--enable-debug', action='store_const', const='1', d
                        help='Enable debugging symbols')
 parser.options.add_argument('--enable-optimize', action='store_const', const='1', dest='opt',
                        help='Enable optimization')
+parser.options.add_argument('--build-vendor-deps', action='store_true', dest='build_vendor_deps', default=False,
+                       help='Build vendor static libraries (zstd, ixwebsocket) instead of the plugin.')
 parser.Configure()

@@ -239,7 +239,7 @@ const char *PLUGIN_REVISION_COUNT = \"{revision_count}\";
     cxx = self.target
     lib = cxx.StaticLibrary(f'versionlib_{cxx.target.arch}')
     
-    self.configureCXX(lib.compiler, True)
+    self.configureCXX(lib.compiler)
   
     # VS generator doesn't like having non string sources, but we need that for correct
     # dependency tracking
@@ -274,7 +274,7 @@ const char *PLUGIN_REVISION_COUNT = \"{revision_count}\";
     self.generateVersioningHeaders()
     self.generateVersionLib()    
 
-  def configureCXX(self, cxx, force_disable_optimization = False):
+  def configureCXX(self, cxx):
     if cxx.behavior == 'gcc':
       cxx.defines += [
         'stricmp=strcasecmp',
@@ -377,12 +377,11 @@ const char *PLUGIN_REVISION_COUNT = \"{revision_count}\";
       ]
 
     # Optimization
-    if builder.options.opt == '1' and not force_disable_optimization:
+    if builder.options.opt == '1':
       cxx.defines += ['NDEBUG']
       if cxx.behavior == 'gcc':
-        cxx.cflags += ['-O3', '-flto']
+        cxx.cflags += ['-O3']
         cxx.cxxflags += ['-g1'] # override ambuild's default -g3 flag.
-        cxx.linkflags += ['-flto']
       elif cxx.behavior == 'msvc':
         cxx.cflags += ['/Ox', '/Zo']
         cxx.linkflags += ['/OPT:ICF', '/OPT:REF']
@@ -413,16 +412,25 @@ const char *PLUGIN_REVISION_COUNT = \"{revision_count}\";
     elif cxx.target.platform == 'windows':
       cxx.defines += ['WIN32', '_WINDOWS']
 
-  def Library(self, cxx, name):
-    binary = cxx.Library(name)
+  def Library(self, cxx, name, static = False):
+    if static:
+        binary = cxx.StaticLibrary(name)
+    else:
+        binary = cxx.Library(name)
     return binary
   
-  def HL2Library(self, context, compiler, name, sdk):
+  def HL2Library(self, context, compiler, name, sdk, static = False):
     binary = self.Library(compiler, name)
     mms_core_path = os.path.join(self.mms_root, 'core')
     cxx = binary.compiler
     
     self.addVersioning(cxx)
+
+    # Apply -flto only to shared (non-static) binaries.
+    # Static archives trigger linker issues when pulled into other binaries that also use LTO.
+    if not static and builder.options.opt == '1' and cxx.behavior == 'gcc':
+        cxx.cflags += ['-flto']
+        cxx.linkflags += ['-flto']
 
     cxx.cxxincludes += [
       os.path.join(context.currentSourcePath),
@@ -451,12 +459,19 @@ const char *PLUGIN_REVISION_COUNT = \"{revision_count}\";
 
 MMSPlugin = MMSPluginConfig()
 MMSPlugin.detectSDKs()
-MMSPlugin.configurePluginMetadata()
+if not builder.options.build_vendor_deps:
+  MMSPlugin.configurePluginMetadata()
 MMSPlugin.configure()
 
 BuildScripts = [
   'AMBuilder',
   'PackageScript',
 ]
+
+if builder.options.build_vendor_deps:
+  BuildScripts = [
+    'vendor/zstd.AMBuilder',
+    'vendor/ixwebsocket.AMBuilder',
+  ]
 
 builder.Build(BuildScripts, { 'MMSPlugin': MMSPlugin }) # type: ignore
