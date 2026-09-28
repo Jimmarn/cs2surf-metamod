@@ -19,7 +19,7 @@ namespace Surf
 		void OnClientDisconnect(CPlayerSlot slot);
 
 		// Player commands
-		void RequestRTV(SurfPlayer *player);
+		void RequestRTV(SurfPlayer *player, const char *mapNamePart = ""); // !vote [map]: alone on the server = instant change
 		void UnRTV(SurfPlayer *player);
 		void Nominate(SurfPlayer *player, const char *mapNamePart);
 		void CastVote(SurfPlayer *player, i32 option);
@@ -31,6 +31,6 @@ namespace Surf
 		bool StartVote(bool endOfMap, bool forced);
 		void ReloadMapList();
 		bool IsVoteRunning();
-		std::string GetPanelHTML(SurfPlayer *target);   // empty when no vote is running
+		std::string GetPanelHTML(SurfPlayer *target); // empty when no vote is running
 	} // namespace vote
 } // namespace Surf

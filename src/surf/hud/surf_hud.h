@@ -12,12 +12,12 @@ public:
 	// Checkpoint / stage split shown in the panel for a few seconds (compact style).
 	struct SplitFlash
 	{
-		std::string label;          // "CP 3" / "Stage 2"
-		std::string time;           // formatted split/zone time
-		std::string diff;           // formatted diff vs the compare target, "" when unknown
+		std::string label; // "CP 3" / "Stage 2"
+		std::string time;  // formatted split/zone time
+		std::string diff;  // formatted diff vs the compare target, "" when unknown
 		bool faster {};
-		std::string speed;          // speed when the zone was touched
-		std::string speedDiff;      // "+123" / "-45", "" when unknown
+		std::string speed;     // speed when the zone was touched
+		std::string speedDiff; // "+123" / "-45", "" when unknown
 		bool speedFaster {};
 		f64 expiry {};
 	};
@@ -52,6 +52,7 @@ public:
 	}
 
 	void OnProcessMovementPost();
+
 	void ResetSync()
 	{
 		this->syncGood = this->syncTotal = 0;

@@ -19,7 +19,7 @@
 extern CConVarRef<float> mp_timelimit;
 extern CConVarRef<CUtlString> nextlevel;
 
-#define VOTE_MAX_OPTIONS 6
+#define VOTE_MAX_OPTIONS  6
 #define VOTE_PLAYER_SLOTS (MAXPLAYERS + 2)
 
 namespace
@@ -27,16 +27,16 @@ namespace
 	struct VoteConfig
 	{
 		bool enabled = true;
-		f32 rtvPercent = 0.6f;        // fraction of players needed for !vote to trigger a vote
-		f32 rtvDelay = 120.0f;        // seconds after map start before !vote counts
-		f32 rtvChangeDelay = 6.0f;    // seconds between the vote result and the map change
-		f32 endVoteMinutes = 3.0f;    // start the end-of-map vote this many minutes before mp_timelimit
-		f32 voteDuration = 25.0f;     // seconds a vote stays open
-		i32 mapsInVote = 5;           // number of maps offered (nominations first, then random)
-		i32 excludeRecent = 3;        // last N played maps are not offered / nominatable
-		i32 extendMinutes = 15;       // "Extend map" adds this many minutes (0 disables the option)
-		i32 maxExtends = 2;           // how many times a map can be extended
-		std::string changeCommand = "ds_workshop_changelevel";   // workshop maps (collections) need this, "changelevel" only knows maps on disk
+		f32 rtvPercent = 0.6f;                                 // fraction of players needed for !vote to trigger a vote
+		f32 rtvDelay = 120.0f;                                 // seconds after map start before !vote counts
+		f32 rtvChangeDelay = 6.0f;                             // seconds between the vote result and the map change
+		f32 endVoteMinutes = 3.0f;                             // start the end-of-map vote this many minutes before mp_timelimit
+		f32 voteDuration = 25.0f;                              // seconds a vote stays open
+		i32 mapsInVote = 5;                                    // number of maps offered (nominations first, then random)
+		i32 excludeRecent = 3;                                 // last N played maps are not offered / nominatable
+		i32 extendMinutes = 15;                                // "Extend map" adds this many minutes (0 disables the option)
+		i32 maxExtends = 2;                                    // how many times a map can be extended
+		std::string changeCommand = "ds_workshop_changelevel"; // workshop maps (collections) need this, "changelevel" only knows maps on disk
 	};
 
 	enum VoteKind
@@ -49,21 +49,21 @@ namespace
 
 	VoteConfig cfg;
 	std::vector<std::string> mapList;
-	std::deque<std::string> recentMaps;   // most recent first
+	std::deque<std::string> recentMaps; // most recent first
 	std::string currentMap;
-	std::string nextMap;                  // decided by a finished vote (end-of-map)
+	std::string nextMap; // decided by a finished vote (end-of-map)
 
 	bool rtvVoted[VOTE_PLAYER_SLOTS];
 	std::string nominations[VOTE_PLAYER_SLOTS];
-	i32 ballots[VOTE_PLAYER_SLOTS];       // -1 = no vote
+	i32 ballots[VOTE_PLAYER_SLOTS]; // -1 = no vote
 
 	VoteKind voteKind = VOTE_NONE;
-	std::vector<std::string> options;     // "" entry = extend
+	std::vector<std::string> options; // "" entry = extend
 	i32 extendOption = -1;
 	f32 voteEndTime = 0.0f;
 	bool endVoteDone = false;
 	i32 extendsUsed = 0;
-	f32 pendingChangeTime = 0.0f;         // > 0: change to nextMap at this curtime
+	f32 pendingChangeTime = 0.0f; // > 0: change to nextMap at this curtime
 	CTimer<> *tickTimer = nullptr;
 
 	f32 Now()
@@ -346,7 +346,7 @@ namespace
 			{
 				mp_timelimit.Set(mp_timelimit.Get() + (f32)cfg.extendMinutes);
 			}
-			endVoteDone = false;   // a new end-of-map vote will run before the new limit
+			endVoteDone = false; // a new end-of-map vote will run before the new limit
 			nextMap.clear();
 			SurfLanguageService::PrintChatAll(true, "Vote - Result Extend", cfg.extendMinutes, counts[winner], total);
 			options.clear();
@@ -450,8 +450,9 @@ void Surf::vote::ReloadMapList()
 		{
 			line = line.substr(0, colon);
 		}
-		line.erase(std::remove_if(line.begin(), line.end(), [](unsigned char c) { return c == '\r' || c == '\n' || c == '\t' || c == ' ' || c == '"'; }),
-				   line.end());
+		line.erase(
+			std::remove_if(line.begin(), line.end(), [](unsigned char c) { return c == '\r' || c == '\n' || c == '\t' || c == ' ' || c == '"'; }),
+			line.end());
 		if (line.empty())
 		{
 			continue;
@@ -577,16 +578,22 @@ std::string Surf::vote::GetPanelHTML(SurfPlayer *target)
 	{
 		const char *label = options[o].empty() ? extendLabel.c_str() : options[o].c_str();
 		char line[320];
-		V_snprintf(line, sizeof(line), "%s!%d  %s <font color='#aaaaaa'>[%d]</font>%s<br>", (mine == o) ? "<font color='#7fff00'>" : "", o + 1,
-				   label, voteCounts[o], (mine == o) ? "</font>" : "");
+		V_snprintf(line, sizeof(line), "%s!%d  %s <font color='#aaaaaa'>[%d]</font>%s<br>", (mine == o) ? "<font color='#7fff00'>" : "", o + 1, label,
+				   voteCounts[o], (mine == o) ? "</font>" : "");
 		html += line;
 	}
 	// the HUD prints this through a printf-style call
 	std::string safe;
 	for (char c : html)
 	{
-		if (c == '%') safe += "%%";
-		else safe += c;
+		if (c == '%')
+		{
+			safe += "%%";
+		}
+		else
+		{
+			safe += c;
+		}
 	}
 	return safe;
 }
@@ -618,7 +625,9 @@ bool Surf::vote::StartVote(bool endOfMap, bool forced)
 	return true;
 }
 
-void Surf::vote::RequestRTV(SurfPlayer *player)
+static_function std::string FindMap(SurfPlayer *player, const char *mapNamePart);
+
+void Surf::vote::RequestRTV(SurfPlayer *player, const char *mapNamePart)
 {
 	if (!cfg.enabled)
 	{
@@ -635,6 +644,43 @@ void Surf::vote::RequestRTV(SurfPlayer *player)
 		player->languageService->PrintChat(true, false, "Vote - Change Pending", nextMap.c_str());
 		return;
 	}
+	bool solo = CountPlayers() <= 1;
+	std::string wanted;
+	if (mapNamePart && mapNamePart[0])
+	{
+		wanted = FindMap(player, mapNamePart);
+		if (wanted.empty())
+		{
+			return;
+		}
+	}
+	if (solo)
+	{
+		// nobody to outvote: change right away (to the requested map, or a random fresh one)
+		if (wanted.empty())
+		{
+			BuildOptions(false);
+			for (const auto &o : options)
+			{
+				if (!o.empty())
+				{
+					wanted = o;
+					break;
+				}
+			}
+			options.clear();
+			extendOption = -1;
+		}
+		if (wanted.empty())
+		{
+			player->languageService->PrintChat(true, false, "Vote - No Maps");
+			return;
+		}
+		nextMap = wanted;
+		pendingChangeTime = Now() + cfg.rtvChangeDelay;
+		SurfLanguageService::PrintChatAll(true, "Vote - Solo Change", wanted.c_str(), (i32)cfg.rtvChangeDelay);
+		return;
+	}
 	f32 now = Now();
 	if (now < cfg.rtvDelay)
 	{
@@ -642,6 +688,11 @@ void Surf::vote::RequestRTV(SurfPlayer *player)
 		return;
 	}
 	i32 idx = SlotIndex(player);
+	if (!wanted.empty() && !IsRecent(wanted) && V_stricmp(nominations[idx].c_str(), wanted.c_str()))
+	{
+		nominations[idx] = wanted;
+		SurfLanguageService::PrintChatAll(true, "Vote - Player Nominated", player->GetName(), wanted.c_str());
+	}
 	if (rtvVoted[idx])
 	{
 		player->languageService->PrintChat(true, false, "Vote - Already Voted", CountRTV(), NeededRTV());
@@ -668,20 +719,9 @@ void Surf::vote::UnRTV(SurfPlayer *player)
 	SurfLanguageService::PrintChatAll(true, "Vote - Player Withdrew", player->GetName(), CountRTV(), NeededRTV());
 }
 
-void Surf::vote::Nominate(SurfPlayer *player, const char *mapNamePart)
+// exact match first, then a unique substring match. Prints the reason and returns "" when nothing usable matched.
+static_function std::string FindMap(SurfPlayer *player, const char *mapNamePart)
 {
-	if (!cfg.enabled)
-	{
-		player->languageService->PrintChat(true, false, "Vote - Disabled");
-		return;
-	}
-	if (!mapNamePart || !mapNamePart[0])
-	{
-		player->languageService->PrintChat(true, false, "Vote - Nominate Usage");
-		PrintMapList(player);
-		return;
-	}
-	// exact match first, then unique substring match
 	std::string chosen;
 	std::vector<std::string> matches;
 	for (const auto &m : mapList)
@@ -705,7 +745,7 @@ void Surf::vote::Nominate(SurfPlayer *player, const char *mapNamePart)
 		else if (matches.empty())
 		{
 			player->languageService->PrintChat(true, false, "Vote - Nominate Not Found", mapNamePart);
-			return;
+			return "";
 		}
 		else
 		{
@@ -715,12 +755,33 @@ void Surf::vote::Nominate(SurfPlayer *player, const char *mapNamePart)
 				list += (i ? ", " : "") + matches[i];
 			}
 			player->languageService->PrintChat(true, false, "Vote - Nominate Ambiguous", list.c_str());
-			return;
+			return "";
 		}
 	}
 	if (IsCurrent(chosen))
 	{
 		player->languageService->PrintChat(true, false, "Vote - Nominate Current Map");
+		return "";
+	}
+	return chosen;
+}
+
+void Surf::vote::Nominate(SurfPlayer *player, const char *mapNamePart)
+{
+	if (!cfg.enabled)
+	{
+		player->languageService->PrintChat(true, false, "Vote - Disabled");
+		return;
+	}
+	if (!mapNamePart || !mapNamePart[0])
+	{
+		player->languageService->PrintChat(true, false, "Vote - Nominate Usage");
+		PrintMapList(player);
+		return;
+	}
+	std::string chosen = FindMap(player, mapNamePart);
+	if (chosen.empty())
+	{
 		return;
 	}
 	if (IsRecent(chosen))
@@ -760,6 +821,15 @@ void Surf::vote::CastVote(SurfPlayer *player, i32 option)
 		player->languageService->PrintChat(true, false, "Vote - You Voted", options[option].c_str());
 	}
 	RecountVotes();
+	i32 cast = 0;
+	for (i32 o = 0; o < (i32)options.size(); o++)
+	{
+		cast += voteCounts[o];
+	}
+	if (cast >= CountPlayers())
+	{
+		FinishVote(); // everyone has spoken, no point waiting for the clock
+	}
 }
 
 void Surf::vote::PrintNextMap(SurfPlayer *player)
@@ -807,7 +877,7 @@ void Surf::vote::PrintMapList(SurfPlayer *player)
 SCMD(surf_vote, SCFL_MAP)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
-	Surf::vote::RequestRTV(player);
+	Surf::vote::RequestRTV(player, args->ArgC() > 1 ? args->Arg(1) : "");
 	return true;
 }
 

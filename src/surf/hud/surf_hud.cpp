@@ -18,11 +18,12 @@
 
 // Compact panel colours. Speed is coloured by the same thresholds SharpTimer used; diffs use blue/red for time and green/orange for speed.
 static_global const i32 hudSpeedThresholds[] = {349, 699, 1049, 1399, 1749, 2099, 2449, 2799, 3149, 3499};
-static_global const char *hudSpeedColors[] = {"LimeGreen", "Lime", "GreenYellow", "Yellow", "Gold", "Orange", "DarkOrange", "Tomato", "OrangeRed", "Red", "Crimson"};
-#define HUD_COLOR_TIME_FASTER   "#5a97fa"
-#define HUD_COLOR_TIME_SLOWER   "#fa5a5a"
-#define HUD_COLOR_SPEED_FASTER  "#3b992c"
-#define HUD_COLOR_SPEED_SLOWER  "#DA6E1B"
+static_global const char *hudSpeedColors[] = {"LimeGreen",  "Lime",   "GreenYellow", "Yellow", "Gold",   "Orange",
+											  "DarkOrange", "Tomato", "OrangeRed",   "Red",    "Crimson"};
+#define HUD_COLOR_TIME_FASTER  "#5a97fa"
+#define HUD_COLOR_TIME_SLOWER  "#fa5a5a"
+#define HUD_COLOR_SPEED_FASTER "#3b992c"
+#define HUD_COLOR_SPEED_SLOWER "#DA6E1B"
 
 static_global class SurfTimerServiceEventListener_HUD : public SurfTimerServiceEventListener
 {
@@ -424,7 +425,8 @@ SCMD(surf_hudstyle, SCFL_HUD)
 {
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	player->hudService->ToggleStyle();
-	player->languageService->PrintChat(true, false, player->hudService->IsCompactStyle() ? "HUD Option - Style - Compact" : "HUD Option - Style - Classic");
+	player->languageService->PrintChat(true, false,
+									   player->hudService->IsCompactStyle() ? "HUD Option - Style - Compact" : "HUD Option - Style - Classic");
 	return true;
 }
 

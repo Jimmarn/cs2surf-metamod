@@ -71,6 +71,11 @@
 		"#format"	"minutes:d,votes:d,total:d"
 		"en"		"{grey}Vote finished: the map was extended by {lime}{minutes} minutes{grey} ({votes}/{total} votes)."
 	}
+	"Vote - Solo Change"
+	{
+		"#format"	"map:s,seconds:d"
+		"en"		"{grey}You're alone, no vote needed: changing map to {lime}{map}{grey} in {seconds}s."
+	}
 	"Vote - No Maps"
 	{
 		"en"		"{darkred}There are no other maps to vote for. Ask an admin to fill cfg/cs2surf-maplist.txt."
