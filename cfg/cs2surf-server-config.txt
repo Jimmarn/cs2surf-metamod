@@ -58,6 +58,30 @@
 		//"port"			"3306"
 	}
 
+	// Map voting (!vote / !nominate / !nextmap / !timeleft). The map pool is cfg/cs2surf-maplist.txt.
+	"vote"
+	{
+		"enabled"			"true"
+		// Fraction of players that must type !vote to start a vote (0.6 = 60%).
+		"rtvPercent"		"0.6"
+		// Seconds after map start before !vote counts.
+		"rtvDelay"			"120"
+		// Seconds between a successful vote and the map change.
+		"rtvChangeDelay"	"6"
+		// Start the automatic end-of-map vote this many minutes before the time limit runs out.
+		"endVoteMinutes"	"3"
+		// How long a vote stays open, in seconds.
+		"voteDuration"		"25"
+		// Maps offered per vote (nominations first, the rest random). Max 5.
+		"mapsInVote"		"5"
+		// The last N played maps are not offered or nominatable.
+		"excludeRecent"		"3"
+		// The end-of-map vote offers "extend map" adding this many minutes. 0 disables it.
+		"extendMinutes"		"15"
+		// How many times one map can be extended.
+		"maxExtends"		"2"
+	}
+
 	"apiUrl"	""
 	"apiKey"	""
 }

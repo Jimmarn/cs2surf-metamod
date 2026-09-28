@@ -1,0 +1,35 @@
+# Map pool for !vote / !nominate. One map per line, optionally "name:workshopid" (the id is ignored, kept for reference).
+# Lines starting with # are comments. Reload at runtime with: surf_vote_reload_maplist
+surf_beginner:3070321829
+surf_utopia_njv:3073875025
+surf_kitsune:3076153623
+surf_mesa_revo:3076980482
+surf_rookie:3082548297
+surf_ace:3088413071
+surf_nyx:3129698096
+surf_boreas:3133346713
+surf_me:3248211716
+surf_aquaflow:3255589335
+surf_palais:3277590518
+surf_whiteout:3296258256
+surf_prisma:3319154265
+surf_southpark:3398896393
+surf_flow:3403083638
+surf_arctic:3414958060
+surf_siren:3426610799
+surf_tiltberg:3442939685
+surf_rez:3536081532
+surf_frosty:3581092479
+surf_cyberwave:3588798043
+surf_pantheon:3622331520
+surf_exocube:3622437766
+surf_not_so_neb:3623715490
+surf_invert:3624041364
+surf_presmon:3628814857
+surf_activation:3634942758
+surf_leidenfrost:3637141307
+surf_anzchamps:3646843549
+surf_intothewild:3649200027
+surf_summit:3650611306
+surf_instantdeath:3651324310
+surf_papertown:3676739820
