@@ -19,6 +19,7 @@
 #include "surf/style/surf_style.h"
 #include "surf/quiet/surf_quiet.h"
 #include "surf/tip/surf_tip.h"
+#include "surf/vote/surf_vote.h"
 #include "surf/option/surf_option.h"
 #include "surf/language/surf_language.h"
 #include "surf/mappingapi/surf_mappingapi.h"
@@ -86,6 +87,7 @@ bool SurfPlugin::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bo
 	Surf::mode::DisableReplicatedModeCvars();
 
 	SurfTipService::Init();
+	Surf::vote::Init();
 	if (late)
 	{
 		g_steamAPI.Init();
