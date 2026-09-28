@@ -30,6 +30,7 @@
 #include "surf/timer/queries/base_request.h"
 #include "surf/telemetry/surf_telemetry.h"
 #include "surf/trigger/surf_trigger.h"
+#include "surf/vote/surf_vote.h"
 #include "surf/db/surf_db.h"
 #include "surf/mappingapi/surf_mappingapi.h"
 #include "surf/global/surf_global.h"
@@ -326,6 +327,7 @@ static KHook::Return<void> ClientDisconnectPost(ISource2GameClients *pThis, CPla
 	player->optionService->OnClientDisconnect();
 	player->globalService->OnClientDisconnect();
 	cvarquery::OnClientDisconnect(slot);
+	Surf::vote::OnClientDisconnect(slot);
 	// Surf::prefs::OnClientDisconnect(slot);
 	g_pSurfPlayerManager->OnClientDisconnect(slot, reason, pszName, xuid, pszNetworkID);
 	return {KHook::Action::Ignore};
@@ -526,6 +528,7 @@ static KHook::Return<bool> ActivateServerPost(CNetworkGameServerBase *pThis)
 
 	RunSubmission::Clear();
 	Surf::misc::OnActivateServer();
+	Surf::vote::OnActivateServer();
 	SurfDatabaseService::SetupMap();
 	SurfGlobalService::OnActivateServer();
 	SurfRecordingService::OnActivateServer();
