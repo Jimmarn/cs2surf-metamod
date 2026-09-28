@@ -1,0 +1,157 @@
+"Phrases"
+{
+	"Vote - Disabled"
+	{
+		"en"		"{grey}Map voting is disabled on this server."
+	}
+	"Vote - Already Running"
+	{
+		"en"		"{grey}A map vote is already running, use {lime}!1{grey}-{lime}!6{grey} to vote."
+	}
+	"Vote - Change Pending"
+	{
+		"#format"	"map:s"
+		"en"		"{grey}The map is already changing to {lime}{map}{grey}."
+	}
+	"Vote - Too Early"
+	{
+		"#format"	"time:s"
+		"en"		"{grey}You can vote to change the map in {lime}{time}{grey}."
+	}
+	"Vote - Already Voted"
+	{
+		"#format"	"votes:d,needed:d"
+		"en"		"{grey}You already voted to change the map ({lime}{votes}{grey}/{lime}{needed}{grey})."
+	}
+	"Vote - Player Wants Vote"
+	{
+		"#format"	"player:s,votes:d,needed:d"
+		"en"		"{lime}{player}{grey} wants to change the map ({lime}{votes}{grey}/{lime}{needed}{grey} needed). Type {lime}!vote{grey} to agree."
+	}
+	"Vote - Player Withdrew"
+	{
+		"#format"	"player:s,votes:d,needed:d"
+		"en"		"{lime}{player}{grey} no longer wants to change the map ({lime}{votes}{grey}/{lime}{needed}{grey})."
+	}
+	"Vote - Started"
+	{
+		"#format"	"seconds:d"
+		"en"		"{grey}Map vote started! Type {lime}!1{grey}-{lime}!6{grey} to pick the next map. {darkred}{seconds}s{grey} left."
+	}
+	"Vote - Started (End Of Map)"
+	{
+		"#format"	"seconds:d"
+		"en"		"{grey}The map is ending soon, vote for the next map with {lime}!1{grey}-{lime}!6{grey}. {darkred}{seconds}s{grey} left."
+	}
+	"Vote - Panel Title"
+	{
+		"en"		"Vote for the next map"
+	}
+	"Vote - Panel Title (End Of Map)"
+	{
+		"en"		"Map is ending - vote for the next map"
+	}
+	"Vote - Extend Option"
+	{
+		"#format"	"minutes:d"
+		"en"		"Extend this map (+{minutes} min)"
+	}
+	"Vote - Result Next Map"
+	{
+		"#format"	"map:s,votes:d,total:d"
+		"en"		"{grey}Vote finished: next map is {lime}{map}{grey} ({votes}/{total} votes)."
+	}
+	"Vote - Result Change Map"
+	{
+		"#format"	"map:s,votes:d,total:d,seconds:d"
+		"en"		"{grey}Vote finished: changing map to {lime}{map}{grey} in {seconds}s ({votes}/{total} votes)."
+	}
+	"Vote - Result Extend"
+	{
+		"#format"	"minutes:d,votes:d,total:d"
+		"en"		"{grey}Vote finished: the map was extended by {lime}{minutes} minutes{grey} ({votes}/{total} votes)."
+	}
+	"Vote - No Maps"
+	{
+		"en"		"{darkred}There are no other maps to vote for. Ask an admin to fill cfg/cs2surf-maplist.txt."
+	}
+	"Vote - Not Running"
+	{
+		"en"		"{grey}There is no vote running right now. Type {lime}!vote{grey} to start one."
+	}
+	"Vote - Invalid Option"
+	{
+		"#format"	"count:d"
+		"en"		"{grey}Pick an option between {lime}!1{grey} and {lime}!{count}{grey}."
+	}
+	"Vote - You Voted"
+	{
+		"#format"	"map:s"
+		"en"		"{grey}You voted for {lime}{map}{grey}."
+	}
+	"Vote - You Voted Extend"
+	{
+		"en"		"{grey}You voted to extend the current map."
+	}
+	"Vote - Nominate Usage"
+	{
+		"en"		"{grey}Usage: {lime}!nominate <map>{grey}. The map list was printed to your console."
+	}
+	"Vote - Nominate Not Found"
+	{
+		"#format"	"map:s"
+		"en"		"{grey}No map matches {darkred}{map}{grey}. Type {lime}!maps{grey} for the list."
+	}
+	"Vote - Nominate Ambiguous"
+	{
+		"#format"	"maps:s"
+		"en"		"{grey}Be more specific, that matches: {lime}{maps}"
+	}
+	"Vote - Nominate Current Map"
+	{
+		"en"		"{grey}You are already playing that map."
+	}
+	"Vote - Nominate Recent Map"
+	{
+		"#format"	"map:s"
+		"en"		"{lime}{map}{grey} was played recently and cannot be nominated yet."
+	}
+	"Vote - Nominate Already"
+	{
+		"#format"	"map:s"
+		"en"		"{grey}You already nominated {lime}{map}{grey}."
+	}
+	"Vote - Player Nominated"
+	{
+		"#format"	"player:s,map:s"
+		"en"		"{lime}{player}{grey} nominated {lime}{map}{grey} for the next vote."
+	}
+	"Vote - Next Map"
+	{
+		"#format"	"map:s"
+		"en"		"{grey}Next map: {lime}{map}"
+	}
+	"Vote - Next Map Undecided"
+	{
+		"#format"	"time:s"
+		"en"		"{grey}The next map has not been decided yet, the vote starts in {lime}{time}{grey}."
+	}
+	"Vote - Next Map Unknown"
+	{
+		"en"		"{grey}The next map has not been decided yet. Type {lime}!vote{grey} to start a vote."
+	}
+	"Vote - Time Left"
+	{
+		"#format"	"time:s"
+		"en"		"{grey}Time left on this map: {lime}{time}"
+	}
+	"Vote - No Time Limit"
+	{
+		"en"		"{grey}This map has no time limit."
+	}
+	"Vote - Map List Hint"
+	{
+		"#format"	"count:d"
+		"en"		"{grey}{lime}{count}{grey} maps were printed to your console. Nominate one with {lime}!nominate <map>{grey}."
+	}
+}

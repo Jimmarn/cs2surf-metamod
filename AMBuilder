@@ -80,6 +80,7 @@ def configure_main(sdk_target, sdk, cxx):
     os.path.join(builder.sourcePath, 'src', 'surf', 'misc', 'surf_misc.cpp'),
     os.path.join(builder.sourcePath, 'src', 'surf', 'misc', 'block_radio.cpp'),
     os.path.join(builder.sourcePath, 'src', 'surf', 'misc', 'time_limit.cpp'),
+    os.path.join(builder.sourcePath, 'src', 'surf', 'vote', 'surf_vote.cpp'),
     
 
     os.path.join(builder.sourcePath, 'src', 'surf', 'surf_manager.cpp'),

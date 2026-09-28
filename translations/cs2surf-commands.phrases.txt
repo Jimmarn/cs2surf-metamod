@@ -1082,4 +1082,28 @@
 		"en"		"Toggle replay bot's first person legs visibility."
 		"ko"		"리플레이 봇의 1인칭 다리 표시를 전환합니다."
 	}
+	"Command Description - surf_vote"
+	{
+		"en"		"Vote to change the map (rock the vote)."
+	}
+	"Command Description - surf_unvote"
+	{
+		"en"		"Withdraw your vote to change the map."
+	}
+	"Command Description - surf_nominate"
+	{
+		"en"		"Nominate a map for the next map vote."
+	}
+	"Command Description - surf_nextmap"
+	{
+		"en"		"Show the next map."
+	}
+	"Command Description - surf_timeleft"
+	{
+		"en"		"Show the time left on the current map."
+	}
+	"Command Description - surf_maps"
+	{
+		"en"		"Print the map list to your console."
+	}
 }

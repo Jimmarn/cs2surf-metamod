@@ -11,6 +11,23 @@ WIP, not ready for release
 
 - Optional: [SQL_MM](https://github.com/zer0k-z/sql_mm/releases) v1.3.4.4 or later for local database support
 
+# Map voting
+
+Built in, no CounterStrikeSharp needed. Players use:
+
+| Command | What it does |
+|---|---|
+| `!vote` (`!rtv`) | Vote to change the map. When enough players agree (default 60%) a map vote starts. `!unvote` withdraws. |
+| `!nominate <map>` (`!nom`) | Put a map on the next vote. Partial names work (`!nom utopia`). |
+| `!1` .. `!6` | Pick an option while a vote is open (also shown in the HUD panel). |
+| `!nextmap`, `!timeleft`, `!maps` | Next map / time left / print the map pool to the console. |
+
+A vote also starts automatically a few minutes before `mp_timelimit` runs out, with an "extend map" option.
+
+- Map pool: `cfg/cs2surf-maplist.txt`, one map per line (`name` or `name:workshopid`). Reload with `surf_vote_reload_maplist`.
+- Settings: the `vote` block in `cfg/cs2surf-server-config.txt`.
+- Admins can start a vote from the console with `surf_vote_start`.
+
 # Installation:
 
 - Download the latest version in the release section and extract them to your server's `csgo/` directory.
