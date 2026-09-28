@@ -1,6 +1,7 @@
 #include "surf/surf.h"
 #include "cs2surf.h"
 #include "surf_hud.h"
+#include "surf/vote/surf_vote.h"
 #include "sdk/datatypes.h"
 #include "utils/utils.h"
 #include "utils/simplecmds.h"
@@ -139,8 +140,13 @@ std::string SurfHUDService::GetTimerText(const char *language)
 
 void SurfHUDService::DrawPanels(SurfPlayer *player, SurfPlayer *target)
 {
+	std::string voteHtml = Surf::vote::GetPanelHTML(target);
 	if (!target->hudService->IsShowingPanel())
 	{
+		if (!voteHtml.empty())
+		{
+			target->PrintHTMLCentre(false, false, voteHtml.c_str());
+		}
 		return;
 	}
 	const char *language = target->languageService->GetLanguage();
@@ -177,6 +183,11 @@ void SurfHUDService::DrawPanels(SurfPlayer *player, SurfPlayer *target)
 	trimNewlines(centerText);
 	trimNewlines(alertText);
 	trimNewlines(htmlText);
+	if (!voteHtml.empty())
+	{
+		// map vote in progress: show it above the speed/keys panel
+		htmlText = htmlText.empty() ? voteHtml : voteHtml + htmlText;
+	}
 
 	// Remove leading & trailing newlines just in case a line is empty.
 	if (!centerText.empty())
