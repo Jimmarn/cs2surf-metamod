@@ -1106,4 +1106,12 @@
 	{
 		"en"		"Print the map list to your console."
 	}
+	"Command Description - surf_hudstyle"
+	{
+		"en"		"Switch between the compact and classic HUD."
+	}
+	"Command Description - surf_sync"
+	{
+		"en"		"Toggle the strafe sync display."
+	}
 }

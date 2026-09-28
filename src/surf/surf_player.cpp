@@ -254,6 +254,7 @@ void SurfPlayer::OnProcessMovementPost()
 		this->styleServices[i]->OnProcessMovementPost();
 	}
 	this->triggerService->OnProcessMovementPost();
+	this->hudService->OnProcessMovementPost();
 	Surf::replaysystem::OnProcessMovementPost(this);
 	MovementPlayer::OnProcessMovementPost();
 }

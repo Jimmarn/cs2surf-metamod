@@ -36,7 +36,7 @@ namespace
 		i32 excludeRecent = 3;        // last N played maps are not offered / nominatable
 		i32 extendMinutes = 15;       // "Extend map" adds this many minutes (0 disables the option)
 		i32 maxExtends = 2;           // how many times a map can be extended
-		f32 revoteDelay = 0.0f;       // unused for now
+		std::string changeCommand = "ds_workshop_changelevel";   // workshop maps (collections) need this, "changelevel" only knows maps on disk
 	};
 
 	enum VoteKind
@@ -128,7 +128,7 @@ namespace
 	{
 		i32 players = CountPlayers();
 		i32 needed = (i32)ceilf(players * cfg.rtvPercent);
-		return std::max(1, needed);
+		return (std::max)(1, needed);
 	}
 
 	f32 TimeLeft()
@@ -179,9 +179,9 @@ namespace
 
 	void ChangeLevel(const std::string &map)
 	{
-		char cmd[MAX_PATH + 32];
-		V_snprintf(cmd, sizeof(cmd), "changelevel %s", map.c_str());
-		META_CONPRINTF("[Surf::Vote] Changing map to %s\n", map.c_str());
+		char cmd[MAX_PATH + 64];
+		V_snprintf(cmd, sizeof(cmd), "%s %s", cfg.changeCommand.c_str(), map.c_str());
+		META_CONPRINTF("[Surf::Vote] Changing map: %s\n", cmd);
 		interfaces::pEngine->ServerCommand(cmd);
 	}
 
@@ -399,8 +399,18 @@ namespace
 			return 1.0;
 		}
 
-		// Automatic end-of-map vote.
+		// A decided next map: load it ourselves just before the time limit hits. The engine's own end-of-match
+		// changelevel only understands maps on disk, so it can't be trusted with workshop maps.
 		f32 left = TimeLeft();
+		if (!nextMap.empty() && left > -1.0f && left <= 1.5f)
+		{
+			std::string map = nextMap;
+			nextMap.clear();
+			ChangeLevel(map);
+			return 1.0;
+		}
+
+		// Automatic end-of-map vote.
 		if (!endVoteDone && pendingChangeTime <= 0.0f && left > 0.0f && left <= cfg.endVoteMinutes * 60.0f)
 		{
 			endVoteDone = true;
@@ -481,10 +491,15 @@ static_function void LoadConfig()
 	cfg.excludeRecent = kv->GetInt("excludeRecent", cfg.excludeRecent);
 	cfg.extendMinutes = kv->GetInt("extendMinutes", cfg.extendMinutes);
 	cfg.maxExtends = kv->GetInt("maxExtends", cfg.maxExtends);
-	cfg.rtvPercent = std::min(std::max(cfg.rtvPercent, 0.05f), 1.0f);
-	cfg.mapsInVote = std::min(std::max(cfg.mapsInVote, 2), VOTE_MAX_OPTIONS - 1);
-	cfg.voteDuration = std::max(cfg.voteDuration, 5.0f);
-	cfg.excludeRecent = std::max(cfg.excludeRecent, 0);
+	const char *cc = kv->GetString("changeCommand", "");
+	if (cc && cc[0])
+	{
+		cfg.changeCommand = cc;
+	}
+	cfg.rtvPercent = (std::min)((std::max)(cfg.rtvPercent, 0.05f), 1.0f);
+	cfg.mapsInVote = (std::min)((std::max)(cfg.mapsInVote, 2), VOTE_MAX_OPTIONS - 1);
+	cfg.voteDuration = (std::max)(cfg.voteDuration, 5.0f);
+	cfg.excludeRecent = (std::max)(cfg.excludeRecent, 0);
 }
 
 void Surf::vote::Init()
@@ -758,7 +773,7 @@ void Surf::vote::PrintNextMap(SurfPlayer *player)
 	if (left > 0.0f && !endVoteDone)
 	{
 		f32 untilVote = left - cfg.endVoteMinutes * 60.0f;
-		player->languageService->PrintChat(true, false, "Vote - Next Map Undecided", FormatTime(std::max(untilVote, 0.0f)).c_str());
+		player->languageService->PrintChat(true, false, "Vote - Next Map Undecided", FormatTime((std::max)(untilVote, 0.0f)).c_str());
 	}
 	else
 	{

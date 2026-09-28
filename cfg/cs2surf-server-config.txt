@@ -80,6 +80,9 @@
 		"extendMinutes"		"15"
 		// How many times one map can be extended.
 		"maxExtends"		"2"
+		// Console command used to switch maps. Workshop maps (host_workshop_collection) need ds_workshop_changelevel;
+		// use "changelevel" only if your maps are plain files in csgo/maps.
+		"changeCommand"		"ds_workshop_changelevel"
 	}
 
 	"apiUrl"	""

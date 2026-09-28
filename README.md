@@ -28,6 +28,16 @@ A vote also starts automatically a few minutes before `mp_timelimit` runs out, w
 - Settings: the `vote` block in `cfg/cs2surf-server-config.txt`.
 - Admins can start a vote from the console with `surf_vote_start`.
 
+# Compact HUD (default)
+
+A SharpTimer-style panel: big run timer, speed coloured by value, strafe sync %, and a checkpoint/stage flash showing the
+split time, the diff against your compare target (blue = faster, red = slower) and the speed at the zone with its diff
+(green = faster, orange = slower). Speeds at zones are stored with each run, so speed diffs appear once a PB has been
+set with this build.
+
+- `!hud` switches between the compact and the classic panel, `!sync` toggles the sync line, `!panel` hides everything.
+- Layout and colours are plain HTML in `translations/cs2surf-hud.phrases.txt` (`HUD - Compact Panel`, `HUD - Compact Split`, `HUD - Compact Sync`).
+
 # Installation:
 
 - Download the latest version in the release section and extract them to your server's `csgo/` directory.

@@ -250,4 +250,35 @@
 		"lv"		"{grey}Jūsu centrālais informācijas panelis ir deaktivizēts."
 		"pt"		"{grey}O painel central de informações foi desativado."
 	}
+	// ---- compact panel (default). Colours/sizes live here so they are easy to change. ----
+	"HUD - Compact Panel"
+	{
+		// {flash} = checkpoint/stage split lines (may be empty), {time} = run time, {speed} = coloured speed,
+		// {sync} = sync line (may be empty), {stage} = "Stage X" (may be empty), {keys} = key overlay
+		"#format"	"flash:s,time:s,speed:s,sync:s,stage:s,keys:s"
+		"en"		"{flash}<font class='fontSize-xl horizontal-center' color='white'>{time}</font><br><font class='fontSize-s stratum-bold-italic' color='#9aa4b0'>u/s</font> <font class='fontSize-l horizontal-center'>{speed}</font> {sync}<br><font class='fontSize-s stratum-bold-italic' color='#9aa4b0'>{stage}</font> <font class='fontSize-ml stratum-light-mono' color='#9aa4b0'>{keys}</font>"
+	}
+	"HUD - Compact Sync"
+	{
+		"#format"	"sync:s"
+		"en"		"<font class='fontSize-l' color='#7fd0ff'>| {sync}%</font> <font class='fontSize-s stratum-bold-italic' color='#9aa4b0'>Sync</font>"
+	}
+	"HUD - Compact Split"
+	{
+		// {label} = "CP 3" / "Stage 2", {time} = split time, {diff} = coloured time diff line (may be empty), {speed} = coloured speed line
+		"#format"	"label:s,time:s,diff:s,speed:s"
+		"en"		"<font color='white'>{label}  &#183;  {time}</font><br>{diff}<br>{speed}<br>"
+	}
+	"HUD Option - Style - Compact"
+	{
+		"en"		"{grey}HUD style: {lime}compact{grey} (big timer, checkpoint diffs, sync). {lime}!hud{grey} to switch back."
+	}
+	"HUD Option - Style - Classic"
+	{
+		"en"		"{grey}HUD style: {lime}classic{grey}. {lime}!hud{grey} to switch back."
+	}
+	"HUD Option - Sync - Toggled"
+	{
+		"en"		"{grey}Sync display toggled."
+	}
 }

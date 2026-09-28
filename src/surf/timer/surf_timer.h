@@ -35,6 +35,10 @@ struct PBData
 		overall.pbCpZoneTimes.FillWithValue(-1.0);
 		overall.pbStageZoneTimes.SetCount(SURF_MAX_STAGE_ZONES);
 		overall.pbStageZoneTimes.FillWithValue(-1.0);
+		overall.pbCpZoneSpeeds.SetCount(SURF_MAX_CHECKPOINT_ZONES);
+		overall.pbCpZoneSpeeds.FillWithValue(-1.0);
+		overall.pbStageZoneSpeeds.SetCount(SURF_MAX_STAGE_ZONES);
+		overall.pbStageZoneSpeeds.FillWithValue(-1.0);
 	}
 
 	struct
@@ -43,6 +47,9 @@ struct PBData
 		f64 points {};
 		CUtlVectorFixed<f64, SURF_MAX_CHECKPOINT_ZONES> pbCpZoneTimes;
 		CUtlVectorFixed<f64, SURF_MAX_STAGE_ZONES> pbStageZoneTimes;
+		// speed when the zone was touched, -1 when the record was made before speeds were stored
+		CUtlVectorFixed<f64, SURF_MAX_CHECKPOINT_ZONES> pbCpZoneSpeeds;
+		CUtlVectorFixed<f64, SURF_MAX_STAGE_ZONES> pbStageZoneSpeeds;
 	} overall;
 };
 
@@ -124,9 +131,11 @@ private:
 	u32 lastCheckpoint {};
 	i32 reachedCheckpoints {};
 	CUtlVectorFixed<f64, SURF_MAX_CHECKPOINT_ZONES> cpZoneTimes {};
+	CUtlVectorFixed<f64, SURF_MAX_CHECKPOINT_ZONES> cpZoneSpeeds {};
 
 	i32 currentStage {};
 	CUtlVectorFixed<f64, SURF_MAX_STAGE_ZONES> stageZoneTimes {};
+	CUtlVectorFixed<f64, SURF_MAX_STAGE_ZONES> stageZoneSpeeds {};
 	CUtlVectorFixed<f64, SURF_MAX_STAGE_ZONES> stageEndTouchTimes {};
 
 	// PB cache per mode and per course.
@@ -200,6 +209,15 @@ public:
 	bool GetValidTimer()
 	{
 		return validTime;
+	}
+
+	f32 GetCurrentSpeed()
+	{
+		Vector velocity, baseVelocity;
+		this->player->GetVelocity(&velocity);
+		this->player->GetBaseVelocity(&baseVelocity);
+		velocity += baseVelocity;
+		return velocity.Length2D();
 	}
 
 	f64 GetTime()

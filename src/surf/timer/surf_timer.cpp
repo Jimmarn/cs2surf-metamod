@@ -10,6 +10,7 @@
 #include "surf/trigger/surf_trigger.h"
 #include "surf/spec/surf_spec.h"
 #include "surf/recording/surf_recording.h"
+#include "surf/hud/surf_hud.h"
 #include "submission.h"
 
 #include "utils/utils.h"
@@ -106,6 +107,7 @@ void SurfTimerService::CheckpointZoneStartTouch(const SurfCourseDescriptor *cour
 	{
 		this->PlayReachedCheckpointSound();
 		this->cpZoneTimes[cpNumber - 1] = this->GetTime();
+		this->cpZoneSpeeds[cpNumber - 1] = this->GetCurrentSpeed();
 		this->ShowCheckpointText(cpNumber);
 		this->lastCheckpoint = cpNumber;
 		this->reachedCheckpoints++;
@@ -140,6 +142,7 @@ void SurfTimerService::StageZoneStartTouch(const SurfCourseDescriptor *course, i
 	if (stageNumber == this->currentStage + 1)
 	{
 		this->stageZoneTimes[this->currentStage - 1] = this->GetTime() - this->stageEndTouchTimes[this->currentStage - 1];
+		this->stageZoneSpeeds[this->currentStage - 1] = this->GetCurrentSpeed();
 
 		this->PlayReachedStageSound();
 		this->ShowStageText();
@@ -211,10 +214,14 @@ bool SurfTimerService::TimerStart(const SurfCourseDescriptor *courseDesc, bool p
 	this->cpZoneTimes.SetSize(courseDesc->checkpointCount);
 	this->stageZoneTimes.SetSize(courseDesc->stageCount);
 	this->stageEndTouchTimes.SetSize(courseDesc->stageCount);
+	this->cpZoneSpeeds.SetSize(courseDesc->checkpointCount);
+	this->stageZoneSpeeds.SetSize(courseDesc->stageCount);
 
 	this->cpZoneTimes.FillWithValue(invalidTime);
 	this->stageZoneTimes.FillWithValue(invalidTime);
 	this->stageEndTouchTimes.FillWithValue(invalidTime);
+	this->cpZoneSpeeds.FillWithValue(invalidTime);
+	this->stageZoneSpeeds.FillWithValue(invalidTime);
 
 	if (courseDesc->stageCount > 0)
 	{
@@ -1037,6 +1044,20 @@ void SurfTimerService::UpdateLocalRecordCache()
 	SurfDatabaseService::QueryAllRecords(g_pSurfUtils->GetCurrentMapName(), onQuerySuccess, SurfDatabaseService::OnGenericTxnFailure);
 }
 
+template<size_t N>
+static_function void ReadZoneArray(KeyValues3 &kv, const char *name, i32 count, CUtlVectorFixed<f64, N> &out)
+{
+	KeyValues3 *data = kv.FindMember(name);
+	if (data && data->GetType() == KV3_TYPE_ARRAY)
+	{
+		for (i32 i = 0; i < count; i++)
+		{
+			KeyValues3 *element = data->GetArrayElement(i);
+			out[i] = element ? element->GetDouble(-1.0) : -1.0;
+		}
+	}
+}
+
 void SurfTimerService::InsertRecordToCache(f64 time, const SurfCourseDescriptor *course, PluginId modeID, bool global, CUtlString metadata)
 {
 	PBData &pb = global ? SurfTimerService::wrCache[ToPBDataKey(modeID, course->guid)] : SurfTimerService::srCache[ToPBDataKey(modeID, course->guid)];
@@ -1084,6 +1105,8 @@ void SurfTimerService::InsertRecordToCache(f64 time, const SurfCourseDescriptor 
 			pb.overall.pbStageZoneTimes[i] = time;
 		}
 	}
+	ReadZoneArray(kv, "cpZoneSpeeds", course->checkpointCount, pb.overall.pbCpZoneSpeeds);
+	ReadZoneArray(kv, "stageZoneSpeeds", course->stageCount, pb.overall.pbStageZoneSpeeds);
 }
 
 void SurfTimerService::ClearPBCache()
@@ -1151,6 +1174,8 @@ void SurfTimerService::InsertPBToCache(f64 time, const SurfCourseDescriptor *cou
 			pb.overall.pbStageZoneTimes[i] = time;
 		}
 	}
+	ReadZoneArray(kv, "cpZoneSpeeds", course->checkpointCount, pb.overall.pbCpZoneSpeeds);
+	ReadZoneArray(kv, "stageZoneSpeeds", course->stageCount, pb.overall.pbStageZoneSpeeds);
 }
 
 void SurfTimerService::CheckMissedTime()
@@ -1229,6 +1254,17 @@ void SurfTimerService::ShowCheckpointText(u32 currentCheckpoint)
 	}
 
 	this->player->languageService->PrintChat(true, false, "Course Checkpoint Reached", currentCheckpoint, time.Get(), pbDiff.c_str());
+
+	// HUD split flash
+	{
+		bool hasDiff = pb && pb->overall.pbCpZoneTimes[currentCheckpoint - 1] > 0;
+		f64 diff = hasDiff ? this->cpZoneTimes[currentCheckpoint - 1] - pb->overall.pbCpZoneTimes[currentCheckpoint - 1] : 0.0;
+		f32 pbSpeed = pb ? (f32)pb->overall.pbCpZoneSpeeds[currentCheckpoint - 1] : -1.0f;
+		char label[32];
+		V_snprintf(label, sizeof(label), "CP %d", currentCheckpoint);
+		this->player->hudService->SetSplitFlash(label, utils::FormatTime(this->cpZoneTimes[currentCheckpoint - 1]).Get(), diff, hasDiff,
+												(f32)this->cpZoneSpeeds[currentCheckpoint - 1], pbSpeed);
+	}
 }
 
 void SurfTimerService::ShowStageText()
@@ -1267,6 +1303,16 @@ void SurfTimerService::ShowStageText()
 	}
 
 	this->player->languageService->PrintChat(true, false, "Course Stage Reached", this->currentStage, time.Get(), pbDiff.c_str());
+
+	// HUD split flash
+	{
+		bool hasDiff = pb && pb->overall.pbStageZoneTimes[this->currentStage - 1] > 0;
+		f64 diff = hasDiff ? this->stageZoneTimes[this->currentStage - 1] - pb->overall.pbStageZoneTimes[this->currentStage - 1] : 0.0;
+		f32 pbSpeed = pb ? (f32)pb->overall.pbStageZoneSpeeds[this->currentStage - 1] : -1.0f;
+		char label[32];
+		V_snprintf(label, sizeof(label), "Stage %d", this->currentStage);
+		this->player->hudService->SetSplitFlash(label, time.Get(), diff, hasDiff, (f32)this->stageZoneSpeeds[this->currentStage - 1], pbSpeed);
+	}
 }
 
 CUtlString SurfTimerService::GetCurrentRunMetadata()
@@ -1287,6 +1333,22 @@ CUtlString SurfTimerService::GetCurrentRunMetadata()
 	{
 		KeyValues3 *time = stageZoneTimesKV->ArrayAddElementToTail();
 		time->SetDouble(this->stageZoneTimes[i]);
+	}
+
+	KeyValues3 *cpZoneSpeedsKV = kv.FindOrCreateMember("cpZoneSpeeds");
+	cpZoneSpeedsKV->SetToEmptyArray();
+	FOR_EACH_VEC(this->cpZoneSpeeds, i)
+	{
+		KeyValues3 *v = cpZoneSpeedsKV->ArrayAddElementToTail();
+		v->SetDouble(this->cpZoneSpeeds[i]);
+	}
+
+	KeyValues3 *stageZoneSpeedsKV = kv.FindOrCreateMember("stageZoneSpeeds");
+	stageZoneSpeedsKV->SetToEmptyArray();
+	FOR_EACH_VEC(this->stageZoneSpeeds, i)
+	{
+		KeyValues3 *v = stageZoneSpeedsKV->ArrayAddElementToTail();
+		v->SetDouble(this->stageZoneSpeeds[i]);
 	}
 
 	CUtlString result, error;

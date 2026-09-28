@@ -14,11 +14,25 @@
 #include "tier0/memdbgon.h"
 
 #define HUD_ON_GROUND_THRESHOLD 0.07f
+#define HUD_FLASH_DURATION      4.0f
+
+// Compact panel colours. Speed is coloured by the same thresholds SharpTimer used; diffs use blue/red for time and green/orange for speed.
+static_global const i32 hudSpeedThresholds[] = {349, 699, 1049, 1399, 1749, 2099, 2449, 2799, 3149, 3499};
+static_global const char *hudSpeedColors[] = {"LimeGreen", "Lime", "GreenYellow", "Yellow", "Gold", "Orange", "DarkOrange", "Tomato", "OrangeRed", "Red", "Crimson"};
+#define HUD_COLOR_TIME_FASTER   "#5a97fa"
+#define HUD_COLOR_TIME_SLOWER   "#fa5a5a"
+#define HUD_COLOR_SPEED_FASTER  "#3b992c"
+#define HUD_COLOR_SPEED_SLOWER  "#DA6E1B"
 
 static_global class SurfTimerServiceEventListener_HUD : public SurfTimerServiceEventListener
 {
 	virtual void OnTimerStopped(SurfPlayer *player, u32 courseGUID) override;
 	virtual void OnTimerEndPost(SurfPlayer *player, u32 courseGUID, f32 time) override;
+
+	virtual void OnTimerStartPost(SurfPlayer *player, u32 courseGUID) override
+	{
+		player->hudService->ResetSync();
+	}
 } timerEventListener;
 
 static_global class SurfOptionServiceEventListener_HUD : public SurfOptionServiceEventListener
@@ -37,9 +51,11 @@ void SurfHUDService::Init()
 
 void SurfHUDService::Reset()
 {
-	this->showPanel = this->player->optionService->GetPreferenceBool("showPanel", true);
+	this->ResetShowPanel();
 	this->timerStoppedTime = {};
 	this->currentTimeWhenTimerStopped = {};
+	this->flash = {};
+	this->ResetSync();
 }
 
 std::string SurfHUDService::GetSpeedText(const char *language)
@@ -151,6 +167,20 @@ void SurfHUDService::DrawPanels(SurfPlayer *player, SurfPlayer *target)
 	}
 	const char *language = target->languageService->GetLanguage();
 
+	if (target->hudService->IsCompactStyle())
+	{
+		std::string html = player->hudService->GetCompactHtml(language, target);
+		if (!voteHtml.empty())
+		{
+			html = voteHtml + html;
+		}
+		if (!html.empty())
+		{
+			target->PrintHTMLCentre(false, false, html.c_str());
+		}
+		return;
+	}
+
 	std::string keyText = player->hudService->GetKeyText(language);
 	std::string timerText = player->hudService->GetTimerText(language);
 	std::string speedText = player->hudService->GetSpeedText(language);
@@ -207,6 +237,139 @@ void SurfHUDService::DrawPanels(SurfPlayer *player, SurfPlayer *target)
 void SurfHUDService::ResetShowPanel()
 {
 	this->showPanel = this->player->optionService->GetPreferenceBool("showPanel", true);
+	this->compactStyle = this->player->optionService->GetPreferenceBool("hudCompact", true);
+	this->showSync = this->player->optionService->GetPreferenceBool("hudSync", true);
+}
+
+void SurfHUDService::ToggleStyle()
+{
+	this->compactStyle = !this->compactStyle;
+	this->player->optionService->SetPreferenceBool("hudCompact", this->compactStyle);
+	// the compact style does not use the plain centre text, clear whatever the classic one left there
+	utils::PrintCentre(this->player->GetController(), "#SFUI_EmptyString");
+}
+
+void SurfHUDService::ToggleSync()
+{
+	this->showSync = !this->showSync;
+	this->player->optionService->SetPreferenceBool("hudSync", this->showSync);
+}
+
+void SurfHUDService::OnProcessMovementPost()
+{
+	// Strafe sync: while airborne and holding exactly one strafe key, count the ticks where the view turned the same way.
+	CCSPlayerPawn *pawn = this->player->GetPlayerPawn();
+	if (!pawn || (pawn->m_fFlags() & FL_ONGROUND) || this->player->GetMoveType() != MOVETYPE_WALK)
+	{
+		return;
+	}
+	bool left = this->player->IsButtonPressed(IN_MOVELEFT);
+	bool right = this->player->IsButtonPressed(IN_MOVERIGHT);
+	if (left == right)
+	{
+		return;
+	}
+	TurnState turn = this->player->GetTurning();
+	if (turn == TURN_NONE)
+	{
+		return;
+	}
+	this->syncTotal++;
+	if ((left && turn == TURN_LEFT) || (right && turn == TURN_RIGHT))
+	{
+		this->syncGood++;
+	}
+}
+
+void SurfHUDService::SetSplitFlash(const char *label, const char *time, f64 diff, bool hasDiff, f32 speed, f32 pbSpeed)
+{
+	this->flash = {};
+	this->flash.label = label;
+	this->flash.time = time;
+	if (hasDiff)
+	{
+		this->flash.diff = SurfTimerService::FormatDiffTime(diff).Get();
+		this->flash.faster = diff < 0;
+	}
+	char buf[32];
+	V_snprintf(buf, sizeof(buf), "%.0f", speed);
+	this->flash.speed = buf;
+	if (pbSpeed >= 0.0f)
+	{
+		f32 sd = speed - pbSpeed;
+		V_snprintf(buf, sizeof(buf), "%+.0f", sd);
+		this->flash.speedDiff = buf;
+		this->flash.speedFaster = sd > 0.0f;
+	}
+	this->flash.expiry = g_pSurfUtils->GetServerGlobals()->curtime + HUD_FLASH_DURATION;
+}
+
+std::string SurfHUDService::GetCompactHtml(const char *language, SurfPlayer *target)
+{
+	// --- timer (big) ---
+	std::string timeText;
+	if (Surf::replaysystem::IsReplayBot(this->player) || this->player->timerService->GetTimerRunning() || this->ShouldShowTimerAfterStop())
+	{
+		timeText = this->GetTimerText(language);
+	}
+	// --- speed, coloured by value ---
+	Vector velocity, baseVelocity;
+	this->player->GetVelocity(&velocity);
+	this->player->GetBaseVelocity(&baseVelocity);
+	velocity += baseVelocity;
+	f32 speed = velocity.Length2D();
+	const char *speedColor = hudSpeedColors[SURF_ARRAYSIZE(hudSpeedThresholds)];
+	for (u32 i = 0; i < SURF_ARRAYSIZE(hudSpeedThresholds); i++)
+	{
+		if (speed < hudSpeedThresholds[i])
+		{
+			speedColor = hudSpeedColors[i];
+			break;
+		}
+	}
+	char speedText[64];
+	V_snprintf(speedText, sizeof(speedText), "<font color='%s'>%.0f</font>", speedColor, speed);
+	// --- sync ---
+	std::string syncText;
+	if (target->hudService->showSync && !Surf::replaysystem::IsReplayBot(this->player))
+	{
+		char buf[64];
+		V_snprintf(buf, sizeof(buf), "%.1f", this->GetSync());
+		syncText = SurfLanguageService::PrepareMessageWithLang(language, "HUD - Compact Sync", buf);
+	}
+	// --- checkpoint / stage flash ---
+	std::string flashText;
+	if (this->flash.expiry > g_pSurfUtils->GetServerGlobals()->curtime && !this->flash.label.empty())
+	{
+		std::string diffLine, speedLine;
+		if (!this->flash.diff.empty())
+		{
+			char buf[160];
+			V_snprintf(buf, sizeof(buf), "<font color='%s'>%s %s</font>", this->flash.faster ? HUD_COLOR_TIME_FASTER : HUD_COLOR_TIME_SLOWER,
+					   this->flash.faster ? "&#9650;" : "&#9660;", this->flash.diff.c_str());
+			diffLine = buf;
+		}
+		if (!this->flash.speedDiff.empty())
+		{
+			char buf[160];
+			V_snprintf(buf, sizeof(buf), "<font color='white'>%s</font> <font color='%s'>%s %s</font>", this->flash.speed.c_str(),
+					   this->flash.speedFaster ? HUD_COLOR_SPEED_FASTER : HUD_COLOR_SPEED_SLOWER, this->flash.speedFaster ? "&#9650;" : "&#9660;",
+					   this->flash.speedDiff.c_str());
+			speedLine = buf;
+		}
+		else
+		{
+			speedLine = "<font color='white'>" + this->flash.speed + "</font>";
+		}
+		flashText = SurfLanguageService::PrepareMessageWithLang(language, "HUD - Compact Split", this->flash.label.c_str(), this->flash.time.c_str(),
+																diffLine.c_str(), speedLine.c_str());
+	}
+	std::string stageText = this->GetStageText(language);
+	std::string keyText = this->GetKeyText(language);
+	// clang-format off
+	return SurfLanguageService::PrepareMessageWithLang(language, "HUD - Compact Panel",
+		flashText.c_str(), timeText.c_str(), speedText, syncText.c_str(), stageText.c_str(), keyText.c_str());
+	// clang-format on
 }
 
 void SurfHUDService::TogglePanel()
@@ -254,5 +417,23 @@ SCMD(surf_panel, SCFL_HUD)
 	{
 		player->languageService->PrintChat(true, false, "HUD Option - Info Panel - Disable");
 	}
+	return true;
+}
+
+SCMD(surf_hudstyle, SCFL_HUD)
+{
+	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
+	player->hudService->ToggleStyle();
+	player->languageService->PrintChat(true, false, player->hudService->IsCompactStyle() ? "HUD Option - Style - Compact" : "HUD Option - Style - Classic");
+	return true;
+}
+
+SCMD_LINK(surf_hud, surf_hudstyle);
+
+SCMD(surf_sync, SCFL_HUD)
+{
+	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
+	player->hudService->ToggleSync();
+	player->languageService->PrintChat(true, false, "HUD Option - Sync - Toggled");
 	return true;
 }
