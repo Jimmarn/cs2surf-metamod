@@ -37,6 +37,18 @@
 	}
 
 CGameConfig *g_pGameConfig = NULL;
+static_global AcceptInput_t *pAcceptInput = NULL;
+
+bool utils::AcceptInput(CEntityInstance *entity, const char *inputName, CEntityInstance *activator, CEntityInstance *caller, variant_t *value)
+{
+	if (!pAcceptInput || !entity)
+	{
+		return false;
+	}
+	pAcceptInput(entity, inputName, activator, caller, value, 0);
+	return true;
+}
+
 SurfUtils *g_pSurfUtils = NULL;
 extern CSteamGameServerAPIContext g_steamAPI;
 
@@ -96,6 +108,13 @@ bool utils::Initialize(ISmmAPI *ismm, char *error, size_t maxlen)
 
 	g_pSurfUtils = new SurfUtils(GetLegacyGameEventListener, SnapViewAngles, EmitSound, SwitchTeam, SetPawn, CreateEntityByName, DispatchSpawn,
 								 RemoveEntity, DebugDrawMesh, CreateBot, SetOrAddAttributeValueByName, SetModel);
+
+	// Optional: only the 3D HUD needs it, so a missing signature is not fatal.
+	pAcceptInput = (AcceptInput_t *)g_pGameConfig->ResolveSignature("CEntityInstance_AcceptInput");
+	if (!pAcceptInput)
+	{
+		Warning("Failed to find address for CEntityInstance_AcceptInput, entity parenting (!hud3d) will not work.\n");
+	}
 
 	utils::UnlockConVars();
 	utils::UnlockConCommands();

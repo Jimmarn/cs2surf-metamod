@@ -52,6 +52,9 @@ namespace utils
 	void ClientPrintFilter(IRecipientFilter *filter, int msg_dest, const char *msg_name, const char *param1, const char *param2, const char *param3,
 						   const char *param4);
 	void PrintConsole(CBaseEntity *entity, const char *format, ...);
+
+	// Entity IO. Returns false when the AcceptInput signature could not be resolved.
+	bool AcceptInput(CEntityInstance *entity, const char *inputName, CEntityInstance *activator, CEntityInstance *caller, variant_t *value);
 	void PrintChat(CBaseEntity *entity, const char *format, ...);
 	void PrintCentre(CBaseEntity *entity, const char *format, ...);
 	void PrintAlert(CBaseEntity *entity, const char *format, ...);

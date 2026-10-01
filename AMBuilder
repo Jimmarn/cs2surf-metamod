@@ -101,6 +101,7 @@ def configure_main(sdk_target, sdk, cxx):
     os.path.join(builder.sourcePath, 'src', 'surf', 'db', 'migrations.cpp'),
     os.path.join(builder.sourcePath, 'src', 'surf', 'db', 'save_prefs.cpp'),
     os.path.join(builder.sourcePath, 'src', 'surf', 'db', 'save_time.cpp'),
+    os.path.join(builder.sourcePath, 'src', 'surf', 'db', 'stage_times.cpp'),
     os.path.join(builder.sourcePath, 'src', 'surf', 'db', 'setup_client.cpp'),
     os.path.join(builder.sourcePath, 'src', 'surf', 'db', 'setup_database.cpp'),
     os.path.join(builder.sourcePath, 'src', 'surf', 'db', 'setup_map_courses.cpp'),
@@ -116,6 +117,8 @@ def configure_main(sdk_target, sdk, cxx):
     os.path.join(builder.sourcePath, 'src', 'surf', 'global', 'events.cpp'),
     
     os.path.join(builder.sourcePath, 'src', 'surf', 'hud', 'surf_hud.cpp'),
+    os.path.join(builder.sourcePath, 'src', 'surf', 'hud', 'surf_hud_layout.cpp'),
+    os.path.join(builder.sourcePath, 'src', 'surf', 'hud', 'surf_hud_top.cpp'),
 
     os.path.join(builder.sourcePath, 'src', 'surf', 'language', 'surf_language.cpp'),
     os.path.join(builder.sourcePath, 'src', 'surf', 'mode', 'surf_mode_manager.cpp'),
@@ -125,6 +128,7 @@ def configure_main(sdk_target, sdk, cxx):
     os.path.join(builder.sourcePath, 'src', 'surf', 'option', 'surf_option.cpp'),
     os.path.join(builder.sourcePath, 'src', 'surf', 'profile', 'surf_profile.cpp'),
     os.path.join(builder.sourcePath, 'src', 'surf', 'quiet', 'surf_quiet.cpp'),
+    os.path.join(builder.sourcePath, 'src', 'surf', 'wind', 'surf_wind.cpp'),
     os.path.join(builder.sourcePath, 'src', 'surf', 'fov', 'surf_fov.cpp'),
     os.path.join(builder.sourcePath, 'src', 'surf', 'replays', 'item.cpp'),
     os.path.join(builder.sourcePath, 'src', 'surf', 'replays', 'bot.cpp'),
@@ -153,6 +157,7 @@ def configure_main(sdk_target, sdk, cxx):
     os.path.join(builder.sourcePath, 'src', 'surf', 'timer', 'queries', 'base_request.cpp'),
     os.path.join(builder.sourcePath, 'src', 'surf', 'timer', 'queries', 'course_top.cpp'),
     os.path.join(builder.sourcePath, 'src', 'surf', 'timer', 'queries', 'top_record.cpp'),
+    os.path.join(builder.sourcePath, 'src', 'surf', 'timer', 'queries', 'first_finish.cpp'),
     os.path.join(builder.sourcePath, 'src', 'surf', 'timer', 'queries', 'personal_best.cpp'),
     
     os.path.join(builder.sourcePath, 'src', 'surf', 'tip', 'surf_tip.cpp'),

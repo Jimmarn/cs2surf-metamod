@@ -253,21 +253,25 @@
 	// ---- compact panel (default). Colours/sizes live here so they are easy to change. ----
 	"HUD - Compact Panel"
 	{
-		// {flash} = checkpoint/stage split lines (may be empty), {time} = run time, {speed} = coloured speed,
-		// {sync} = sync line (may be empty), {stage} = "Stage X" (may be empty), {keys} = key overlay
-		"#format"	"flash:s,time:s,speed:s,sync:s,stage:s,keys:s"
-		"en"		"{flash}<font class='fontSize-xl horizontal-center' color='white'>{time}</font><br><font class='fontSize-s stratum-bold-italic' color='#9aa4b0'>u/s</font> <font class='fontSize-l horizontal-center'>{speed}</font> {sync}<br><font class='fontSize-s stratum-bold-italic' color='#9aa4b0'>{stage}</font> <font class='fontSize-ml stratum-light-mono' color='#9aa4b0'>{keys}</font>"
+		// {speed} = coloured speed, {sync} = sync line (may be empty), {keys} = key overlay,
+		// {flash} = checkpoint/stage split lines (may be empty), {stage} = "Stage X" line (may be empty), {time} = big run time
+		"#format"	"speed:s,sync:s,keys:s,flash:s,stage:s,time:s"
+		"en"		"<font class='fontSize-s stratum-bold-italic' color='#9aa4b0'>u/s</font> <font class='fontSize-l horizontal-center'>{speed}</font> {sync}<br><font class='fontSize-ml stratum-light-mono' color='#9aa4b0'>{keys}</font><br>{flash}{stage}<font class='fontSize-xl horizontal-center' color='white'>{time}</font>"
 	}
 	"HUD - Compact Sync"
 	{
 		"#format"	"sync:s"
-		"en"		"<font class='fontSize-l' color='#7fd0ff'>| {sync}%</font> <font class='fontSize-s stratum-bold-italic' color='#9aa4b0'>Sync</font>"
+		"en"		"<font class='fontSize-l' color='#7fd0ff'>| {sync}%%%%</font> <font class='fontSize-s stratum-bold-italic' color='#9aa4b0'>Sync</font>"
 	}
 	"HUD - Compact Split"
 	{
 		// {label} = "CP 3" / "Stage 2", {time} = split time, {diff} = coloured time diff line (may be empty), {speed} = coloured speed line
 		"#format"	"label:s,time:s,diff:s,speed:s"
 		"en"		"<font color='white'>{label}  &#183;  {time}</font><br>{diff}<br>{speed}<br>"
+	}
+	"HUD Option - Style - Layout"
+	{
+		"en"		"{grey}HUD style: {lime}layout{grey}. {lime}!hud{grey} to switch, {lime}!keys <x> <y>{grey} moves the keys."
 	}
 	"HUD Option - Style - Compact"
 	{
@@ -280,5 +284,74 @@
 	"HUD Option - Sync - Toggled"
 	{
 		"en"		"{grey}Sync display toggled."
+	}
+	"HUD Option - Sync Font - Toggled"
+	{
+		"en"		"{grey}Sync font toggled (layout HUD)."
+	}
+	"HUD Option - Keys - Toggled"
+	{
+		"en"		"{grey}Key display toggled."
+	}
+	"HUD Option - Keys - Moved"
+	{
+		"#format"	"x:d,y:d"
+		"en"		"{grey}Keys moved to {lime}{x} {y}{grey} (percent of the screen from the centre, -50 to 50)."
+	}
+	"HUD Option - Split - Moved"
+	{
+		"#format"	"x:d,y:d"
+		"en"		"{grey}Split box offset set to {lime}{x} {y}{grey} (percent of the screen, {lime}!splitpos{grey} alone resets it)."
+	}
+	"HUD Option - Timer - Moved"
+	{
+		"#format"	"x:d,y:d"
+		"en"		"{grey}Timer offset set to {lime}{x} {y}{grey} (percent of the screen, {lime}!timerpos{grey} alone resets it)."
+	}
+	"HUD Option - Speed - Moved"
+	{
+		"#format"	"x:d,y:d"
+		"en"		"{grey}Speed offset set to {lime}{x} {y}{grey} (on top of {lime}!timerpos{grey}; {lime}!speedpos{grey} alone resets it)."
+	}
+	"HUD Option - Speed Color - Toggled"
+	{
+		"en"		"{grey}Speed colours toggled (layout HUD)."
+	}
+	"HUD Option - Stage Mode - Stage"
+	{
+		"en"		"{grey}Stage mode: {lime}stage times{grey}. Stage splits and the top list show stage records. {lime}!stagemode{grey} to switch back."
+	}
+	"HUD Option - Stage Mode - Run"
+	{
+		"en"		"{grey}Stage mode: {lime}full run{grey}. Stage splits count towards the whole run, like checkpoints."
+	}
+	"HUD Top List - Map Header"
+	{
+		"en"		"Map"
+	}
+	"HUD Top List - Stage Header"
+	{
+		"#format"	"stage:d"
+		"en"		"Stage {stage}"
+	}
+	"Wind - Enabled"
+	{
+		"en"		"{grey}Wind sounds {lime}enabled{grey}. {lime}!windmode{grey} switches random / sequential clips."
+	}
+	"Wind - Disabled"
+	{
+		"en"		"{grey}Wind sounds {lightred}disabled{grey}."
+	}
+	"Wind - Mode Sequential"
+	{
+		"en"		"{grey}Wind mode: {lime}sequential{grey} (clips 1-8 in a loop)."
+	}
+	"Wind - Mode Random"
+	{
+		"en"		"{grey}Wind mode: {lime}random{grey}."
+	}
+	"Wind - Not Available"
+	{
+		"en"		"{grey}Wind sounds are not enabled on this server."
 	}
 }

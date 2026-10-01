@@ -12,6 +12,7 @@
 #include "queries/styles.h"
 #include "queries/startpos.h"
 #include "queries/times.h"
+#include "queries/stage_times.h"
 
 #include "vendor/sql_mm/src/public/sql_mm.h"
 #include "vendor/sql_mm/src/public/sqlite_mm.h"
@@ -40,6 +41,7 @@ static_global const std::string mysqlMigrations[] =
 	trimString(mysql_times_create),
 	trimString(mysql_startpos_create),
 	trimString(mysql_times_alter_id_column),
+	trimString(mysql_stagetimes_create),
 };
 
 static_global const std::string sqliteMigrations[] = 
@@ -55,6 +57,7 @@ static_global const std::string sqliteMigrations[] =
 	trimString(sqlite_times_alter_id_column_2),
 	trimString(sqlite_times_alter_id_column_3),
 	trimString(sqlite_times_alter_id_column_4),
+	trimString(sqlite_stagetimes_create),
 };
 
 // clang-format on

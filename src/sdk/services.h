@@ -74,6 +74,34 @@ public:
 	SCHEMA_FIELD(CHandle<CBaseEntity>, m_hObserverTarget)
 };
 
+class CPlayer_ViewModelServices : public CPlayerPawnComponent
+{
+	virtual ~CPlayer_ViewModelServices() = 0;
+
+public:
+	DECLARE_SCHEMA_CLASS_ENTITY(CPlayer_ViewModelServices);
+};
+
+class CCSPlayer_ViewModelServices : public CPlayer_ViewModelServices
+{
+	virtual ~CCSPlayer_ViewModelServices() = 0;
+
+public:
+	DECLARE_SCHEMA_CLASS_ENTITY(CCSPlayer_ViewModelServices);
+	SCHEMA_FIELD_POINTER(CHandle<CBaseEntity>, m_hViewModel) // [3], index 0 is the weapon view model
+
+	CBaseEntity *GetViewModel(int index = 0)
+	{
+		return this->m_hViewModel()[index].Get();
+	}
+
+	void SetViewModel(int index, CBaseEntity *viewModel)
+	{
+		this->m_hViewModel()[index] = viewModel->GetRefEHandle();
+		this->m_hViewModel.NetworkStateChanged();
+	}
+};
+
 class CPlayer_MovementServices : public CPlayerPawnComponent
 {
 	virtual ~CPlayer_MovementServices() = 0;
@@ -95,7 +123,7 @@ public:
 		static const auto m_key = schema::GetOffset(m_className, datatable_hash, "m_arrForceSubtickMoveWhen", prop_hash);
 		static const auto m_chain = schema::FindChainOffset(m_className, m_classNameHash);
 		static const size_t offset =
-			((::size_t)&reinterpret_cast<char const volatile &>((((CPlayer_MovementServices *)0)->m_arrForceSubtickMoveWhen)));
+			((::size_t) & reinterpret_cast<char const volatile &>((((CPlayer_MovementServices *)0)->m_arrForceSubtickMoveWhen)));
 		if (m_chain != 0 && m_key.networked && network)
 		{
 			::ChainNetworkStateChanged((uintptr_t)(this) + m_chain, m_key.offset, index);

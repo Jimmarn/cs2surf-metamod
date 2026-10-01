@@ -12,6 +12,7 @@
 #include "noclip/surf_noclip.h"
 #include "option/surf_option.h"
 #include "quiet/surf_quiet.h"
+#include "wind/surf_wind.h"
 #include "spec/surf_spec.h"
 #include "goto/surf_goto.h"
 #include "style/surf_style.h"
@@ -45,6 +46,7 @@ void SurfPlayer::Init()
 	delete this->languageService;
 	delete this->databaseService;
 	delete this->quietService;
+	delete this->windService;
 	delete this->hudService;
 	delete this->specService;
 	delete this->timerService;
@@ -66,6 +68,7 @@ void SurfPlayer::Init()
 	this->languageService = new SurfLanguageService(this);
 	this->noclipService = new SurfNoclipService(this);
 	this->quietService = new SurfQuietService(this);
+	this->windService = new SurfWindService(this);
 	this->hudService = new SurfHUDService(this);
 	this->specService = new SurfSpecService(this);
 	this->gotoService = new SurfGotoService(this);
@@ -94,6 +97,7 @@ void SurfPlayer::Reset()
 	this->checkpointService->Reset();
 	this->noclipService->Reset();
 	this->quietService->Reset();
+	this->windService->Reset();
 	this->hudService->Reset();
 	this->timerService->Reset();
 	this->specService->Reset();
@@ -183,6 +187,7 @@ void SurfPlayer::OnPhysicsSimulatePost()
 		SurfHUDService::DrawPanels(this, this);
 	}
 	this->quietService->OnPhysicsSimulatePost();
+	this->windService->OnPhysicsSimulatePost();
 	this->profileService->OnPhysicsSimulatePost();
 }
 

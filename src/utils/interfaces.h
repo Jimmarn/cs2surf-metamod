@@ -1,4 +1,5 @@
 #pragma once
+#include "variant.h"
 
 #include "common.h"
 #include "sdk/datatypes.h"
@@ -81,6 +82,7 @@ typedef void SetPawn_t(CBasePlayerController *controller, CCSPlayerPawn *pawn, b
 typedef CBaseEntity *CreateEntityByName_t(const char *className, int iForceEdictIndex);
 typedef void DispatchSpawn_t(CBaseEntity *pEntity, CEntityKeyValues *pEntityKeyValues);
 typedef void RemoveEntity_t(CEntityInstance *);
+typedef void AcceptInput_t(CEntityInstance *, const char *, CEntityInstance *, CEntityInstance *, variant_t *, int);
 typedef void DebugDrawMesh_t(CTransform &transform, Ray_t &ray, i32 r, i32 g, i32 b, i32 a, bool solid, bool ignoreZ, f32 duration);
 typedef CCSPlayerController *CreateBot_t(BotProfile *botProfile, i32 teamNumber, bool isNotFromConsole);
 typedef void SetOrAddAttributeValueByName_t(CAttributeList *attrList, const char *attrName, f32 value);

@@ -40,6 +40,7 @@ class SurfModeService;
 class SurfNoclipService;
 class SurfOptionService;
 class SurfQuietService;
+class SurfWindService;
 class SurfSpecService;
 class SurfGotoService;
 class SurfProfileService;
@@ -152,6 +153,7 @@ public:
 	SurfNoclipService *noclipService {};
 	SurfOptionService *optionService {};
 	SurfQuietService *quietService {};
+	SurfWindService *windService {};
 	SurfSpecService *specService {};
 	SurfGotoService *gotoService {};
 	SurfProfileService *profileService {};

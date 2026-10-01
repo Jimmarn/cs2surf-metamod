@@ -87,4 +87,22 @@
 
 	"apiUrl"	""
 	"apiKey"	""
+
+	// Layout HUD: workshop ID of the addon holding the panorama layout (see workshop/README.md).
+	// Needs MultiAddonManager. Leave empty to only offer the panel HUD.
+	"hud"
+	{
+		"layoutAddon"	""
+	}
+	// Wind sounds: a client-side wind loop that follows the player's speed (!wind / !windmode). The clips
+	// (<path>/WindL0..3/wind_Intensity_<level>_001..008.vsnd) come from a workshop addon mounted with MultiAddonManager.
+	"wind"
+	{
+		"enabled"	"0"
+		"path"		"sounds/windsound"
+		"minSpeed"	"320"
+		"level1"	"1000"
+		"level2"	"2000"
+		"level3"	"3000"
+	}
 }

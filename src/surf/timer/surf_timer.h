@@ -39,6 +39,8 @@ struct PBData
 		overall.pbCpZoneSpeeds.FillWithValue(-1.0);
 		overall.pbStageZoneSpeeds.SetCount(SURF_MAX_STAGE_ZONES);
 		overall.pbStageZoneSpeeds.FillWithValue(-1.0);
+		overall.pbStageTouchTimes.SetCount(SURF_MAX_STAGE_ZONES);
+		overall.pbStageTouchTimes.FillWithValue(-1.0);
 	}
 
 	struct
@@ -50,6 +52,8 @@ struct PBData
 		// speed when the zone was touched, -1 when the record was made before speeds were stored
 		CUtlVectorFixed<f64, SURF_MAX_CHECKPOINT_ZONES> pbCpZoneSpeeds;
 		CUtlVectorFixed<f64, SURF_MAX_STAGE_ZONES> pbStageZoneSpeeds;
+		// cumulative run time when each stage was cleared (-1 for runs made before this was stored)
+		CUtlVectorFixed<f64, SURF_MAX_STAGE_ZONES> pbStageTouchTimes;
 	} overall;
 };
 
@@ -137,6 +141,9 @@ private:
 	CUtlVectorFixed<f64, SURF_MAX_STAGE_ZONES> stageZoneTimes {};
 	CUtlVectorFixed<f64, SURF_MAX_STAGE_ZONES> stageZoneSpeeds {};
 	CUtlVectorFixed<f64, SURF_MAX_STAGE_ZONES> stageEndTouchTimes {};
+	// Stage arrays hold one entry per stage including the last one (stageCount + 1 entries): stageZoneTimes[i] is the segment
+	// time of stage i + 1 (start zone exit to next stage / finish), stageTouchTimes[i] the cumulative run time at that moment.
+	CUtlVectorFixed<f64, SURF_MAX_STAGE_ZONES> stageTouchTimes {};
 
 	// PB cache per mode and per course.
 	std::unordered_map<PBDataKey, PBData> localPBCache;
@@ -169,12 +176,13 @@ private:
 	CompareType currentCompareType = COMPARE_GPB;
 
 	void UpdateCurrentCompareType(PBDataKey key);
-	const PBData *GetCompareTargetForType(CompareType type, PBDataKey key);
-	const PBData *GetCompareTarget(PBDataKey key);
 
 	bool shouldAnnounceMissedTime = true;
 
 public:
+	const PBData *GetCompareTargetForType(CompareType type, PBDataKey key);
+	const PBData *GetCompareTarget(PBDataKey key);
+
 	static void ClearRecordCache();
 	static void UpdateLocalRecordCache();
 	static void InsertRecordToCache(f64 time, const SurfCourseDescriptor *courseName, PluginId modeID, bool global, CUtlString metadata = "");
@@ -188,7 +196,13 @@ public:
 	void CheckMissedTime();
 
 	void ShowCheckpointText(u32 currentCheckpoint);
-	void ShowStageText();
+	// stage = 1-based stage number that was just cleared
+	void ShowStageText(i32 stage);
+	void ShowFinishText(const SurfCourseDescriptor *course, f32 time);
+	// Save the stage segment as a standalone stage record when it beats the player's best (styles are never ranked).
+	void SubmitStageTime(const SurfCourseDescriptor *course, i32 stage);
+	// Number of stages of the course including the final one (0 on linear maps).
+	static i32 GetTotalStages(const SurfCourseDescriptor *course);
 
 	CUtlString GetCurrentRunMetadata();
 
@@ -218,6 +232,14 @@ public:
 		this->player->GetBaseVelocity(&baseVelocity);
 		velocity += baseVelocity;
 		return velocity.Length2D();
+	}
+
+	// Speed for a split. Stage end triggers usually teleport the player into the next stage zone with zero velocity,
+	// so the speed at the moment the zone is touched is meaningless; fall back to the speed from the previous tick.
+	f32 GetSplitSpeed()
+	{
+		f32 speed = this->GetCurrentSpeed();
+		return speed < 10.0f ? this->lastTickSpeed : speed;
 	}
 
 	f64 GetTime()
@@ -377,6 +399,7 @@ public:
 public:
 	virtual void Reset() override;
 	void OnPhysicsSimulatePost();
+	f32 lastTickSpeed {};
 	void OnStartTouchGround();
 	void OnStopTouchGround();
 	void OnChangeMoveType(MoveType_t oldMoveType);

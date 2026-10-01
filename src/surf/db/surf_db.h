@@ -136,6 +136,13 @@ public:
 	// Times
 	static void SaveTime(const char *runUUID, u64 steamID, u32 courseID, i32 modeID, f64 time, u64 styleIDs, std::string_view metadata,
 						 TransactionSuccessCallbackFunc onSuccess, TransactionFailureCallbackFunc onFailure);
+	// Stage records (StageTimes): save a player's stage segment if it beats their best, list a stage's top times, the player's own.
+	static void SaveStageTime(u64 steamID, u32 courseID, i32 modeID, u64 styleIDs, i32 stage, f64 time, f32 speed,
+							  TransactionSuccessCallbackFunc onSuccess, TransactionFailureCallbackFunc onFailure);
+	static void QueryStageTop(CUtlString mapName, CUtlString courseName, u32 modeID, i32 stage, u32 count, TransactionSuccessCallbackFunc onSuccess,
+							  TransactionFailureCallbackFunc onFailure);
+	static void QueryStagePB(u64 steamID64, CUtlString mapName, CUtlString courseName, u32 modeID, i32 stage,
+							 TransactionSuccessCallbackFunc onSuccess, TransactionFailureCallbackFunc onFailure);
 	static void QueryAllPBs(u64 steamID64, CUtlString mapName, TransactionSuccessCallbackFunc onSuccess, TransactionFailureCallbackFunc onFailure);
 	static void QueryPB(u64 steamID64, CUtlString mapName, CUtlString courseName, u32 modeID, TransactionSuccessCallbackFunc onSuccess,
 						TransactionFailureCallbackFunc onFailure);

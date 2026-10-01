@@ -4,6 +4,12 @@
 #include "utils/schema.h"
 #include "utils/interfaces.h"
 #include "ehandle.h"
+#include "variant.h"
+
+namespace utils
+{
+	bool AcceptInput(CEntityInstance *entity, const char *inputName, CEntityInstance *activator, CEntityInstance *caller, variant_t *value);
+}
 
 extern CGameConfig *g_pGameConfig;
 
@@ -155,6 +161,19 @@ public:
 	void Teleport(const Vector *newPosition, const QAngle *newAngles, const Vector *newVelocity)
 	{
 		CALL_VIRTUAL(bool, g_pGameConfig->GetOffset("Teleport"), this, newPosition, newAngles, newVelocity);
+	}
+
+	// Entity IO input, e.g. AcceptInput("SetParent", parent, parent, "!activator").
+	bool AcceptInput(const char *inputName, CEntityInstance *activator, CEntityInstance *caller, variant_t *value)
+	{
+		return utils::AcceptInput(this, inputName, activator, caller, value);
+	}
+
+	// Convenience for string inputs, e.g. AcceptInput("SetParent", parent, parent, "!activator").
+	bool AcceptInput(const char *inputName, CEntityInstance *activator, CEntityInstance *caller, const char *value)
+	{
+		variant_t variant(value);
+		return this->AcceptInput(inputName, activator, caller, &variant);
 	}
 
 	void DispatchSpawn(CEntityKeyValues *pEntityKeyValues = nullptr)

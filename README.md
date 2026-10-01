@@ -82,3 +82,20 @@ docker run --rm -v ./build:/app/build cs2surf-linux-builder
 Note: does not work with gcc!
 
 Copy the contents of `build/package/` to your server's `csgo/` directory.
+
+## Layout HUD
+
+The default HUD is a Panorama layout (`custom_hud_layout`) rendered by the client: freely placed, no lag, styled with CSS.
+It needs [MultiAddonManager](https://github.com/Source2ZE/MultiAddonManager) on the server and a workshop addon holding
+the layout, see [workshop/README.md](workshop/README.md). Set the addon's workshop ID as `hud` > `layoutAddon` in
+`cfg/cs2surf-server-config.txt`. Players switch styles with `!hud` (layout / compact / classic), `!keys` toggles the key
+display and `!keys <x> <y>` moves it, `!splitpos <x> <y>` / `!timerpos <x> <y>` nudge the split box and the timer stack away from their default
+place, `!speedpos <x> <y>` moves the speed/sync readout on its own (no arguments resets), `!speedcolor` toggles the speed colouring, `!syncfont` the sync font, `!sync` the strafe sync readout. `!first [map]` lists
+who finished a map first (earliest recorded finish per player, any mode).
+Wind sounds (`wind` block in the server config, off by default): a client-side wind loop whose intensity follows the
+player's speed, using clips from a workshop addon; `!wind` toggles it, `!windmode` switches random / sequential clips.
+On staged maps `!stagemode` switches between full-run mode (default: a stage clear is a checkpoint of the whole run, compared and
+ranked against the top runs) and stage mode (the stage's own segment time, compared and ranked against standalone stage records;
+the top-left list then shows the records of the current stage). Stage records live in the `StageTimes` table and are saved on
+every stage clear that beats the player's best, whether or not the run is finished.
+

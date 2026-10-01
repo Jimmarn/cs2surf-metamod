@@ -18,6 +18,7 @@
 #include "surf/goto/surf_goto.h"
 #include "surf/style/surf_style.h"
 #include "surf/quiet/surf_quiet.h"
+#include "surf/wind/surf_wind.h"
 #include "surf/tip/surf_tip.h"
 #include "surf/vote/surf_vote.h"
 #include "surf/option/surf_option.h"
@@ -72,6 +73,7 @@ bool SurfPlugin::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bo
 	SurfZoneBeamService::Init();
 	Surf::misc::Init();
 	SurfQuietService::Init();
+	SurfWindService::Init();
 	AsyncFileIO::Init();
 	SurfRecordingService::Init();
 	if (!Surf::mode::CheckModeCvars())
@@ -111,6 +113,7 @@ bool SurfPlugin::Unload(char *error, size_t maxlen)
 	Surf::misc::UnrestrictTimeLimit();
 	SurfRecordingService::Shutdown();
 	AsyncFileIO::Cleanup();
+	SurfHUDService::Cleanup();
 	hooks::Cleanup();
 	Surf::mode::EnableReplicatedModeCvars();
 	g_pSurfModeManager->Cleanup();
@@ -149,6 +152,12 @@ void SurfPlugin::AddonInit()
 	if (g_pMultiAddonManager != nullptr && !addonLoaded)
 	{
 		addonLoaded = g_pMultiAddonManager->AddAddon(SURF_WORKSHOP_ADDON_ID, true);
+		// The layout HUD ships in a separate workshop addon ("hud" > "layoutAddon" in the server config).
+		const char *hudAddon = SurfHUDService::GetLayoutAddon();
+		if (hudAddon[0] != '\0')
+		{
+			g_pMultiAddonManager->AddAddon(hudAddon, true);
+		}
 		CConVarRef<bool> mm_cache_clients_with_addons("mm_cache_clients_with_addons");
 		CConVarRef<float> mm_cache_clients_duration("mm_cache_clients_duration");
 		mm_cache_clients_with_addons.Set(true);

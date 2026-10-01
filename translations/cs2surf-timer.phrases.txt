@@ -343,6 +343,19 @@
 		"lv"		"{grey}Posms {default}#{number}{grey}: {lime}{time_text}{grey}{diff_text}"
 		"pt"		"{grey}Estágio {default}#{number}{grey}: {lime}{time_text}{grey}{diff_text}"
 	}
+	"Course Stage Reached (Stage Mode)"
+	{
+		"#format"	"number:d,time_text:s,diff_text:s"
+		"en"		"{grey}Stage {default}#{number}{grey} (stage time): {lime}{time_text}{grey}{diff_text}"
+		"chi"		"{grey}阶段 {default}#{number}{grey}: {lime}{time_text}{grey}{diff_text}"
+		"sv"		"{grey}Fas {default}#{number}{grey}: {lime}{time_text}{grey}{diff_text}"
+		"ua"		"{grey}Стадія {default}#{number}{grey}: {lime}{time_text}{grey}{diff_text}"
+		"tr"		"{grey}Aşama {default}#{number}{grey}: {lime}{time_text}{grey}{diff_text}"
+		"ko"		"{grey}스테이지 {default}#{number}{grey}: {lime}{time_text}{grey}{diff_text}"
+		"es"		"{grey}Etapa {default}#{number}{grey}: {lime}{time_text}{grey}{diff_text}"
+		"lv"		"{grey}Posms {default}#{number}{grey}: {lime}{time_text}{grey}{diff_text}"
+		"pt"		"{grey}Estágio {default}#{number}{grey}: {lime}{time_text}{grey}{diff_text}"
+	}
 
 	// The spaces are intentional.
 	"Server PB Diff (Overall)"
@@ -579,5 +592,24 @@
 		"en"		"{grey}Start speed: {lime}{start_speed}{grey}"
 		"ko"		"{grey}시작 속도: {lime}{start_speed}{grey}"
 		"pt"		"{grey}Velocidade inicial: {lime}{start_speed}{grey}"
+	}
+	"First Finish - Header"
+	{
+		"#format"	"map:s"
+		"en"		"{grey}First to finish {lime}{map}{grey}:"
+	}
+	"First Finish - Entry"
+	{
+		"#format"	"place:d,name:s,date:s"
+		"en"		"{grey}{place}. {default}{name} {grey}({date})"
+	}
+	"First Finish - None"
+	{
+		"#format"	"map:s"
+		"en"		"{grey}Nobody has finished {lime}{map}{grey} yet."
+	}
+	"First Finish - No Database"
+	{
+		"en"		"{grey}The database is not available."
 	}
 }

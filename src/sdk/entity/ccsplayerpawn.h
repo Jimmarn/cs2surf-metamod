@@ -3,10 +3,13 @@
 #include "cbaseplayerpawn.h"
 #include "sdk/econ/ceconitemview.h"
 
+class CPlayer_ViewModelServices;
+
 class CCSPlayerPawnBase : public CBasePlayerPawn
 {
 public:
 	DECLARE_SCHEMA_CLASS_ENTITY(CCSPlayerPawnBase);
+	SCHEMA_FIELD(CPlayer_ViewModelServices *, m_pViewModelServices)
 };
 
 class CCSPlayerPawn : public CCSPlayerPawnBase

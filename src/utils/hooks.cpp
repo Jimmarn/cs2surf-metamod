@@ -31,6 +31,7 @@
 #include "surf/telemetry/surf_telemetry.h"
 #include "surf/trigger/surf_trigger.h"
 #include "surf/vote/surf_vote.h"
+#include "surf/hud/surf_hud.h"
 #include "surf/db/surf_db.h"
 #include "surf/mappingapi/surf_mappingapi.h"
 #include "surf/global/surf_global.h"
@@ -202,7 +203,7 @@ static KHook::Return<void> CheckTransmitPost(ISource2GameEntities *pThis, CCheck
 	VPROF_BUDGET(__func__, "CS2Surf");
 	Surf::quiet::OnCheckTransmit(pInfos, infoCount);
 	SurfProfileService::OnCheckTransmit();
-	// SurfHUDService::OnCheckTransmit(pInfos, infoCount);
+	SurfHUDService::OnCheckTransmit(pInfos, infoCount);
 	return {KHook::Action::Ignore};
 }
 
@@ -328,6 +329,7 @@ static KHook::Return<void> ClientDisconnectPost(ISource2GameClients *pThis, CPla
 	player->globalService->OnClientDisconnect();
 	cvarquery::OnClientDisconnect(slot);
 	Surf::vote::OnClientDisconnect(slot);
+	player->hudService->DestroyOwnedLayout();
 	// Surf::prefs::OnClientDisconnect(slot);
 	g_pSurfPlayerManager->OnClientDisconnect(slot, reason, pszName, xuid, pszNetworkID);
 	return {KHook::Action::Ignore};
@@ -529,6 +531,7 @@ static KHook::Return<bool> ActivateServerPost(CNetworkGameServerBase *pThis)
 	RunSubmission::Clear();
 	Surf::misc::OnActivateServer();
 	Surf::vote::OnActivateServer();
+	SurfHUDService::RefreshLayoutAvailability();
 	SurfDatabaseService::SetupMap();
 	SurfGlobalService::OnActivateServer();
 	SurfRecordingService::OnActivateServer();
@@ -1268,7 +1271,10 @@ struct SignatureHook
 	void (*configure)(void *address);
 };
 
-#define SIGNATURE_HOOK(hook) {#hook, [](void *address) { hook.Configure(address); }}
+#define SIGNATURE_HOOK(hook) \
+	{ \
+		#hook, [](void *address) { hook.Configure(address); } \
+	}
 
 static_global const SignatureHook SIGNATURE_HOOKS[] = {
 	SIGNATURE_HOOK(RecvServerBrowserPacket),

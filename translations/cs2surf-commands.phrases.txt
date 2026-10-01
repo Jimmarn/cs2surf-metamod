@@ -1108,10 +1108,50 @@
 	}
 	"Command Description - surf_hudstyle"
 	{
-		"en"		"Switch between the compact and classic HUD."
+		"en"		"Cycle the HUD style: layout (needs the HUD addon), compact, classic."
 	}
 	"Command Description - surf_sync"
 	{
 		"en"		"Toggle the strafe sync display."
+	}
+	"Command Description - surf_syncfont"
+	{
+		"en"		"Toggle the alternative font for the sync readout (layout HUD)."
+	}
+	"Command Description - surf_keys"
+	{
+		"en"		"Toggle the pressed keys display; !keys <x> <y> moves it on the layout HUD."
+	}
+	"Command Description - surf_wind"
+	{
+		"en"		"Toggle the speed-based wind sounds."
+	}
+	"Command Description - surf_windmode"
+	{
+		"en"		"Wind sounds: switch between random and sequential clips."
+	}
+	"Command Description - surf_first"
+	{
+		"en"		"!first [map] lists who finished the map first (each player's earliest recorded finish, any mode)."
+	}
+	"Command Description - surf_stagemode"
+	{
+		"en"		"Toggle stage mode on staged maps: stage splits and the top list use standalone stage records instead of the full run."
+	}
+	"Command Description - surf_speedcolor"
+	{
+		"en"		"Toggle the speed-band colouring of the speed readout (layout HUD)."
+	}
+	"Command Description - surf_splitpos"
+	{
+		"en"		"!splitpos <x> <y> moves the checkpoint/stage split box (layout HUD, percent of the screen); no arguments resets it."
+	}
+	"Command Description - surf_speedpos"
+	{
+		"en"		"!speedpos <x> <y> moves the speed/sync readout on its own, on top of !timerpos (layout HUD); no arguments resets it."
+	}
+	"Command Description - surf_timerpos"
+	{
+		"en"		"!timerpos <x> <y> moves the speed/sync/timer stack (layout HUD, percent of the screen); no arguments resets it."
 	}
 }

@@ -1,4 +1,5 @@
 #include "surf/surf.h"
+#include <algorithm>
 #include "cs2surf.h"
 #include "surf_hud.h"
 #include "surf/vote/surf_vote.h"
@@ -10,6 +11,7 @@
 #include "surf/timer/surf_timer.h"
 #include "surf/language/surf_language.h"
 #include "surf/replays/surf_replaysystem.h"
+#include "surf/spec/surf_spec.h"
 
 #include "tier0/memdbgon.h"
 
@@ -52,6 +54,7 @@ void SurfHUDService::Init()
 
 void SurfHUDService::Reset()
 {
+	this->DestroyOwnedLayout();
 	this->ResetShowPanel();
 	this->timerStoppedTime = {};
 	this->currentTimeWhenTimerStopped = {};
@@ -157,9 +160,16 @@ std::string SurfHUDService::GetTimerText(const char *language)
 
 void SurfHUDService::DrawPanels(SurfPlayer *player, SurfPlayer *target)
 {
-	std::string voteHtml = Surf::vote::GetPanelHTML(target);
-	if (!target->hudService->IsShowingPanel())
+	if (!target->GetController() || Surf::replaysystem::IsReplayBot(target))
 	{
+		return;
+	}
+	std::string voteHtml = Surf::vote::GetPanelHTML(target);
+	// The layout HUD hides itself when the panel is off or another style is chosen.
+	bool layoutDrawn = target->hudService->UpdateHudLayout(player) && target->hudService->IsUsingLayoutStyle();
+	if (!target->hudService->IsShowingPanel() || layoutDrawn)
+	{
+		// the map vote still uses the centre panel
 		if (!voteHtml.empty())
 		{
 			target->PrintHTMLCentre(false, false, voteHtml.c_str());
@@ -240,14 +250,69 @@ void SurfHUDService::ResetShowPanel()
 	this->showPanel = this->player->optionService->GetPreferenceBool("showPanel", true);
 	this->compactStyle = this->player->optionService->GetPreferenceBool("hudCompact", true);
 	this->showSync = this->player->optionService->GetPreferenceBool("hudSync", true);
+	this->showKeys = this->player->optionService->GetPreferenceBool("hudKeys", true);
+	this->layoutStyle = this->player->optionService->GetPreferenceBool("hudLayout", true);
+	this->syncAltFont = this->player->optionService->GetPreferenceBool("hudSyncAlt", false);
+	this->speedColor = this->player->optionService->GetPreferenceBool("hudSpeedColor", true);
+	this->stageMode = this->player->optionService->GetPreferenceBool("hudStageMode", false);
+	this->keysX = (i32)this->player->optionService->GetPreferenceInt("hudKeysX", -45);
+	this->keysY = (i32)this->player->optionService->GetPreferenceInt("hudKeysY", 0);
+	this->splitX = (i32)this->player->optionService->GetPreferenceInt("hudSplitX", 0);
+	this->splitY = (i32)this->player->optionService->GetPreferenceInt("hudSplitY", 0);
+	this->timerX = (i32)this->player->optionService->GetPreferenceInt("hudTimerX", 0);
+	this->timerY = (i32)this->player->optionService->GetPreferenceInt("hudTimerY", 0);
+	this->speedX = (i32)this->player->optionService->GetPreferenceInt("hudSpeedX", 0);
+	this->speedY = (i32)this->player->optionService->GetPreferenceInt("hudSpeedY", 0);
 }
 
+// !hud cycles layout (when the addon is available) -> compact -> classic.
 void SurfHUDService::ToggleStyle()
 {
-	this->compactStyle = !this->compactStyle;
+	if (SurfHUDService::IsLayoutHudAvailable() && this->layoutStyle)
+	{
+		this->layoutStyle = false;
+		this->compactStyle = true;
+	}
+	else if (this->compactStyle)
+	{
+		this->compactStyle = false;
+	}
+	else if (SurfHUDService::IsLayoutHudAvailable())
+	{
+		this->layoutStyle = true;
+	}
+	else
+	{
+		this->compactStyle = true;
+	}
+	this->player->optionService->SetPreferenceBool("hudLayout", this->layoutStyle);
 	this->player->optionService->SetPreferenceBool("hudCompact", this->compactStyle);
-	// the compact style does not use the plain centre text, clear whatever the classic one left there
+	// neither the layout nor the compact style uses the plain centre text, clear whatever the classic one left there
 	utils::PrintCentre(this->player->GetController(), "#SFUI_EmptyString");
+}
+
+void SurfHUDService::ToggleKeys()
+{
+	this->showKeys = !this->showKeys;
+	this->player->optionService->SetPreferenceBool("hudKeys", this->showKeys);
+}
+
+void SurfHUDService::ToggleSyncFont()
+{
+	this->syncAltFont = !this->syncAltFont;
+	this->player->optionService->SetPreferenceBool("hudSyncAlt", this->syncAltFont);
+}
+
+void SurfHUDService::ToggleSpeedColor()
+{
+	this->speedColor = !this->speedColor;
+	this->player->optionService->SetPreferenceBool("hudSpeedColor", this->speedColor);
+}
+
+void SurfHUDService::ToggleStageMode()
+{
+	this->stageMode = !this->stageMode;
+	this->player->optionService->SetPreferenceBool("hudStageMode", this->stageMode);
 }
 
 void SurfHUDService::ToggleSync()
@@ -329,7 +394,8 @@ std::string SurfHUDService::GetCompactHtml(const char *language, SurfPlayer *tar
 		}
 	}
 	char speedText[64];
-	V_snprintf(speedText, sizeof(speedText), "<font color='%s'>%.0f</font>", speedColor, speed);
+	// zero padded to 4 digits so the panel does not change width between 999 and 1000 u/s
+	V_snprintf(speedText, sizeof(speedText), "<font color='%s'>%04.0f</font>", speedColor, speed);
 	// --- sync ---
 	std::string syncText;
 	if (target->hudService->showSync && !Surf::replaysystem::IsReplayBot(this->player))
@@ -340,7 +406,7 @@ std::string SurfHUDService::GetCompactHtml(const char *language, SurfPlayer *tar
 	}
 	// --- checkpoint / stage flash ---
 	std::string flashText;
-	if (this->flash.expiry > g_pSurfUtils->GetServerGlobals()->curtime && !this->flash.label.empty())
+	if (this->flash.expiry > g_pSurfUtils->GetServerGlobals()->curtime && !this->flash.time.empty())
 	{
 		std::string diffLine, speedLine;
 		if (!this->flash.diff.empty())
@@ -366,10 +432,14 @@ std::string SurfHUDService::GetCompactHtml(const char *language, SurfPlayer *tar
 																diffLine.c_str(), speedLine.c_str());
 	}
 	std::string stageText = this->GetStageText(language);
-	std::string keyText = this->GetKeyText(language);
+	if (!stageText.empty())
+	{
+		stageText = "<font class='fontSize-s stratum-bold-italic' color='#9aa4b0'>" + stageText + "</font><br>";
+	}
+	std::string keyText = target->hudService->showKeys ? this->GetKeyText(language) : "";
 	// clang-format off
 	return SurfLanguageService::PrepareMessageWithLang(language, "HUD - Compact Panel",
-		flashText.c_str(), timeText.c_str(), speedText, syncText.c_str(), stageText.c_str(), keyText.c_str());
+		speedText, syncText.c_str(), keyText.c_str(), flashText.c_str(), stageText.c_str(), timeText.c_str());
 	// clang-format on
 }
 
@@ -426,11 +496,86 @@ SCMD(surf_hudstyle, SCFL_HUD)
 	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
 	player->hudService->ToggleStyle();
 	player->languageService->PrintChat(true, false,
-									   player->hudService->IsCompactStyle() ? "HUD Option - Style - Compact" : "HUD Option - Style - Classic");
+									   player->hudService->IsUsingLayoutStyle() ? "HUD Option - Style - Layout"
+									   : player->hudService->IsCompactStyle()   ? "HUD Option - Style - Compact"
+																				: "HUD Option - Style - Classic");
 	return true;
 }
 
 SCMD_LINK(surf_hud, surf_hudstyle);
+
+// !keys toggles the key display; !keys <x> <y> moves it on the layout HUD (percent of the screen from the centre).
+SCMD(surf_keys, SCFL_HUD)
+{
+	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
+	if (args->ArgC() >= 3)
+	{
+		player->hudService->SetKeysPosition(V_atoi(args->Arg(1)), V_atoi(args->Arg(2)));
+		player->languageService->PrintChat(true, false, "HUD Option - Keys - Moved", V_atoi(args->Arg(1)), V_atoi(args->Arg(2)));
+		return true;
+	}
+	player->hudService->ToggleKeys();
+	player->languageService->PrintChat(true, false, "HUD Option - Keys - Toggled");
+	return true;
+}
+
+SCMD(surf_syncfont, SCFL_HUD)
+{
+	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
+	player->hudService->ToggleSyncFont();
+	player->languageService->PrintChat(true, false, "HUD Option - Sync Font - Toggled");
+	return true;
+}
+
+// !stagemode: on staged maps, compare stage splits and list stage records instead of the full run.
+SCMD(surf_stagemode, SCFL_HUD)
+{
+	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
+	player->hudService->ToggleStageMode();
+	player->languageService->PrintChat(true, false,
+									   player->hudService->IsStageMode() ? "HUD Option - Stage Mode - Stage" : "HUD Option - Stage Mode - Run");
+	return true;
+}
+
+SCMD(surf_speedcolor, SCFL_HUD)
+{
+	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
+	player->hudService->ToggleSpeedColor();
+	player->languageService->PrintChat(true, false, "HUD Option - Speed Color - Toggled");
+	return true;
+}
+
+// !splitpos <x> <y> / !timerpos <x> <y>: move the split box / the bottom stack away from their default place (layout HUD).
+SCMD(surf_splitpos, SCFL_HUD)
+{
+	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
+	i32 x = args->ArgC() >= 3 ? V_atoi(args->Arg(1)) : 0;
+	i32 y = args->ArgC() >= 3 ? V_atoi(args->Arg(2)) : 0;
+	player->hudService->SetSplitPosition(x, y);
+	player->languageService->PrintChat(true, false, "HUD Option - Split - Moved", x, y);
+	return true;
+}
+
+// !speedpos <x> <y>: move the speed / sync readout on its own, relative to where !timerpos put the block.
+SCMD(surf_speedpos, SCFL_HUD)
+{
+	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
+	i32 x = args->ArgC() >= 3 ? V_atoi(args->Arg(1)) : 0;
+	i32 y = args->ArgC() >= 3 ? V_atoi(args->Arg(2)) : 0;
+	player->hudService->SetSpeedPosition(x, y);
+	player->languageService->PrintChat(true, false, "HUD Option - Speed - Moved", x, y);
+	return true;
+}
+
+SCMD(surf_timerpos, SCFL_HUD)
+{
+	SurfPlayer *player = g_pSurfPlayerManager->ToPlayer(controller);
+	i32 x = args->ArgC() >= 3 ? V_atoi(args->Arg(1)) : 0;
+	i32 y = args->ArgC() >= 3 ? V_atoi(args->Arg(2)) : 0;
+	player->hudService->SetTimerPosition(x, y);
+	player->languageService->PrintChat(true, false, "HUD Option - Timer - Moved", x, y);
+	return true;
+}
 
 SCMD(surf_sync, SCFL_HUD)
 {
